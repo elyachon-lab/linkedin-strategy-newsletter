@@ -5,21 +5,28 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LinkedInUserProfile } from '@/lib/types';
 import { AuthModal } from '@/components/auth-modal';
+import { AdminControlModal } from '@/components/admin-control-modal';
 import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound } from 'lucide-react';
 
 export function Navbar() {
   const pathname = usePathname();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAdminControlOpen, setIsAdminControlOpen] = useState(false);
   const [clientProfile, setClientProfile] = useState<LinkedInUserProfile | null>(null);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Load persisted client profile from localStorage
-    const saved = localStorage.getItem('linkedin_user_profile');
-    if (saved) {
+    // Load persisted state from localStorage
+    const savedProfile = localStorage.getItem('linkedin_user_profile');
+    if (savedProfile) {
       try {
-        setClientProfile(JSON.parse(saved));
+        setClientProfile(JSON.parse(savedProfile));
       } catch {}
+    }
+
+    const savedAdmin = localStorage.getItem('is_admin_logged_in');
+    if (savedAdmin === 'true') {
+      setIsAdminLoggedIn(true);
     }
   }, []);
 
@@ -30,12 +37,15 @@ export function Navbar() {
 
   const handleAdminLoginSuccess = () => {
     setIsAdminLoggedIn(true);
+    localStorage.setItem('is_admin_logged_in', 'true');
+    setIsAdminControlOpen(true); // Open control modal immediately upon login
   };
 
   const handleLogout = () => {
     setClientProfile(null);
     setIsAdminLoggedIn(false);
     localStorage.removeItem('linkedin_user_profile');
+    localStorage.removeItem('is_admin_logged_in');
   };
 
   return (
@@ -101,7 +111,7 @@ export function Navbar() {
             </Link>
           </nav>
 
-          {/* Top Right Action Button - Replaced with Connexion / Espace Membre */}
+          {/* Top Right Action Button */}
           <div className="flex items-center space-x-3">
             {clientProfile ? (
               <div className="flex items-center space-x-2">
@@ -121,14 +131,20 @@ export function Navbar() {
                 </button>
               </div>
             ) : isAdminLoggedIn ? (
+              /* PILOT BUTTON MATCHING THE USER'S IMAGE EXACTLY */
               <div className="flex items-center space-x-2">
-                <span className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs">
-                  <ShieldCheck className="w-4 h-4 text-metricool-purple" /> Admin Connecté
-                </span>
+                <button
+                  onClick={() => setIsAdminControlOpen(true)}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-metricool-yellow hover:bg-yellow-300 text-metricool-purple border-2 border-metricool-purple rounded-full text-sm font-extrabold shadow-md hover:scale-105 transition-all cursor-pointer"
+                  title="Ouvrir le Centre de Contrôle Administrateur"
+                >
+                  <ShieldCheck className="w-5 h-5 text-metricool-purple" />
+                  Admin Connecté
+                </button>
                 <button
                   onClick={handleLogout}
                   className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors"
-                  title="Déconnexion"
+                  title="Déconnexion Admin"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -153,6 +169,13 @@ export function Navbar() {
         onClose={() => setIsAuthModalOpen(false)}
         onClientLoginSuccess={handleClientLoginSuccess}
         onAdminLoginSuccess={handleAdminLoginSuccess}
+      />
+
+      {/* Admin Control Center Modal */}
+      <AdminControlModal
+        isOpen={isAdminControlOpen}
+        onClose={() => setIsAdminControlOpen(false)}
+        onLogout={handleLogout}
       />
     </header>
   );

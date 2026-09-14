@@ -6,9 +6,13 @@ import { Users, UserPlus, Trash2, Download, Search, Lock, RefreshCw, Mail, KeyRo
 
 const ROBUST_ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'LinkedIn_Pro2026!Secured';
 
-export function AdminSubscribersManager() {
+interface AdminSubscribersManagerProps {
+  defaultAuthenticated?: boolean;
+}
+
+export function AdminSubscribersManager({ defaultAuthenticated = false }: AdminSubscribersManagerProps) {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(defaultAuthenticated);
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
