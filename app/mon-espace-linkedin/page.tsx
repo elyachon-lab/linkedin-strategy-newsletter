@@ -83,6 +83,8 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
   );
 }
 
+import { LinkedInConnectModal } from '@/components/linkedin-connect-modal';
+
 export default function DedicatedClientSpacePage() {
   const [profile, setProfile] = useState<LinkedInUserProfile | null>(null);
   const [activeTab, setActiveTab] = useState<'my_audit' | 'search_audit' | 'website_scan'>('my_audit');
@@ -99,6 +101,7 @@ export default function DedicatedClientSpacePage() {
 
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
 
   // Load user profile & trigger auto-audit for registered profile
   useEffect(() => {
@@ -144,6 +147,7 @@ export default function DedicatedClientSpacePage() {
         body: JSON.stringify({
           query: targetQuery,
           industry: userProf.industry || 'SaaS & Tech',
+          userSyncData: userProf.userSyncData,
         }),
       });
 
@@ -180,6 +184,7 @@ export default function DedicatedClientSpacePage() {
   };
 
   const registeredUrl = profile?.linkedinUrl || `https://www.linkedin.com/in/${profile?.username || 'profil'}`;
+  const isAccountSynced = !!profile?.userSyncData?.isConnected;
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12">
@@ -198,9 +203,15 @@ export default function DedicatedClientSpacePage() {
                 <span className="bg-metricool-yellow text-metricool-purple text-xs font-extrabold px-3 py-0.5 rounded-full uppercase border border-metricool-purple">
                   🤖 Secteur IA : {profile?.industry}
                 </span>
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-xs font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                  <UserCheck className="w-3.5 h-3.5 text-emerald-400" /> Compte Enregistré
-                </span>
+                {isAccountSynced ? (
+                  <span className="bg-emerald-400 text-slate-950 font-extrabold text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    🟢 Compte LinkedIn Connecté ({profile?.userSyncData?.weeklyPostFrequency} posts/sem)
+                  </span>
+                ) : (
+                  <span className="bg-amber-400/20 text-amber-200 border border-amber-300/40 text-xs font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    ⚠️ Données estimées
+                  </span>
+                )}
               </div>
 
               {/* CLICKABLE REGISTERED LINK */}
@@ -223,20 +234,21 @@ export default function DedicatedClientSpacePage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              onClick={() => setIsConnectModalOpen(true)}
+              className="px-4 py-3 bg-metricool-yellow hover:bg-yellow-300 text-metricool-purple font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-1.5"
+            >
+              <Zap className="w-4 h-4 text-metricool-purple" />
+              {isAccountSynced ? '⚙️ Ajuster mes Métriques Réelles' : '🔗 Connecter & Synchroniser Mon Compte Réel'}
+            </button>
+
             <Link
               href="/profil"
               className="px-4 py-3 bg-white/10 hover:bg-white/20 text-white font-extrabold rounded-2xl text-xs border border-white/20 transition-all flex items-center gap-2"
             >
-              <Settings className="w-4 h-4 text-metricool-yellow" /> Modifier dans mes paramètres
+              <Settings className="w-4 h-4 text-metricool-yellow" /> Paramètres
             </Link>
-
-            <button
-              onClick={() => setIsAuthModalOpen(true)}
-              className="px-4 py-3 bg-metricool-yellow hover:bg-yellow-300 text-metricool-purple font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-1.5"
-            >
-              <RefreshCw className="w-4 h-4" /> Changer de Compte
-            </button>
           </div>
         </div>
 
@@ -673,6 +685,17 @@ export default function DedicatedClientSpacePage() {
           runAutoAuditForRegisteredUser(p);
         }}
         onAdminLoginSuccess={() => {}}
+      />
+
+      {/* LinkedIn Connect & Real Metrics Sync Modal */}
+      <LinkedInConnectModal
+        isOpen={isConnectModalOpen}
+        onClose={() => setIsConnectModalOpen(false)}
+        currentProfile={profile}
+        onSyncSuccess={(updatedProf) => {
+          setProfile(updatedProf);
+          runAutoAuditForRegisteredUser(updatedProf);
+        }}
       />
 
     </div>

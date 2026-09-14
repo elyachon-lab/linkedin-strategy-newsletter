@@ -62,6 +62,16 @@ export interface AIAuditResult {
   growthActionPlan: string[];
 }
 
+export interface UserSyncData {
+  isConnected: boolean;
+  weeklyPostFrequency?: number;
+  followerCount?: number;
+  ssiScore?: number;
+  engagementRate?: string;
+  lastPostDate?: string;
+  primaryFormat?: string;
+}
+
 export interface LinkedInUserProfile {
   username: string;
   fullName: string;
@@ -71,5 +81,6 @@ export interface LinkedInUserProfile {
   email?: string;
   linkedinUrl?: string;
   websiteUrl?: string;
+  userSyncData?: UserSyncData;
   auditResult?: AIAuditResult;
 }
