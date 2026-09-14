@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { LinkedInUserProfile } from '@/lib/types';
 import { AuthModal } from '@/components/auth-modal';
 import { AdminControlModal } from '@/components/admin-control-modal';
-import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound, LayoutDashboard } from 'lucide-react';
+import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound, LayoutDashboard, Search } from 'lucide-react';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -99,6 +99,18 @@ export function Navbar() {
               }`}
             >
               Fiches & Stratégie
+            </Link>
+
+            <Link
+              href="/audit-linkedin"
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                pathname === '/audit-linkedin'
+                  ? 'bg-purple-100 text-purple-900 border border-purple-300 font-extrabold'
+                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+              }`}
+            >
+              <Search className="w-3.5 h-3.5 inline mr-1 text-metricool-purple" />
+              Audit LinkedIn
             </Link>
 
             <Link
