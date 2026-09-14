@@ -119,6 +119,18 @@ export function Navbar() {
             </Link>
 
             <Link
+              href="/connect-linkedin"
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                pathname === '/connect-linkedin'
+                  ? 'bg-blue-100 text-blue-900 border border-blue-300 font-extrabold'
+                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+              }`}
+            >
+              <Linkedin className="w-3.5 h-3.5 inline mr-1 text-[#0077B5]" />
+              Lier LinkedIn
+            </Link>
+
+            <Link
               href="/mon-espace-linkedin"
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/mon-espace-linkedin'
@@ -146,6 +158,14 @@ export function Navbar() {
           <div className="flex items-center space-x-3">
             {clientProfile ? (
               <div className="flex items-center space-x-2">
+                <Link
+                  href="/connect-linkedin"
+                  className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-[#0077B5] border border-blue-200 rounded-2xl text-xs font-extrabold transition-all"
+                  title="Connecter mon compte LinkedIn officiel (Metricool Style)"
+                >
+                  <Linkedin className="w-3.5 h-3.5 fill-[#0077B5]" />
+                  <span>Lier Compte</span>
+                </Link>
                 <Link
                   href="/profil"
                   className="inline-flex items-center gap-2 px-3.5 py-2 bg-metricool-lightBlue text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs hover:bg-blue-100 transition-colors"

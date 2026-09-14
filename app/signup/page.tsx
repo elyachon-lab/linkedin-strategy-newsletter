@@ -144,6 +144,22 @@ export default function SignupPage() {
         </p>
       </div>
 
+      {/* Metricool-style OAuth LinkedIn Quick Button */}
+      <div className="space-y-3">
+        <Link
+          href="/connect-linkedin"
+          className="w-full py-3.5 bg-[#0077B5] hover:bg-[#005E93] text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2.5 border-2 border-blue-900/10"
+        >
+          <Linkedin className="w-5 h-5 fill-white text-white" />
+          <span>S'inscrire / Lier via LinkedIn (Metricool Style)</span>
+        </Link>
+        <div className="relative flex py-1 items-center">
+          <div className="flex-grow border-t border-slate-200"></div>
+          <span className="flex-shrink mx-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Ou inscription par e-mail</span>
+          <div className="flex-grow border-t border-slate-200"></div>
+        </div>
+      </div>
+
       <form onSubmit={handleSignup} className="space-y-4">
         
         <div>
