@@ -2,28 +2,28 @@
 
 import { useState } from 'react';
 import { StrategyCard } from '@/lib/types';
-import { Pin, Copy, Check, Edit2, Trash2, ChevronDown, ChevronUp, Sparkles, Hash, Clock, User, ArrowUpRight } from 'lucide-react';
+import { Pin, Copy, Check, Edit2, Trash2, ChevronDown, ChevronUp, Sparkles, Clock, ArrowRight } from 'lucide-react';
 
 interface StrategyCardProps {
   card: StrategyCard;
   searchQuery?: string;
   onEdit?: (card: StrategyCard) => void;
   onDelete?: (id: string) => void;
-  layoutStyle?: 'grid' | 'full';
 }
 
-export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete, layoutStyle = 'grid' }: StrategyCardProps) {
+export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete }: StrategyCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [copiedContent, setCopiedContent] = useState(false);
 
-  const categoryColors: Record<string, string> = {
-    Hook: 'bg-amber-100/80 text-amber-900 border-amber-200',
-    Algorithme: 'bg-indigo-100/80 text-indigo-900 border-indigo-200',
-    Planning: 'bg-emerald-100/80 text-emerald-900 border-emerald-200',
-    Format: 'bg-purple-100/80 text-purple-900 border-purple-200',
-    Engagement: 'bg-rose-100/80 text-rose-900 border-rose-200',
-    Copywriting: 'bg-blue-100/80 text-blue-900 border-blue-200',
+  // Metricool signature category badge colors
+  const categoryBadges: Record<string, string> = {
+    Hook: 'bg-metricool-yellow text-metricool-purple font-extrabold border-2 border-metricool-purple',
+    Algorithme: 'bg-metricool-pink text-white font-extrabold border-2 border-metricool-purple',
+    Planning: 'bg-metricool-lightBlue text-metricool-purple font-extrabold border-2 border-metricool-purple',
+    Format: 'bg-purple-200 text-purple-950 font-extrabold border-2 border-metricool-purple',
+    Engagement: 'bg-amber-200 text-amber-950 font-extrabold border-2 border-metricool-purple',
+    Copywriting: 'bg-blue-200 text-blue-950 font-extrabold border-2 border-metricool-purple',
   };
 
   const copyToClipboard = (text: string, index?: number) => {
@@ -37,7 +37,6 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
     }
   };
 
-  // Estimate reading time based on word count
   const wordCount = (card.summary + ' ' + (card.content || '')).split(/\s+/).length;
   const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 180));
 
@@ -48,7 +47,7 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
       <>
         {parts.map((part, i) =>
           part.toLowerCase() === searchQuery.toLowerCase() ? (
-            <mark key={i} className="bg-amber-200 text-amber-950 font-semibold px-0.5 rounded">
+            <mark key={i} className="bg-metricool-yellow text-metricool-purple font-bold px-1 rounded">
               {part}
             </mark>
           ) : (
@@ -60,144 +59,134 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
   };
 
   return (
-    <article
-      className={`group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between ${
-        card.is_pinned ? 'ring-2 ring-blue-500/20 border-blue-300' : ''
-      }`}
-    >
-      <div className="p-6 sm:p-7 space-y-4">
-        
-        {/* Article Meta Bar (Category, Reading Time, Pinned Badge) */}
-        <div className="flex items-center justify-between text-xs text-slate-500 gap-2 flex-wrap">
-          <div className="flex items-center gap-2">
-            <span
-              className={`font-semibold px-3 py-1 rounded-full text-[11px] uppercase tracking-wider border ${
-                categoryColors[card.category] || 'bg-slate-100 text-slate-800 border-slate-200'
-              }`}
-            >
-              {card.category}
+    <article className="bg-white rounded-3xl border-2 border-metricool-purple p-6 sm:p-7 metricool-card-shadow transition-all duration-300 flex flex-col justify-between space-y-4">
+      
+      {/* Top Meta Bar */}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span
+            className={`text-xs px-3 py-1 rounded-full uppercase tracking-wider ${
+              categoryBadges[card.category] || 'bg-slate-100 text-slate-900 border-2 border-slate-900'
+            }`}
+          >
+            {card.category}
+          </span>
+          {card.is_pinned && (
+            <span className="inline-flex items-center gap-1 text-xs font-bold bg-metricool-purple text-metricool-yellow px-2.5 py-0.5 rounded-full">
+              <Pin className="w-3 h-3 fill-current" /> Épinglé
             </span>
-            {card.is_pinned && (
-              <span className="inline-flex items-center gap-1 font-semibold text-[11px] bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full border border-blue-200">
-                <Pin className="w-3 h-3 fill-current" /> Épinglé
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3 text-slate-400 font-sans text-[11px]">
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" /> {readingTimeMinutes} min de lecture
-            </span>
-            {onEdit && (
-              <button
-                onClick={() => onEdit(card)}
-                className="text-slate-400 hover:text-slate-700 transition-colors p-1"
-                title="Modifier l'article"
-              >
-                <Edit2 className="w-3.5 h-3.5" />
-              </button>
-            )}
-            {onDelete && (
-              <button
-                onClick={() => onDelete(card.id)}
-                className="text-slate-400 hover:text-rose-600 transition-colors p-1"
-                title="Supprimer l'article"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
+          )}
         </div>
 
-        {/* Blog Post Title */}
-        <h2 className="font-serif text-xl sm:text-2xl font-bold text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">
-          {highlightText(card.title)}
-        </h2>
-
-        {/* Excerpt / Summary */}
-        <p className="font-sans text-sm text-slate-600 leading-relaxed line-clamp-3">
-          {highlightText(card.summary)}
-        </p>
-
-        {/* Tags Pills */}
-        {card.tags && card.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {card.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-[11px] font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200/60"
-              >
-                #{highlightText(tag)}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Featured Examples Box */}
-        {card.examples && card.examples.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-slate-100 space-y-2 bg-slate-50/80 -mx-6 -mb-6 p-6">
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 font-sans">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Modèles d'Accroches prêts à l'emploi
-            </h4>
-            <div className="space-y-2">
-              {card.examples.map((ex, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white p-3 rounded-xl border border-slate-200/80 text-xs text-slate-800 flex items-center justify-between gap-3 shadow-2xs hover:border-blue-300 transition-colors"
-                >
-                  <span className="font-serif italic text-slate-800 font-medium">"{highlightText(ex)}"</span>
-                  <button
-                    onClick={() => copyToClipboard(ex, idx)}
-                    className="shrink-0 text-slate-400 hover:text-blue-600 p-1.5 rounded-lg hover:bg-blue-50 transition-colors"
-                    title="Copier le hook"
-                  >
-                    {copiedIndex === idx ? (
-                      <Check className="w-4 h-4 text-emerald-600" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+          <span className="flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-full">
+            <Clock className="w-3.5 h-3.5 text-metricool-blue" /> {readingTimeMinutes} min de lecture
+          </span>
+          {onEdit && (
+            <button
+              onClick={() => onEdit(card)}
+              className="p-1.5 text-slate-400 hover:text-metricool-purple rounded-lg hover:bg-slate-100 transition-colors"
+              title="Modifier"
+            >
+              <Edit2 className="w-4 h-4" />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              onClick={() => onDelete(card.id)}
+              className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+              title="Supprimer"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Inline Article Reader Toggle */}
+      {/* Article Title */}
+      <h2 className="text-xl sm:text-2xl font-extrabold text-metricool-purple leading-snug hover:text-metricool-blue transition-colors">
+        {highlightText(card.title)}
+      </h2>
+
+      {/* Summary */}
+      <p className="text-sm font-medium text-slate-600 leading-relaxed">
+        {highlightText(card.summary)}
+      </p>
+
+      {/* Tags */}
+      {card.tags && card.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {card.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-lg"
+            >
+              #{highlightText(tag)}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Metricool Style Hook Copy Box */}
+      {card.examples && card.examples.length > 0 && (
+        <div className="pt-3 border-t-2 border-slate-100 bg-metricool-lightBlue/30 -mx-6 -mb-6 p-6 space-y-2 rounded-b-3xl">
+          <h4 className="text-xs font-extrabold uppercase tracking-wider text-metricool-purple flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-metricool-pink" /> Modèles de Hooks prêts à copier
+          </h4>
+          <div className="space-y-2">
+            {card.examples.map((ex, idx) => (
+              <div
+                key={idx}
+                className="bg-white p-3 rounded-2xl border-2 border-metricool-purple text-xs font-bold text-metricool-purple flex items-center justify-between gap-3 shadow-xs hover:border-metricool-blue transition-colors"
+              >
+                <span className="italic font-medium">"{highlightText(ex)}"</span>
+                <button
+                  onClick={() => copyToClipboard(ex, idx)}
+                  className="shrink-0 bg-metricool-yellow text-metricool-purple font-extrabold px-3 py-1.5 rounded-xl border border-metricool-purple hover:bg-yellow-300 transition-colors inline-flex items-center gap-1 shadow-2xs"
+                >
+                  {copiedIndex === idx ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-700" /> Copié !
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" /> Copier
+                    </>
+                  )}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Expandable Article Content */}
       {card.content && (
-        <div className="border-t border-slate-100 bg-slate-50/40 px-6 py-3">
+        <div className="pt-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full flex items-center justify-between text-xs font-semibold text-slate-700 hover:text-blue-600 transition-colors"
+            className="w-full inline-flex items-center justify-between text-xs font-extrabold text-metricool-purple hover:text-metricool-blue transition-colors py-2 px-4 bg-slate-100 rounded-2xl border border-slate-200"
           >
-            <span className="flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-slate-400" />
-              {isExpanded ? 'Fermer l\'article' : 'Lire l\'article complet'}
-            </span>
+            <span>{isExpanded ? 'Masquer l\'article détaillé' : 'Lire le guide complet & consignes'}</span>
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
 
           {isExpanded && (
-            <div className="mt-4 pt-4 border-t border-slate-200/80 space-y-4">
-              <div className="flex justify-end">
+            <div className="mt-3 p-5 bg-white rounded-2xl border-2 border-metricool-purple text-xs font-medium text-slate-800 space-y-3 leading-relaxed whitespace-pre-line shadow-xs">
+              <div className="flex justify-end mb-1">
                 <button
                   onClick={() => copyToClipboard(card.content)}
-                  className="inline-flex items-center gap-1.5 text-xs text-blue-700 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200 font-semibold"
+                  className="text-xs font-bold text-metricool-purple bg-metricool-yellow border border-metricool-purple px-3 py-1 rounded-xl shadow-2xs"
                 >
-                  {copiedContent ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                  {copiedContent ? 'Copié !' : 'Copier l\'article'}
+                  {copiedContent ? 'Copié !' : 'Copier tout le texte'}
                 </button>
               </div>
-
-              {/* Native Editorial Article Layout */}
-              <div className="bg-white p-6 rounded-xl border border-slate-200/80 font-sans text-xs text-slate-800 leading-relaxed space-y-3 shadow-2xs whitespace-pre-line">
-                {highlightText(card.content)}
-              </div>
+              {highlightText(card.content)}
             </div>
           )}
         </div>
       )}
+
     </article>
   );
 }

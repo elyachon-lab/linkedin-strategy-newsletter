@@ -2,78 +2,82 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Mail, Sparkles, Layers, PenTool } from 'lucide-react';
+import { BookOpen, Mail, Sparkles, Layers, PenTool, ArrowUpRight } from 'lucide-react';
 
 export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
+      
+      {/* Metricool Top Gradient Announcement Bar */}
+      <div className="metricool-gradient-bar py-1.5 px-4 text-center text-white text-xs font-semibold flex items-center justify-center gap-2">
+        <span>⚡ Guide & Veille Tech LinkedIn • Moteur d'accroches & meilleures pratiques 2026</span>
+        <span className="hidden sm:inline bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase font-bold">Pro</span>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
           
-          {/* Brand Logo - Native Blog Style */}
+          {/* Brand Logo - Metricool Style */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-serif text-lg font-bold shadow-sm group-hover:bg-blue-600 transition-colors">
-              S
+            <div className="w-10 h-10 rounded-2xl bg-metricool-purple text-metricool-yellow flex items-center justify-center font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
+              M
             </div>
             <div className="flex flex-col">
-              <span className="font-serif font-bold text-lg text-slate-900 tracking-tight leading-none group-hover:text-blue-600 transition-colors">
-                LinkedIn Strategy <span className="font-sans text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full ml-1 border border-blue-100">Journal</span>
+              <span className="font-bold text-xl text-metricool-purple tracking-tight leading-none flex items-center gap-1">
+                LinkedIn Blog <span className="w-2 h-2 rounded-full bg-metricool-pink inline-block animate-pulse" />
               </span>
-              <span className="text-[11px] text-slate-500 font-sans mt-0.5">
-                Guide, Best Practices & Veille Tech
+              <span className="text-xs text-slate-500 font-medium mt-1">
+                Guide des Réseaux Sociaux & Content Strategy
               </span>
             </div>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-1 font-sans">
+          <nav className="hidden md:flex items-center space-x-2">
             <Link
               href="/"
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  ? 'bg-metricool-lightBlue text-metricool-purple border border-metricool-blue/30'
+                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
               }`}
             >
-              <Layers className="w-3.5 h-3.5" />
               Accueil Blog
             </Link>
 
             <Link
               href="/linkedin-strategy"
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/linkedin-strategy'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  ? 'bg-metricool-lightBlue text-metricool-purple border border-metricool-blue/30'
+                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
               }`}
             >
-              <BookOpen className="w-3.5 h-3.5" />
               Fiches & Stratégie
             </Link>
 
             <Link
               href="/newsletter"
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname.startsWith('/newsletter')
-                  ? 'bg-purple-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  ? 'bg-purple-50 text-purple-900 border border-purple-200'
+                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
               }`}
             >
-              <Mail className="w-3.5 h-3.5" />
-              Éditions Newsletter
+              Newsletter de Veille
             </Link>
           </nav>
 
-          {/* Action */}
+          {/* Action CTA Button - Metricool Style */}
           <div className="flex items-center space-x-3">
             <Link
               href="/newsletter/create"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-blue-600 text-white rounded-full text-xs font-semibold transition-all shadow-xs hover:shadow"
+              className="inline-flex items-center gap-2 px-5 py-3 bg-metricool-purple hover:bg-black text-metricool-yellow rounded-2xl text-xs font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
-              <PenTool className="w-3.5 h-3.5" />
-              Nouvel Article
+              <PenTool className="w-4 h-4 text-metricool-yellow" />
+              Rédiger une édition
             </Link>
           </div>
 

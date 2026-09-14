@@ -6,12 +6,15 @@ import { StrategyCard, NewsletterIssue } from '@/lib/types';
 import { INITIAL_STRATEGIES, INITIAL_NEWSLETTERS } from '@/lib/supabase/fallback-data';
 import { StrategyCardComponent } from '@/components/linkedin/strategy-card';
 import { TimingGridComponent } from '@/components/linkedin/timing-grid';
-import { Search, ArrowRight, Sparkles, BookOpen, Calendar, Clock, Feather, Mail } from 'lucide-react';
+import { Search, ArrowRight, Sparkles, BookOpen, Calendar, Mail, Filter, CheckCircle2 } from 'lucide-react';
 
 export default function DashboardPage() {
   const [strategies, setStrategies] = useState<StrategyCard[]>(INITIAL_STRATEGIES);
   const [newsletters, setNewsletters] = useState<NewsletterIssue[]>(INITIAL_NEWSLETTERS);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Tous');
+
+  const categories = ['Tous', 'Hook', 'Algorithme', 'Planning', 'Format', 'Engagement', 'Copywriting'];
 
   useEffect(() => {
     fetch('/api/linkedin-strategies')
@@ -32,6 +35,9 @@ export default function DashboardPage() {
   const featuredCard = strategies.find((s) => s.is_pinned) || strategies[0];
 
   const filteredStrategies = strategies.filter((strat) => {
+    if (selectedCategory !== 'Tous' && strat.category !== selectedCategory) {
+      return false;
+    }
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
@@ -43,57 +49,80 @@ export default function DashboardPage() {
   });
 
   return (
-    <div className="space-y-12 max-w-6xl mx-auto">
+    <div className="space-y-12 max-w-7xl mx-auto">
       
-      {/* Blog Editorial Header & Search */}
-      <div className="border-b border-slate-200 pb-10 pt-4 text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-800 text-xs font-semibold border border-blue-200/60">
-          <Feather className="w-3.5 h-3.5" /> Le Journal & Guide Stratégique
+      {/* Metricool Hero Banner Header */}
+      <div className="bg-white rounded-3xl p-8 sm:p-12 border-2 border-metricool-purple metricool-card-shadow text-center space-y-6">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-metricool-yellow text-metricool-purple text-xs font-extrabold border-2 border-metricool-purple uppercase tracking-wider">
+          <Sparkles className="w-4 h-4 text-metricool-purple" /> Blog & Centre de Ressources LinkedIn
         </div>
 
-        <h1 className="font-serif text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-          L'art de publier sur LinkedIn & de réussir sa veille tech.
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-metricool-purple tracking-tight leading-tight max-w-4xl mx-auto">
+          Blog LinkedIn : Votre guide ultime pour dompter l'algorithme & captiver votre audience.
         </h1>
 
-        <p className="font-sans text-base text-slate-600 leading-relaxed">
-          Analyses de l'algorithme, structures d'accroches virales, heatmaps d'audience et récapitulatifs hebdomadaires rédigés pour les créateurs.
+        <p className="text-base font-medium text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          Conseils utiles, statistiques d'audiences, structures d'accroches virales et récapitulatifs hebdomadaires de veille tech.
         </p>
 
-        {/* Editorial Search Bar */}
-        <div className="pt-4 max-w-xl mx-auto">
+        {/* Metricool Big Search Bar */}
+        <div className="pt-2 max-w-2xl mx-auto">
           <div className="relative">
-            <Search className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-5 top-4 w-6 h-6 text-slate-400" />
             <input
               type="text"
-              placeholder="Rechercher un article ou un conseil ('hook', 'carrousel', 'dwell time')..."
+              placeholder="Que recherchez-vous ? ('hook', 'carrousel', 'dwell time', 'planning')..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-full text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 text-sm shadow-xs transition-all"
+              className="w-full pl-14 pr-32 py-4 bg-slate-50 border-2 border-metricool-purple rounded-2xl text-metricool-purple placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-metricool-blue/20 focus:bg-white text-sm font-bold shadow-xs transition-all"
             />
+            <button
+              onClick={() => {}}
+              className="absolute right-2 top-2 bottom-2 px-5 bg-metricool-purple text-metricool-yellow font-extrabold rounded-xl text-xs hover:bg-black transition-colors"
+            >
+              Rechercher
+            </button>
           </div>
+        </div>
+
+        {/* Category Pills (Metricool Filter Buttons) */}
+        <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all border-2 ${
+                selectedCategory === cat
+                  ? 'bg-metricool-purple text-metricool-yellow border-metricool-purple shadow-sm scale-105'
+                  : 'bg-slate-50 text-metricool-purple border-slate-300 hover:border-metricool-purple'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Featured Main Story Hero */}
-      {!searchQuery && featuredCard && (
-        <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
-          <div className="max-w-2xl space-y-4 relative z-10">
-            <span className="inline-block bg-blue-500/30 text-blue-200 border border-blue-400/30 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+      {/* Featured Main Article (Metricool Style Spotlight) */}
+      {!searchQuery && selectedCategory === 'Tous' && featuredCard && (
+        <section className="bg-metricool-purple rounded-3xl p-8 sm:p-12 text-white border-2 border-metricool-purple metricool-card-shadow relative overflow-hidden">
+          <div className="max-w-3xl space-y-4 relative z-10">
+            <span className="inline-block bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple text-xs font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full">
               À La Une • {featuredCard.category}
             </span>
             
-            <h2 className="font-serif text-2xl sm:text-4xl font-bold leading-tight text-white">
+            <h2 className="text-2xl sm:text-4xl font-extrabold leading-tight text-white">
               {featuredCard.title}
             </h2>
 
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p className="text-slate-200 text-sm sm:text-base font-medium leading-relaxed">
               {featuredCard.summary}
             </p>
 
             <div className="pt-4 flex items-center gap-4">
               <Link
                 href="/linkedin-strategy"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-slate-900 hover:bg-blue-50 rounded-full font-semibold text-xs shadow-md transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-metricool-yellow text-metricool-purple hover:bg-yellow-300 rounded-2xl font-extrabold text-xs shadow-md transition-all hover:scale-105"
               >
                 Lire l'article complet <ArrowRight className="w-4 h-4" />
               </Link>
@@ -102,83 +131,106 @@ export default function DashboardPage() {
         </section>
       )}
 
-      {/* Timing Grid Heatmap */}
+      {/* Best Posting Times Heatmap */}
       <TimingGridComponent />
 
       {/* Articles Feed */}
       <section className="space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-          <h2 className="font-serif text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-blue-600" />
-            {searchQuery ? `Résultats de recherche ("${searchQuery}")` : 'Dernières Fiches & Guides Rédigés'}
+        <div className="flex items-center justify-between border-b-2 border-slate-200 pb-4">
+          <h2 className="text-2xl font-extrabold text-metricool-purple flex items-center gap-2">
+            <BookOpen className="w-6 h-6 text-metricool-blue" />
+            {searchQuery
+              ? `Résultats pour "${searchQuery}" (${filteredStrategies.length})`
+              : `Articles & Guides LinkedIn (${filteredStrategies.length})`}
           </h2>
           <Link
             href="/linkedin-strategy"
-            className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 font-sans"
+            className="text-xs font-extrabold text-metricool-blue hover:text-metricool-purple flex items-center gap-1"
           >
-            Voir tous les articles <ArrowRight className="w-3.5 h-3.5" />
+            Voir toutes les fiches <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredStrategies.map((card) => (
-            <StrategyCardComponent key={card.id} card={card} searchQuery={searchQuery} />
-          ))}
-        </div>
+        {filteredStrategies.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-3xl border-2 border-slate-200 space-y-3">
+            <Sparkles className="w-10 h-10 text-slate-300 mx-auto" />
+            <h3 className="text-base font-extrabold text-slate-800">Aucune fiche ne correspond à votre filtre</h3>
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedCategory('Tous');
+              }}
+              className="text-xs font-extrabold text-metricool-purple underline"
+            >
+              Réinitialiser les filtres
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredStrategies.map((card) => (
+              <StrategyCardComponent key={card.id} card={card} searchQuery={searchQuery} />
+            ))}
+          </div>
+        )}
       </section>
 
-      {/* Newsletter Editions Feed (Substack / Blog Archive Style) */}
-      <section className="space-y-6 pt-6 border-t border-slate-200">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-          <h2 className="font-serif text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Mail className="w-5 h-5 text-purple-600" />
-            Archives de la Newsletter de Veille
-          </h2>
+      {/* Metricool Newsletter Section Banner */}
+      <section className="bg-gradient-to-r from-metricool-purple via-purple-950 to-metricool-purple rounded-3xl p-8 sm:p-12 text-white border-2 border-metricool-purple metricool-card-shadow space-y-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-800/80 text-metricool-yellow text-xs font-bold border border-purple-600">
+              <Mail className="w-3.5 h-3.5" /> Newsletter Hebdomadaire
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              Restez à la pointe de la Veille Tech & des Tendances Social Media.
+            </h2>
+            <p className="text-sm text-slate-300 font-medium">
+              Chaque semaine, recevez nos curations d'articles, études de cas et mises à jour fonctionnelles.
+            </p>
+          </div>
+
           <Link
-            href="/newsletter"
-            className="text-xs font-semibold text-purple-600 hover:text-purple-800 flex items-center gap-1 font-sans"
+            href="/newsletter/create"
+            className="inline-flex items-center gap-2 px-6 py-3.5 bg-metricool-yellow text-metricool-purple hover:bg-yellow-300 font-extrabold text-xs rounded-2xl shadow-md shrink-0 transition-all hover:scale-105"
           >
-            Accéder au Studio <ArrowRight className="w-3.5 h-3.5" />
+            Accéder au Studio de Rédaction <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Newsletter Issues Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-purple-800/80">
           {newsletters.map((issue) => (
-            <article
+            <div
               key={issue.id}
-              className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-all space-y-3 flex flex-col justify-between"
+              className="bg-white text-metricool-purple p-6 rounded-2xl border-2 border-metricool-purple space-y-3 shadow-xs"
             >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span className="font-bold text-purple-700 bg-purple-100/80 px-2.5 py-0.5 rounded-full border border-purple-200">
-                    Édition #{issue.issue_number}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    {issue.sent_at ? new Date(issue.sent_at).toLocaleDateString('fr-FR') : 'Brouillon'}
-                  </span>
-                </div>
-
-                <h3 className="font-serif text-xl font-bold text-slate-900 leading-snug hover:text-purple-700 transition-colors">
-                  {issue.title}
-                </h3>
-                <p className="font-sans text-xs text-slate-600 leading-relaxed line-clamp-2">
-                  {issue.subject_line}
-                </p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-extrabold text-purple-900 bg-purple-100 px-3 py-0.5 rounded-full border border-purple-300">
+                  Édition #{issue.issue_number}
+                </span>
+                <span
+                  className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full ${
+                    issue.status === 'sent'
+                      ? 'bg-emerald-100 text-emerald-900'
+                      : 'bg-amber-100 text-amber-900'
+                  }`}
+                >
+                  {issue.status === 'sent' ? 'Envoyé' : 'Brouillon'}
+                </span>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-[11px] font-medium text-slate-500">
-                  {issue.articles ? `${issue.articles.length} ressource(s) sélectionnée(s)` : ''}
+              <h3 className="text-lg font-extrabold leading-snug">{issue.title}</h3>
+              <p className="text-xs text-slate-600 font-medium line-clamp-2">{issue.subject_line}</p>
+
+              <div className="pt-2 flex items-center justify-between border-t border-slate-100 text-xs font-bold">
+                <span className="text-slate-500">
+                  {issue.articles ? `${issue.articles.length} article(s) curé(s)` : ''}
                 </span>
-                <Link
-                  href="/newsletter/create"
-                  className="text-xs font-semibold text-purple-600 hover:underline flex items-center gap-1 font-sans"
-                >
-                  Lire l'édition →
+                <Link href="/newsletter/create" className="text-metricool-blue hover:underline">
+                  Ouvrir l'édition →
                 </Link>
               </div>
-            </article>
+            </div>
           ))}
         </div>
       </section>

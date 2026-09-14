@@ -1,18 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-  }
-
   body {
-    background-color: #f8fafc;
-    color: #0f172a;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    background-color: #F9FAFC;
+    color: #2D1A29;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   }
+}
+
+/* Metricool Gradient Accent Line */
+.metricool-gradient-bar {
+  background: linear-gradient(90deg, #589CBC 0%, #EE5B91 53%, #F5CA32 100%);
+}
+
+.metricool-gradient-text {
+  background: linear-gradient(90deg, #589CBC 0%, #EE5B91 53%, #F5CA32 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Metricool Offset Card Shadow */
+.metricool-card-shadow {
+  box-shadow: 0 8px 0 0 #2D1A29;
+}
+
+.metricool-card-shadow:hover {
+  box-shadow: 0 12px 0 0 #2D1A29;
+  transform: translateY(-2px);
 }
 
 /* Custom scrollbar */
@@ -30,14 +48,11 @@
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
 /* Highlight animation for search matches */
 mark {
-  background-color: #fef08a;
-  color: #854d0e;
-  padding: 0.1rem 0.2rem;
-  border-radius: 0.2rem;
+  background-color: #E7FF56;
+  color: #2D1A29;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  font-weight: 700;
 }
