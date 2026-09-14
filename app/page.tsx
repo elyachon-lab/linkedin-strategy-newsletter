@@ -6,6 +6,7 @@ import { StrategyCard, NewsletterIssue } from '@/lib/types';
 import { INITIAL_STRATEGIES, INITIAL_NEWSLETTERS } from '@/lib/supabase/fallback-data';
 import { StrategyCardComponent } from '@/components/linkedin/strategy-card';
 import { TimingGridComponent } from '@/components/linkedin/timing-grid';
+import { SubscribeWidget } from '@/components/newsletter/subscribe-widget';
 import { Search, ArrowRight, Sparkles, BookOpen, Calendar, Mail, Filter, CheckCircle2 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -173,6 +174,9 @@ export default function DashboardPage() {
           </div>
         )}
       </section>
+
+      {/* Public Newsletter Subscribe Widget */}
+      <SubscribeWidget />
 
       {/* Metricool Newsletter Section Banner */}
       <section className="bg-gradient-to-r from-metricool-purple via-purple-950 to-metricool-purple rounded-3xl p-8 sm:p-12 text-white border-2 border-metricool-purple metricool-card-shadow space-y-8">

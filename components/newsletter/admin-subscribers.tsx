@@ -1,0 +1,264 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Subscriber } from '@/lib/types';
+import { Users, UserPlus, Trash2, Download, Search, Lock, ShieldAlert, Sparkles, CheckCircle2, RefreshCw, Mail } from 'lucide-react';
+
+export function AdminSubscribersManager() {
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const fetchSubscribers = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/subscribers');
+      const data = await res.json();
+      if (data.subscribers) setSubscribers(data.subscribers);
+    } catch {
+      // Keep state
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchSubscribers();
+    }
+  }, [isAuthenticated]);
+
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Default admin code for managing subscribers (admin / admin123 / custom)
+    if (passwordInput === 'admin' || passwordInput === 'admin123' || passwordInput.length >= 4) {
+      setIsAuthenticated(true);
+      setPasswordError('');
+    } else {
+      setPasswordError('Mot de passe incorrect (utilisez "admin" ou 4 caractères min).');
+    }
+  };
+
+  const handleAddSubscriber = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEmail.trim() || !newEmail.includes('@')) return;
+
+    setIsAdding(true);
+    try {
+      const res = await fetch('/api/subscribers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newEmail.trim() }),
+      });
+      const data = await res.json();
+      if (data.subscriber) {
+        setSubscribers([data.subscriber, ...subscribers]);
+      } else {
+        const newSub: Subscriber = {
+          id: 'sub-' + Date.now(),
+          email: newEmail.trim().toLowerCase(),
+          status: 'active',
+          created_at: new Date().toISOString(),
+        };
+        setSubscribers([newSub, ...subscribers]);
+      }
+      setNewEmail('');
+    } catch {
+      // Fallback
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const handleDeleteSubscriber = async (id: string) => {
+    if (confirm('Êtes-vous sûr de vouloir retirer cet abonné de la liste ?')) {
+      setSubscribers((prev) => prev.filter((s) => s.id !== id));
+      try {
+        await fetch(`/api/subscribers?id=${id}`, { method: 'DELETE' });
+      } catch {}
+    }
+  };
+
+  const handleExportCSV = () => {
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      ['Email,Statut,Date d Inscription']
+        .concat(subscribers.map((s) => `${s.email},${s.status},${s.created_at}`))
+        .join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `abonnés_newsletter_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const filteredSubscribers = subscribers.filter((s) =>
+    s.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (!isAuthenticated) {
+    return (
+      <div className="bg-white p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow max-w-md mx-auto my-8 space-y-4">
+        <div className="text-center space-y-2">
+          <div className="w-12 h-12 bg-metricool-purple text-metricool-yellow rounded-2xl flex items-center justify-center mx-auto">
+            <Lock className="w-6 h-6" />
+          </div>
+          <h3 className="text-xl font-extrabold text-metricool-purple">Espace Administrateur Newsletter</h3>
+          <p className="text-xs font-medium text-slate-500">
+            Saisissez le mot de passe administrateur pour accéder à la liste des abonnés et les gérer.
+          </p>
+        </div>
+
+        <form onSubmit={handleAdminLogin} className="space-y-3 pt-2">
+          <div>
+            <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+              Mot de passe Administrateur
+            </label>
+            <input
+              type="password"
+              placeholder="Entrez votre mot de passe (ex: admin)"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              className="w-full px-4 py-2.5 text-sm border-2 border-metricool-purple rounded-xl focus:outline-none focus:ring-2 focus:ring-metricool-yellow"
+            />
+          </div>
+
+          {passwordError && (
+            <p className="text-xs font-bold text-rose-600 text-center">{passwordError}</p>
+          )}
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-xl text-xs shadow-sm transition-all"
+          >
+            Se connecter à la gestion
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
+      
+      {/* Header Admin Toolbar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-100 pb-4">
+        <div>
+          <h3 className="text-xl font-extrabold text-metricool-purple flex items-center gap-2">
+            <Users className="w-6 h-6 text-metricool-blue" />
+            Gestion de l'Audience & Abonnés Newsletter ({subscribers.length})
+          </h3>
+          <p className="text-xs font-medium text-slate-500 mt-0.5">
+            Liste des destinataires enregistrés pour recevoir les éditions hebdomadaires de veille.
+          </p>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={fetchSubscribers}
+            className="p-2 text-slate-500 hover:text-metricool-purple rounded-xl hover:bg-slate-100 transition-colors"
+            title="Rafraîchir la liste"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+          </button>
+
+          <button
+            onClick={handleExportCSV}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-extrabold text-metricool-purple bg-metricool-yellow border-2 border-metricool-purple rounded-xl hover:bg-yellow-300 transition-colors shadow-2xs"
+          >
+            <Download className="w-3.5 h-3.5" /> Exporter CSV
+          </button>
+        </div>
+      </div>
+
+      {/* Add New Subscriber Form */}
+      <form onSubmit={handleAddSubscriber} className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row gap-3">
+        <input
+          type="email"
+          required
+          placeholder="Ajouter manuellement un e-mail abonné (ex: abonné@societe.com)"
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
+          className="flex-1 px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-metricool-purple"
+        />
+        <button
+          type="submit"
+          disabled={isAdding}
+          className="px-4 py-2 bg-metricool-purple text-metricool-yellow font-extrabold rounded-xl text-xs shadow-2xs hover:bg-black transition-colors shrink-0 flex items-center justify-center gap-1.5"
+        >
+          <UserPlus className="w-4 h-4" /> Ajouter l'abonné
+        </button>
+      </form>
+
+      {/* Search Input */}
+      <div className="relative">
+        <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          placeholder="Filtrer les abonnés par adresse e-mail..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-10 pr-4 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-metricool-purple"
+        />
+      </div>
+
+      {/* Subscribers Table */}
+      <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+        <table className="w-full text-left text-xs">
+          <thead className="bg-slate-100 text-metricool-purple font-extrabold uppercase tracking-wider">
+            <tr>
+              <th className="px-4 py-3">Adresse E-mail</th>
+              <th className="px-4 py-3">Statut</th>
+              <th className="px-4 py-3">Date d'inscription</th>
+              <th className="px-4 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200 bg-white font-medium">
+            {filteredSubscribers.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-4 py-8 text-center text-slate-400 font-normal">
+                  Aucun abonné ne correspond à la recherche.
+                </td>
+              </tr>
+            ) : (
+              filteredSubscribers.map((sub) => (
+                <tr key={sub.id} className="hover:bg-slate-50 transition-colors">
+                  <td className="px-4 py-3 font-bold text-slate-900 flex items-center gap-2">
+                    <Mail className="w-3.5 h-3.5 text-metricool-blue" />
+                    {sub.email}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] bg-emerald-100 text-emerald-900 border border-emerald-300">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Actif
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-slate-500">
+                    {new Date(sub.created_at).toLocaleDateString('fr-FR')}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <button
+                      onClick={() => handleDeleteSubscriber(sub.id)}
+                      className="p-1 text-slate-400 hover:text-rose-600 transition-colors"
+                      title="Désinscrire l'abonné"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  );
+}
