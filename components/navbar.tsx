@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LinkedInUserProfile } from '@/lib/types';
 import { AuthModal } from '@/components/auth-modal';
 import { AdminControlModal } from '@/components/admin-control-modal';
-import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound } from 'lucide-react';
+import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound, LayoutDashboard } from 'lucide-react';
 
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isAdminControlOpen, setIsAdminControlOpen] = useState(false);
   const [clientProfile, setClientProfile] = useState<LinkedInUserProfile | null>(null);
@@ -33,6 +34,7 @@ export function Navbar() {
   const handleClientLoginSuccess = (profile: LinkedInUserProfile) => {
     setClientProfile(profile);
     localStorage.setItem('linkedin_user_profile', JSON.stringify(profile));
+    router.push('/mon-espace-linkedin');
   };
 
   const handleAdminLoginSuccess = () => {
@@ -100,6 +102,18 @@ export function Navbar() {
             </Link>
 
             <Link
+              href="/mon-espace-linkedin"
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                pathname === '/mon-espace-linkedin'
+                  ? 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple shadow-2xs font-extrabold'
+                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+              }`}
+            >
+              <LayoutDashboard className="w-3.5 h-3.5 inline mr-1 text-metricool-purple" />
+              Mon Espace IA
+            </Link>
+
+            <Link
               href="/newsletter"
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname.startsWith('/newsletter')
@@ -115,13 +129,13 @@ export function Navbar() {
           <div className="flex items-center space-x-3">
             {clientProfile ? (
               <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setIsAuthModalOpen(true)}
+                <Link
+                  href="/mon-espace-linkedin"
                   className="inline-flex items-center gap-2 px-4 py-2.5 bg-metricool-lightBlue text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs hover:bg-blue-100 transition-colors"
                 >
                   <Linkedin className="w-4 h-4 text-metricool-blue" />
                   @{clientProfile.username} ({clientProfile.industry})
-                </button>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors"

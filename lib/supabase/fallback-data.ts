@@ -271,3 +271,9 @@ N'hésitez pas à nous envoyer vos retours !`,
     created_at: new Date().toISOString()
   }
 ];
+
+export const INITIAL_SUBSCRIBERS = [
+  { id: 'sub-1', email: 'abonne.tech@exemple.com', status: 'active', created_at: new Date().toISOString() },
+  { id: 'sub-2', email: 'contact.growth@entreprise.com', status: 'active', created_at: new Date().toISOString() },
+  { id: 'sub-3', email: 'dev.lead@societe.fr', status: 'active', created_at: new Date().toISOString() }
+];
