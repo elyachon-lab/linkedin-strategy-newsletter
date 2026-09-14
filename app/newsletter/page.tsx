@@ -7,6 +7,7 @@ import { INITIAL_NEWSLETTERS } from '@/lib/supabase/fallback-data';
 import { SendModal } from '@/components/newsletter/send-modal';
 import { SubscribeWidget } from '@/components/newsletter/subscribe-widget';
 import { AdminSubscribersManager } from '@/components/newsletter/admin-subscribers';
+import { ScheduleConfigManager } from '@/components/newsletter/schedule-config';
 import { Mail, Plus, Sparkles, Send, CheckCircle2, Clock, Calendar, Globe, Shield, Users } from 'lucide-react';
 
 export default function NewsletterDashboardPage() {
@@ -187,8 +188,13 @@ export default function NewsletterDashboardPage() {
         </div>
       )}
 
-      {/* TAB 3: Admin Subscribers Workspace */}
-      {activeTab === 'admin' && <AdminSubscribersManager />}
+      {/* TAB 3: Admin Workspace & Schedule Config */}
+      {activeTab === 'admin' && (
+        <div className="space-y-8">
+          <ScheduleConfigManager />
+          <AdminSubscribersManager />
+        </div>
+      )}
 
       {/* Send Modal */}
       {selectedForSend && (

@@ -34,8 +34,8 @@ export function AIAuditRecommendations({ profile, onRefreshAudit }: AIAuditRecom
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-xl font-extrabold text-white">{profile.fullName}</h3>
-              <span className="bg-metricool-yellow text-metricool-purple text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
-                {profile.industry}
+              <span className="bg-metricool-yellow text-metricool-purple text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase flex items-center gap-1 border border-metricool-purple">
+                🤖 Secteur IA : {profile.industry}
               </span>
             </div>
             <p className="text-xs text-slate-300 font-bold mt-1">
