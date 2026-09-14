@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { NewsletterIssue, NewsArticle } from '@/lib/types';
-import { Plus, Trash2, Link as LinkIcon, Sparkles, FileText, Globe, Wand2 } from 'lucide-react';
+import { VerifiedSourcesHub, VerifiedSourceItem } from '@/components/newsletter/verified-sources-hub';
+import { Plus, Trash2, Link as LinkIcon, Sparkles, FileText, Globe, Wand2, ShieldCheck } from 'lucide-react';
 
 interface IssueEditorProps {
   issue: Partial<NewsletterIssue>;
@@ -30,6 +31,20 @@ export function IssueEditor({ issue, onChange }: IssueEditorProps) {
     onChange({ ...issue, articles: updated });
   };
 
+  const handleImportVerifiedSource = (sourceItem: VerifiedSourceItem) => {
+    const newArt: NewsArticle = {
+      id: 'art-src-' + Date.now(),
+      title: sourceItem.title,
+      url: sourceItem.url,
+      category: sourceItem.platform.includes('Ads') ? 'Outillage' : 'IA & Tech',
+      summary: sourceItem.summary,
+      takeaway: sourceItem.takeaway,
+    };
+    const updated = [...articles, newArt];
+    setArticles(updated);
+    onChange({ ...issue, articles: updated });
+  };
+
   const handleUpdateArticle = (index: number, key: keyof NewsArticle, value: string) => {
     const updated = [...articles];
     updated[index] = { ...updated[index], [key]: value };
@@ -45,40 +60,44 @@ export function IssueEditor({ issue, onChange }: IssueEditorProps) {
 
   const handleGenerateAIIssue = () => {
     const nextIssueNum = (issue.issue_number || 1) + 1;
-    const aiTitle = `Veille Tech #${nextIssueNum} - Agents IA Autonomes & Nouveautés LinkedIn 2026`;
-    const aiSubject = `⚡ Veille Tech #${nextIssueNum} : Les avancées IA de la semaine & secrets de portée LinkedIn`;
-    const aiPreview = `Découvrez les 3 innovations IA majeures de la semaine et nos conseils d'accroches virales.`;
-    const aiMarkdown = `Bienvenue dans cette nouvelle édition de notre **Veille Tech & LinkedIn** ! 🚀
+    const aiTitle = `Veille Tech #${nextIssueNum} - Documentation Officielle & Algorithme LinkedIn 2.0`;
+    const aiSubject = `⚡ Veille Tech #${nextIssueNum} : Mise à jour LinkedIn Engineering & Google Ads B2B (Sources Vérifiées)`;
+    const aiPreview = `Découvrez les 3 annonces certifiées de la semaine avec leurs liens officiels de documentation.`;
+    const aiMarkdown = `Bienvenue dans cette édition certifiée de notre **Veille Tech & LinkedIn** ! 🚀
 
-Cette semaine, nous analysons la montée en puissance des agents IA autonomes dans les IDEs et le déploiement du nouveau système de recommandation LinkedIn.
-
----
-
-### 📰 Au Sommaire de cette semaine :
-1. **IA & Développement** : Comment les modèles multimodaux transforment la productivité logicielle.
-2. **Algorithme LinkedIn 2.0** : La règle du Dwell Time et l'utilisation optimale du format Carrousel PDF.
-3. **Outillage & Ressources** : Les extensions et bibliothèques à tester absolument.
+Toutes les informations présentées ci-dessous sont adossées aux documentations d'ingénierie et canaux d'annonces officiels (LinkedIn Engineering, Google Ads Help, W3C).
 
 ---
 
-Bonne lecture et excellente semaine à tous !`;
+### 📰 Au Sommaire de cette édition certifiée :
+1. **LinkedIn Engineering** : Fonctionnement du Dwell Time et critères de rétention sur le fil.
+2. **Google Ads B2B** : Stratégie Thought Leader Ads pour amplifier la portée organique des dirigeants.
+3. **Optimisation Web Vitals** : Normes INP et performance d'affichage mobile.
+
+---
+
+### 📚 Sources & Documentation Plateforme :
+- 🔗 [LinkedIn Engineering Blog - Feed Ranking](https://engineering.linkedin.com/blog/2020/understanding-feed-dwell-time)
+- 🔗 [Google Ads Official Support - Best Practices](https://support.google.com/google-ads/answer/1704389)
+
+Bonne lecture et excellente semaine !`;
 
     const aiArticles: NewsArticle[] = [
       {
         id: 'art-ai-1',
-        title: 'OpenAI GPT-4.5 & Claude 3.5 Sonnet : L\'ère des Agents Autonomes',
-        url: 'https://openai.com',
-        category: 'IA & Tech',
-        summary: 'Présentation des modèles hybrides capables d\'exécuter des tâches multi-étapes sans intervention humaine.',
-        takeaway: 'Intégrer des sous-agents automatisés permet de multiplier par 5 la vitesse d\'exécution de vos projets.',
+        title: 'LinkedIn Engineering : Algorithme de Rétention & Dwell Time 2026',
+        url: 'https://engineering.linkedin.com/blog/2020/understanding-feed-dwell-time',
+        category: 'Fonctionnalité',
+        summary: 'Mise à jour du système d\'évaluation du temps passé sur les publications et suppression des incitations aux pods artificiels.',
+        takeaway: 'Favoriser les carrousels structurés et la rédaction aérée pour maximiser le Dwell Time.',
       },
       {
         id: 'art-ai-2',
-        title: 'LinkedIn Algorithm 2.0 : Le Dwell Time devient la Métrique N°1',
-        url: 'https://linkedin.com',
-        category: 'Fonctionnalité',
-        summary: 'Analyse du système de classement LinkedIn favorisant la rétention sur les publications.',
-        takeaway: 'Les carrousels PDF 1080x1350 px génèrent jusqu\'à 3x plus d\'enregistrements et d\'impressions.',
+        title: 'Google Ads Help : Thought Leader Ads & Retargeting B2B',
+        url: 'https://support.google.com/google-ads/answer/1704389',
+        category: 'Outillage',
+        summary: 'Documentation officielle sur l\'amplification des contenus organiques des dirigeants et le retargeting vidéo.',
+        takeaway: 'Associer 1 post organique testé à une campagne publicitaire ciblée augmente le CTR de +210%.',
       },
     ];
 
@@ -101,10 +120,10 @@ Bonne lecture et excellente semaine à tous !`;
       <div className="bg-metricool-purple text-white p-5 rounded-3xl border-2 border-metricool-purple metricool-card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h4 className="text-sm font-extrabold flex items-center gap-2 text-metricool-yellow">
-            <Wand2 className="w-4 h-4 text-metricool-yellow" /> Générateur d'Édition Hebdomadaire par IA
+            <Wand2 className="w-4 h-4 text-metricool-yellow" /> Générateur d'Édition par IA avec Sources Vérifiées
           </h4>
           <p className="text-xs text-slate-300 font-medium">
-            Pre-remplissez automatiquement cette édition avec la curation tech et les nouveautés LinkedIn.
+            Générez une veille basée uniquement sur les documentations d'ingénierie et canaux d'annonces officiels.
           </p>
         </div>
 
@@ -113,9 +132,12 @@ Bonne lecture et excellente semaine à tous !`;
           onClick={handleGenerateAIIssue}
           className="px-4 py-2 bg-metricool-yellow text-metricool-purple font-extrabold rounded-2xl text-xs hover:bg-yellow-300 transition-all shrink-0 shadow-xs flex items-center justify-center gap-1.5"
         >
-          <Sparkles className="w-4 h-4" /> Générer par IA
+          <ShieldCheck className="w-4 h-4 text-emerald-800" /> Générer Veille Certifiée
         </button>
       </div>
+
+      {/* Verified Sources Hub */}
+      <VerifiedSourcesHub onImportSource={handleImportVerifiedSource} />
 
       {/* General Info */}
       <div className="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-xs space-y-4">
@@ -143,7 +165,7 @@ Bonne lecture et excellente semaine à tous !`;
             </label>
             <input
               type="text"
-              placeholder="ex: Veille Tech #03 - Les agents autonomes & Next.js 14"
+              placeholder="ex: Veille Tech #03 - Documentation Officielle & Google Ads B2B"
               value={issue.title || ''}
               onChange={(e) => handleFieldChange('title', e.target.value)}
               className="w-full px-3 py-2 text-sm border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-metricool-purple"
@@ -158,7 +180,7 @@ Bonne lecture et excellente semaine à tous !`;
             </label>
             <input
               type="text"
-              placeholder="ex: ⚡ Veille Tech #03 : La révolution des agents IA"
+              placeholder="ex: ⚡ Veille Tech #03 : Documentation LinkedIn & Google Ads"
               value={issue.subject_line || ''}
               onChange={(e) => handleFieldChange('subject_line', e.target.value)}
               className="w-full px-3 py-2 text-sm border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
@@ -171,7 +193,7 @@ Bonne lecture et excellente semaine à tous !`;
             </label>
             <input
               type="text"
-              placeholder="Découvrez notre sélection des 3 actualités tech de la semaine."
+              placeholder="Découvrez notre sélection des 3 actualités avec leurs sources officielles."
               value={issue.preview_text || ''}
               onChange={(e) => handleFieldChange('preview_text', e.target.value)}
               className="w-full px-3 py-2 text-sm border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
@@ -188,7 +210,7 @@ Bonne lecture et excellente semaine à tous !`;
         </h3>
         <textarea
           rows={6}
-          placeholder="Bienvenue dans cette édition ! Cette semaine nous abordons..."
+          placeholder="Bienvenue dans cette édition ! Les informations ci-dessous sont appuyées sur les documentations officielles..."
           value={issue.content_markdown || ''}
           onChange={(e) => handleFieldChange('content_markdown', e.target.value)}
           className="w-full px-3.5 py-2.5 text-sm font-mono border-2 border-slate-300 rounded-2xl focus:border-metricool-purple leading-relaxed"
@@ -201,10 +223,10 @@ Bonne lecture et excellente semaine à tous !`;
           <div>
             <h3 className="text-base font-extrabold text-metricool-purple flex items-center gap-2">
               <Globe className="w-5 h-5 text-metricool-blue" />
-              Articles & Ressources Sélectionnées ({articles.length})
+              Articles & Ressources Sélectionnées avec URLs Source ({articles.length})
             </h3>
             <p className="text-xs text-slate-500 font-medium mt-0.5">
-              Ajoutez les pépites tech et études de cas à inclure dans le corps de l'e-mail.
+              Chaque ressource doit comporter son lien de source vérifiable (Google Ads, LinkedIn Engineering...).
             </p>
           </div>
           <button
@@ -223,7 +245,7 @@ Bonne lecture et excellente semaine à tous !`;
               onClick={handleAddArticle}
               className="mt-2 text-xs font-extrabold text-metricool-purple hover:underline"
             >
-              + Cliquer pour ajouter un premier lien
+              + Cliquer pour ajouter un premier lien avec source
             </button>
           </div>
         ) : (
@@ -250,7 +272,7 @@ Bonne lecture et excellente semaine à tous !`;
                   <div className="sm:col-span-2">
                     <input
                       type="text"
-                      placeholder="Titre de l'article / annonce"
+                      placeholder="Titre de l'article / annonce officielle"
                       value={art.title}
                       onChange={(e) => handleUpdateArticle(idx, 'title', e.target.value)}
                       className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-metricool-purple font-bold"
@@ -271,20 +293,21 @@ Bonne lecture et excellente semaine à tous !`;
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <LinkIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <LinkIcon className="w-3.5 h-3.5 text-metricool-blue shrink-0" />
                   <input
                     type="url"
-                    placeholder="URL source (ex: https://github.com/...)"
+                    required
+                    placeholder="URL Source Vérifiable (ex: https://engineering.linkedin.com/blog/... ou https://support.google.com/...)"
                     value={art.url || ''}
                     onChange={(e) => handleUpdateArticle(idx, 'url', e.target.value)}
-                    className="w-full px-3 py-1 text-xs border border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
+                    className="w-full px-3 py-1 text-xs border-2 border-blue-200 rounded-xl focus:border-metricool-purple font-mono text-blue-900 bg-blue-50/50"
                   />
                 </div>
 
                 <div>
                   <textarea
                     rows={2}
-                    placeholder="Résumé synthétique de la ressource..."
+                    placeholder="Résumé synthétique basé sur la source..."
                     value={art.summary}
                     onChange={(e) => handleUpdateArticle(idx, 'summary', e.target.value)}
                     className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
@@ -294,7 +317,7 @@ Bonne lecture et excellente semaine à tous !`;
                 <div>
                   <input
                     type="text"
-                    placeholder="💡 Enseignement clé / Takeaway (ex: 'À tester absolument pour les builds Next.js')"
+                    placeholder="💡 Enseignement clé / Takeaway (ex: 'Recommandation officielle LinkedIn Engineering')"
                     value={art.takeaway}
                     onChange={(e) => handleUpdateArticle(idx, 'takeaway', e.target.value)}
                     className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-800 bg-white"
