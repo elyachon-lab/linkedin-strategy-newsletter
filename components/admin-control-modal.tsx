@@ -33,7 +33,10 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
     try {
       const res = await fetch('/api/linkedin-strategies', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'LinkedIn_Pro2026!Secured',
+        },
         body: JSON.stringify({
           title: articleTitle,
           category: articleCategory,

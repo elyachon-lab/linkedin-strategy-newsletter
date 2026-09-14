@@ -84,7 +84,12 @@ export function AdminSubscribersManager({ defaultAuthenticated = false }: AdminS
     if (confirm('Êtes-vous sûr de vouloir retirer cet abonné de la liste ?')) {
       setSubscribers((prev) => prev.filter((s) => s.id !== id));
       try {
-        await fetch(`/api/subscribers?id=${id}`, { method: 'DELETE' });
+        await fetch(`/api/subscribers?id=${id}`, {
+          method: 'DELETE',
+          headers: {
+            'x-admin-password': process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'LinkedIn_Pro2026!Secured',
+          },
+        });
       } catch {}
     }
   };

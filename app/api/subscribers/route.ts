@@ -7,6 +7,13 @@ const FALLBACK_SUBSCRIBERS = [
   { id: 'sub-3', email: 'marketing.growth@startup.fr', status: 'active', created_at: new Date().toISOString() },
 ];
 
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'LinkedIn_Pro2026!Secured';
+
+function verifyAdminPermission(request: Request): boolean {
+  const headerPass = request.headers.get('x-admin-password');
+  return headerPass === ADMIN_PASSWORD;
+}
+
 export async function GET() {
   try {
     const supabase = createClientServer();
@@ -43,7 +50,6 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      // If table missing or duplicate, return graceful success message
       return NextResponse.json({
         success: true,
         message: 'Vous êtes bien inscrit à la newsletter !',
@@ -57,13 +63,21 @@ export async function POST(request: Request) {
       message: 'Inscription réussie ! Vous recevrez la prochaine édition de la veille tech.',
       subscriber: data,
     });
-  } catch (err: any) {
+  } catch {
     return NextResponse.json({ success: true, message: 'Inscription enregistrée !' });
   }
 }
 
 export async function DELETE(request: Request) {
   try {
+    // Admin authorization guard
+    if (!verifyAdminPermission(request)) {
+      return NextResponse.json(
+        { error: 'Accès refusé : Seul l\'administrateur peut supprimer un abonné.' },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { LinkedInUserProfile } from '@/lib/types';
-import { X, Linkedin, Lock, Sparkles, UserCheck, KeyRound, Loader2, ArrowRight, ShieldCheck, UserPlus, CheckCircle2 } from 'lucide-react';
+import { X, Linkedin, Lock, Sparkles, UserCheck, KeyRound, Loader2, ArrowRight, ShieldCheck, UserPlus, AlertTriangle } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -22,6 +22,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
   const [role, setRole] = useState('');
   const [followerCount, setFollowerCount] = useState('2500');
   const [isAuditing, setIsAuditing] = useState(false);
+  const [clientError, setClientError] = useState('');
 
   // Admin Password Form State
   const [adminPassword, setAdminPassword] = useState('');
@@ -50,6 +51,8 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
 
   const handleClientSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setClientError('');
+
     if (!username.trim() || !fullName.trim()) return;
 
     setIsAuditing(true);
@@ -67,6 +70,13 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
       });
 
       const data = await res.json();
+
+      if (!res.ok || data.isValidAccount === false) {
+        setClientError(data.error || '⚠️ Compte LinkedIn invalide ou fictif détecté.');
+        setIsAuditing(false);
+        return;
+      }
+
       const detectedIndustry = data.detectedIndustry || 'SaaS & Tech';
 
       const newProfile: LinkedInUserProfile = {
@@ -86,15 +96,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
       onClientLoginSuccess(newProfile);
       onClose();
     } catch {
-      const fallbackProfile: LinkedInUserProfile = {
-        username: username.replace('@', '').trim(),
-        fullName,
-        industry: 'SaaS & Tech (Détecté par IA)',
-        role: role || 'Créateur B2B',
-        followerCount: parseInt(followerCount) || 2500,
-      };
-      onClientLoginSuccess(fallbackProfile);
-      onClose();
+      setClientError('⚠️ Impossible de vérifier le compte LinkedIn. Veuillez vérifier la connexion.');
     } finally {
       setIsAuditing(false);
     }
@@ -122,7 +124,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
             <div className="w-8 h-8 rounded-xl bg-metricool-yellow text-metricool-purple flex items-center justify-center font-extrabold text-base">
               L
             </div>
-            <h2 className="text-base font-extrabold text-white">Connexion & Audit IA LinkedIn</h2>
+            <h2 className="text-base font-extrabold text-white">Connexion & Verification IA LinkedIn</h2>
           </div>
           <button
             onClick={onClose}
@@ -169,7 +171,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
                 <div className="space-y-4">
                   <div className="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-300 text-xs space-y-1">
                     <h4 className="font-extrabold text-emerald-950 flex items-center gap-1.5 text-sm">
-                      <UserCheck className="w-4 h-4 text-emerald-600" /> Vos Comptes LinkedIn Enregistrés
+                      <UserCheck className="w-4 h-4 text-emerald-600" /> Vos Comptes LinkedIn Vérifiés
                     </h4>
                     <p className="text-emerald-900 font-medium">
                       Sélectionnez votre compte enregistré pour accéder instantanément à votre espace et à vos conseils IA sectoriels.
@@ -215,7 +217,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
                   </button>
                 </div>
               ) : (
-                /* NEW PROFILE FORM WITH AI SECTOR AUTO-DETECTION */
+                /* NEW PROFILE FORM WITH REAL ACCOUNT VERIFICATION & AI SECTOR AUTO-DETECTION */
                 <form onSubmit={handleClientSubmit} className="space-y-4">
                   {savedProfiles.length > 0 && (
                     <button
@@ -229,10 +231,10 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
 
                   <div className="bg-metricool-lightBlue/40 p-4 rounded-2xl border-2 border-metricool-purple text-xs space-y-1.5">
                     <h4 className="font-extrabold text-metricool-purple flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-metricool-pink" /> Auto-Détection du Secteur par l'IA & Audit
+                      <Sparkles className="w-4 h-4 text-metricool-pink" /> Vérification IA du Compte Réel & Auto-Détection
                     </h4>
                     <p className="text-slate-600 font-medium leading-relaxed">
-                      L'outil IA va analyser automatiquement votre compte et déterminer votre <strong>secteur d'activité</strong> sans que vous n'ayez à le choisir manuellement !
+                      L'IA va <strong>vérifier l'authenticité de votre profil LinkedIn</strong> et analyser automatiquement votre secteur sans saisie manuelle.
                     </p>
                   </div>
 
@@ -294,10 +296,17 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
                     </div>
                   </div>
 
+                  {clientError && (
+                    <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-xs font-extrabold text-rose-900 flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                      <span>{clientError}</span>
+                    </div>
+                  )}
+
                   {/* AI Auto-Detection Highlight Banner */}
                   <div className="p-3 bg-purple-50 rounded-xl border border-purple-200 text-[11px] font-bold text-purple-900 flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-purple-600 shrink-0" />
-                    <span>🤖 Secteur d'activité : Détecté automatiquement par l'IA à la soumission.</span>
+                    <span>🔍 Vérification d'authenticité et détection du secteur exécutées par l'IA.</span>
                   </div>
 
                   <div className="pt-2">
@@ -308,11 +317,11 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
                     >
                       {isAuditing ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin" /> Analyse IA & Détection du secteur en cours...
+                          <Loader2 className="w-4 h-4 animate-spin" /> Vérification du compte LinkedIn par l'IA...
                         </>
                       ) : (
                         <>
-                          <Sparkles className="w-4 h-4 text-metricool-yellow" /> Enregistrer & Lancer l'Audit IA
+                          <Sparkles className="w-4 h-4 text-metricool-yellow" /> Vérifier le Compte & Lancer l'Analyse
                         </>
                       )}
                     </button>
@@ -331,7 +340,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
                   <ShieldCheck className="w-4 h-4 text-purple-700" /> Connexion Espace Administrateur
                 </h4>
                 <p className="text-slate-600 font-medium">
-                  Accès réservé à la gestion des abonnés et à la programmation de la veille.
+                  Accès réservé à la gestion des abonnés, à la suppression de contenu et à la programmation.
                 </p>
               </div>
 

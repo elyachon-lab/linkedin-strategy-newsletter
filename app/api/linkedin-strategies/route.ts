@@ -2,7 +2,15 @@ import { NextResponse } from 'next/server';
 import { createClientServer } from '@/lib/supabase/server';
 import { INITIAL_STRATEGIES } from '@/lib/supabase/fallback-data';
 
-export async function GET(request: Request) {
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'LinkedIn_Pro2026!Secured';
+
+function verifyAdminPermission(request: Request, body?: any): boolean {
+  const headerPass = request.headers.get('x-admin-password');
+  const bodyPass = body?.adminPassword;
+  return headerPass === ADMIN_PASSWORD || bodyPass === ADMIN_PASSWORD;
+}
+
+export async function GET() {
   try {
     const supabase = createClientServer();
     const { data, error } = await supabase
@@ -24,6 +32,15 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+
+    // Admin authorization guard
+    if (!verifyAdminPermission(request, body)) {
+      return NextResponse.json(
+        { error: 'Accès refusé : Seul un administrateur authentifié peut créer ou publier des articles.' },
+        { status: 403 }
+      );
+    }
+
     const supabase = createClientServer();
 
     const { data, error } = await supabase
@@ -61,6 +78,15 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
+
+    // Admin authorization guard
+    if (!verifyAdminPermission(request, body)) {
+      return NextResponse.json(
+        { error: 'Accès refusé : Seul un administrateur authentifié peut modifier les articles du site.' },
+        { status: 403 }
+      );
+    }
+
     const { id, ...updates } = body;
     const supabase = createClientServer();
 
@@ -83,6 +109,14 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    // Admin authorization guard
+    if (!verifyAdminPermission(request)) {
+      return NextResponse.json(
+        { error: 'Accès refusé : Seul un administrateur peut supprimer un article du site.' },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'ID requis' }, { status: 400 });
