@@ -69,5 +69,7 @@ export interface LinkedInUserProfile {
   role: string;
   followerCount: number;
   email?: string;
+  linkedinUrl?: string;
+  websiteUrl?: string;
   auditResult?: AIAuditResult;
 }

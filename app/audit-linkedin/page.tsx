@@ -1,14 +1,10 @@
-import { ProfileAuditTool } from '@/components/linkedin/profile-audit-tool';
+import DedicatedClientSpacePage from '@/app/mon-espace-linkedin/page';
 
 export const metadata = {
-  title: 'Audit de Profil & Page LinkedIn IA | Stratégie & Benchmark',
-  description: 'Analysez n\'importe quel profil ou page entreprise LinkedIn. Vérifiez le lien cliquable et obtenez un rapport d\'audit IA complet.',
+  title: 'Audit de Profil & Espace IA LinkedIn 2.0 | Stratégie & Benchmark',
+  description: 'Espace unifié d\'audit de profil et de page entreprise LinkedIn. Vérifiez votre compte, déterminez le secteur IA et accédez à vos conseils stratégiques.',
 };
 
 export default function AuditLinkedInPage() {
-  return (
-    <div className="py-6 sm:py-8">
-      <ProfileAuditTool />
-    </div>
-  );
+  return <DedicatedClientSpacePage />;
 }

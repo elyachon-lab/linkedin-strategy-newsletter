@@ -275,9 +275,17 @@ export default function UserProfilePage() {
         </div>
 
         {saveSuccess && (
-          <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-extrabold text-emerald-900 flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>{saveSuccess}</span>
+          <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl text-xs font-bold text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <span>{saveSuccess} L'audit de votre nouveau compte a été mis à jour dans votre espace.</span>
+            </div>
+            <Link
+              href="/mon-espace-linkedin"
+              className="px-4 py-2 bg-metricool-purple text-metricool-yellow hover:bg-black font-extrabold rounded-xl text-xs shadow-xs transition-colors text-center shrink-0 flex items-center justify-center gap-1.5"
+            >
+              🚀 Voir l'Audit de Mon Compte
+            </Link>
           </div>
         )}
 
