@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { LinkedInUserProfile } from '@/lib/types';
 import { AuthModal } from '@/components/auth-modal';
 import { AdminControlModal } from '@/components/admin-control-modal';
-import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound, LayoutDashboard, Search } from 'lucide-react';
+import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound, LayoutDashboard, Search, User, LogIn } from 'lucide-react';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -34,13 +34,15 @@ export function Navbar() {
   const handleClientLoginSuccess = (profile: LinkedInUserProfile) => {
     setClientProfile(profile);
     localStorage.setItem('linkedin_user_profile', JSON.stringify(profile));
+    document.cookie = `linkedin_user_profile=true; path=/; max-age=86400`;
     router.push('/mon-espace-linkedin');
   };
 
   const handleAdminLoginSuccess = () => {
     setIsAdminLoggedIn(true);
     localStorage.setItem('is_admin_logged_in', 'true');
-    setIsAdminControlOpen(true); // Open control modal immediately upon login
+    document.cookie = `is_admin_logged_in=true; path=/; max-age=86400`;
+    setIsAdminControlOpen(true);
   };
 
   const handleLogout = () => {
@@ -48,6 +50,9 @@ export function Navbar() {
     setIsAdminLoggedIn(false);
     localStorage.removeItem('linkedin_user_profile');
     localStorage.removeItem('is_admin_logged_in');
+    document.cookie = 'linkedin_user_profile=; path=/; max-age=0';
+    document.cookie = 'is_admin_logged_in=; path=/; max-age=0';
+    router.push('/login');
   };
 
   return (
@@ -137,16 +142,16 @@ export function Navbar() {
             </Link>
           </nav>
 
-          {/* Top Right Action Button */}
+          {/* Top Right Action Buttons */}
           <div className="flex items-center space-x-3">
             {clientProfile ? (
               <div className="flex items-center space-x-2">
                 <Link
-                  href="/mon-espace-linkedin"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-metricool-lightBlue text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs hover:bg-blue-100 transition-colors"
+                  href="/profil"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 bg-metricool-lightBlue text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs hover:bg-blue-100 transition-colors"
                 >
-                  <Linkedin className="w-4 h-4 text-metricool-blue" />
-                  @{clientProfile.username} ({clientProfile.industry})
+                  <User className="w-4 h-4 text-metricool-purple" />
+                  @{clientProfile.username}
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -176,13 +181,20 @@ export function Navbar() {
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => setIsAuthModalOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-3 bg-metricool-purple hover:bg-black text-metricool-yellow rounded-2xl text-xs font-extrabold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-              >
-                <UserCheck className="w-4 h-4 text-metricool-yellow" />
-                Connexion / Espace Membre
-              </button>
+              <div className="flex items-center space-x-2">
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl text-xs font-extrabold transition-all"
+                >
+                  <LogIn className="w-3.5 h-3.5 text-metricool-purple" /> Connexion
+                </Link>
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-metricool-purple hover:bg-black text-metricool-yellow rounded-2xl text-xs font-extrabold transition-all shadow-md"
+                >
+                  <UserCheck className="w-3.5 h-3.5 text-metricool-yellow" /> S'inscrire
+                </Link>
+              </div>
             )}
           </div>
 
