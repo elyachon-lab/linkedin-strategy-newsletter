@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { StrategyCard, NewsletterIssue } from '@/lib/types';
+import { StrategyCard, NewsletterIssue, LinkedInUserProfile } from '@/lib/types';
 import { INITIAL_STRATEGIES, INITIAL_NEWSLETTERS } from '@/lib/supabase/fallback-data';
 import { StrategyCardComponent } from '@/components/linkedin/strategy-card';
 import { TimingGridComponent } from '@/components/linkedin/timing-grid';
 import { SubscribeWidget } from '@/components/newsletter/subscribe-widget';
+import { AIAuditRecommendations } from '@/components/linkedin/ai-recommendations';
 import { Search, ArrowRight, Sparkles, BookOpen, Calendar, Mail, Filter, CheckCircle2 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -14,6 +15,7 @@ export default function DashboardPage() {
   const [newsletters, setNewsletters] = useState<NewsletterIssue[]>(INITIAL_NEWSLETTERS);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Tous');
+  const [clientProfile, setClientProfile] = useState<LinkedInUserProfile | null>(null);
 
   const categories = ['Tous', 'Hook', 'Algorithme', 'Planning', 'Format', 'Engagement', 'Copywriting'];
 
@@ -31,6 +33,13 @@ export default function DashboardPage() {
         if (data.newsletters) setNewsletters(data.newsletters);
       })
       .catch(() => {});
+
+    const saved = localStorage.getItem('linkedin_user_profile');
+    if (saved) {
+      try {
+        setClientProfile(JSON.parse(saved));
+      } catch {}
+    }
   }, []);
 
   const featuredCard = strategies.find((s) => s.is_pinned) || strategies[0];
@@ -103,6 +112,9 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
+
+      {/* AI Personalized Recommendations Widget for Logged In Profile */}
+      {clientProfile && <AIAuditRecommendations profile={clientProfile} />}
 
       {/* Featured Main Article (Metricool Style Spotlight) */}
       {!searchQuery && selectedCategory === 'Tous' && featuredCard && (

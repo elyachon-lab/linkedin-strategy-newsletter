@@ -1,11 +1,42 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Mail, Sparkles, Layers, PenTool, ArrowUpRight } from 'lucide-react';
+import { LinkedInUserProfile } from '@/lib/types';
+import { AuthModal } from '@/components/auth-modal';
+import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound } from 'lucide-react';
 
 export function Navbar() {
   const pathname = usePathname();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [clientProfile, setClientProfile] = useState<LinkedInUserProfile | null>(null);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Load persisted client profile from localStorage
+    const saved = localStorage.getItem('linkedin_user_profile');
+    if (saved) {
+      try {
+        setClientProfile(JSON.parse(saved));
+      } catch {}
+    }
+  }, []);
+
+  const handleClientLoginSuccess = (profile: LinkedInUserProfile) => {
+    setClientProfile(profile);
+    localStorage.setItem('linkedin_user_profile', JSON.stringify(profile));
+  };
+
+  const handleAdminLoginSuccess = () => {
+    setIsAdminLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setClientProfile(null);
+    setIsAdminLoggedIn(false);
+    localStorage.removeItem('linkedin_user_profile');
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
@@ -70,19 +101,59 @@ export function Navbar() {
             </Link>
           </nav>
 
-          {/* Action CTA Button - Metricool Style */}
+          {/* Top Right Action Button - Replaced with Connexion / Espace Membre */}
           <div className="flex items-center space-x-3">
-            <Link
-              href="/newsletter/create"
-              className="inline-flex items-center gap-2 px-5 py-3 bg-metricool-purple hover:bg-black text-metricool-yellow rounded-2xl text-xs font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-            >
-              <PenTool className="w-4 h-4 text-metricool-yellow" />
-              Rédiger une édition
-            </Link>
+            {clientProfile ? (
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-metricool-lightBlue text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs hover:bg-blue-100 transition-colors"
+                >
+                  <Linkedin className="w-4 h-4 text-metricool-blue" />
+                  @{clientProfile.username} ({clientProfile.industry})
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors"
+                  title="Déconnexion"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : isAdminLoggedIn ? (
+              <div className="flex items-center space-x-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs">
+                  <ShieldCheck className="w-4 h-4 text-metricool-purple" /> Admin Connecté
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors"
+                  title="Déconnexion"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-metricool-purple hover:bg-black text-metricool-yellow rounded-2xl text-xs font-extrabold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+              >
+                <UserCheck className="w-4 h-4 text-metricool-yellow" />
+                Connexion / Espace Membre
+              </button>
+            )}
           </div>
 
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onClientLoginSuccess={handleClientLoginSuccess}
+        onAdminLoginSuccess={handleAdminLoginSuccess}
+      />
     </header>
   );
 }

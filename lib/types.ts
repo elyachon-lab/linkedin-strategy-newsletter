@@ -50,3 +50,24 @@ export interface Subscriber {
   status: 'active' | 'unsubscribed';
   created_at: string;
 }
+
+export interface AIAuditResult {
+  score: number;
+  industry: string;
+  audienceTier: string;
+  tailoredHooks: string[];
+  formatStrategy: string;
+  bestPostingWindows: string[];
+  recommendedHashtags: string[];
+  growthActionPlan: string[];
+}
+
+export interface LinkedInUserProfile {
+  username: string;
+  fullName: string;
+  industry: string;
+  role: string;
+  followerCount: number;
+  email?: string;
+  auditResult?: AIAuditResult;
+}
