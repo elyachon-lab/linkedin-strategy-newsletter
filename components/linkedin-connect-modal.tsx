@@ -14,11 +14,11 @@ interface LinkedInConnectModalProps {
 export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSuccess }: LinkedInConnectModalProps) {
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [username, setUsername] = useState('');
-  const [weeklyPostFrequency, setWeeklyPostFrequency] = useState('3');
+  const [weeklyPostFrequency, setWeeklyPostFrequency] = useState('0.25');
   const [followerCount, setFollowerCount] = useState('4500');
   const [ssiScore, setSsiScore] = useState('82');
   const [engagementRate, setEngagementRate] = useState('4.2%');
-  const [lastPostDate, setLastPostDate] = useState('Hier à 14h30');
+  const [lastPostDate, setLastPostDate] = useState('Il y a 3 semaines');
   const [primaryFormat, setPrimaryFormat] = useState('Carrousels PDF Verticaux (4:5)');
   
   const [isSyncing, setIsSyncing] = useState(false);
@@ -31,7 +31,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
       if (currentProfile.followerCount) setFollowerCount(currentProfile.followerCount.toString());
       if (currentProfile.userSyncData) {
         const sync = currentProfile.userSyncData;
-        if (sync.weeklyPostFrequency) setWeeklyPostFrequency(sync.weeklyPostFrequency.toString());
+        if (sync.weeklyPostFrequency !== undefined) setWeeklyPostFrequency(sync.weeklyPostFrequency.toString());
         if (sync.ssiScore) setSsiScore(sync.ssiScore.toString());
         if (sync.engagementRate) setEngagementRate(sync.engagementRate);
         if (sync.lastPostDate) setLastPostDate(sync.lastPostDate);
@@ -50,11 +50,11 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
 
     const syncData: UserSyncData = {
       isConnected: true,
-      weeklyPostFrequency: parseFloat(weeklyPostFrequency) || 3,
+      weeklyPostFrequency: parseFloat(weeklyPostFrequency) || 0.25,
       followerCount: parseInt(followerCount) || 4500,
       ssiScore: parseInt(ssiScore) || 82,
       engagementRate: engagementRate.trim() || '4.2%',
-      lastPostDate: lastPostDate.trim() || 'Hier',
+      lastPostDate: lastPostDate.trim() || 'Il y a 3 semaines',
       primaryFormat,
     };
 
@@ -113,7 +113,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
               <span>Connectez votre compte pour corriger les statistiques estimées</span>
             </div>
             <p className="text-slate-600 font-medium leading-relaxed">
-              Renseignez vos métriques réelles de publication (*fréquence exacte par semaine, formats réels, abonnés, SSI*) pour que l'audit IA adapte ses conseils à votre volume de publication réel.
+              Renseignez vos métriques réelles de publication (*fréquence exacte, formats réels, abonnés, SSI*) pour que l'audit IA adapte ses conseils à votre volume de publication réel.
             </p>
           </div>
 
@@ -135,17 +135,20 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                  Fréquence Réelle de Posts / Semaine <span className="text-rose-500">*</span>
+                  Fréquence Réelle de Publication <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="number"
-                  step="0.5"
-                  required
-                  placeholder="ex: 3 ou 4"
+                <select
                   value={weeklyPostFrequency}
                   onChange={(e) => setWeeklyPostFrequency(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
-                />
+                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white text-slate-900"
+                >
+                  <option value="0.25">🔴 1 post / mois (~0,25 post/semaine)</option>
+                  <option value="0.5">🟡 1 post / 2 semaines (~0,5 post/semaine)</option>
+                  <option value="1">🟡 1 post / semaine</option>
+                  <option value="2">🟢 2 posts / semaine</option>
+                  <option value="3">🟢 3 posts / semaine</option>
+                  <option value="4">🟢 4 posts ou + / semaine</option>
+                </select>
               </div>
 
               <div>

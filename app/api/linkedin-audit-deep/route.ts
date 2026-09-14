@@ -145,20 +145,33 @@ export async function POST(request: Request) {
     // Compute metrics using REAL user sync data if available
     const sync: UserSyncData | undefined = userSyncData;
 
-    const realPostFreq = sync?.weeklyPostFrequency ?? 3.5;
-    const realSsi = sync?.ssiScore ?? (sync?.isConnected ? 84 : 78);
-    const realEngagement = sync?.engagementRate || (sync?.isConnected ? '4.2%' : '3.4%');
+    const realPostFreq = sync?.weeklyPostFrequency !== undefined ? sync.weeklyPostFrequency : 0.25;
+    const realSsi = sync?.ssiScore ?? (sync?.isConnected ? 82 : 75);
+    const realEngagement = sync?.engagementRate || (sync?.isConnected ? '3.8%' : '2.9%');
     const realFollowers = sync?.followerCount || 4500;
-    const realLastPost = sync?.lastPostDate || (sync?.isConnected ? 'Hier à 14h30' : 'Il y a 3 jours');
+    const realLastPost = sync?.lastPostDate || (realPostFreq <= 0.3 ? 'Il y a 3 semaines' : 'Hier à 14h30');
 
-    const frequencyDisplay = `${realPostFreq} posts / semaine (${realPostFreq >= 3 ? '🟢 Compte Actif & Régulier' : '⚠️ Sous la fréquence optimale'})`;
+    // Format human-readable frequency
+    let frequencyDisplay = '';
+    if (realPostFreq <= 0.3) {
+      frequencyDisplay = '1 post / mois (~0.25 post/semaine) (🔴 Rythme Inrégulier & Faible)';
+    } else if (realPostFreq <= 0.6) {
+      frequencyDisplay = '1 post / 2 semaines (~0.5 post/semaine) (🟡 Fréquence Modérée)';
+    } else if (realPostFreq <= 1.5) {
+      frequencyDisplay = '1 post / semaine (🟡 Fréquence Standard)';
+    } else {
+      frequencyDisplay = `${realPostFreq} posts / semaine (🟢 Compte Actif & Régulier)`;
+    }
+
+    // Compute realistic Dwell Time score based on publication frequency
+    const dwellTimeScore = realPostFreq <= 0.3 ? 45 : realPostFreq <= 1 ? 65 : 84;
 
     // Tailor strengths & weaknesses based on actual user activity
     const strengths = sync?.isConnected
       ? [
-          `Compte LinkedIn vérifié & synchronisé avec une fréquence réelle de ${realPostFreq} posts/semaine.`,
-          `Bonne autorité dans le secteur ${finalIndustry} (${realFollowers.toLocaleString()} abonnés actifs).`,
-          `Taux d'engagement de ${realEngagement} au-dessus de la moyenne sectorielle.`,
+          `Compte LinkedIn vérifié & synchronisé avec une fréquence réelle de ${realPostFreq <= 0.3 ? '1 post/mois' : `${realPostFreq} posts/semaine`}.`,
+          `Légitimité et autorité sectorielle dans le domaine ${finalIndustry} (${realFollowers.toLocaleString()} abonnés).`,
+          `Taux d'engagement de ${realEngagement} offrant un potentiel d'amplification dès que la régularité sera rétablie.`,
         ]
       : [
           `Bonne légitimité métier constatée dans le secteur ${finalIndustry}.`,
@@ -167,11 +180,17 @@ export async function POST(request: Request) {
         ];
 
     const weaknesses = sync?.isConnected
-      ? [
-          realPostFreq < 3 ? 'Augmenter la régularité pour atteindre au moins 3 publications par semaine.' : 'Optimiser le Dwell Time par post pour dépasser 45 secondes de lecture moyenne.',
-          'Accroches des 3 premières lignes nécessitant plus de levier contre-intuitif.',
-          'Absence d\'un premier commentaire automatique d\'appel à l\'action.',
-        ]
+      ? realPostFreq <= 0.5
+        ? [
+            '🔴 Fréquence de publication très faible (~1 post par mois) : L\'algorithme LinkedIn pénalise la portée des profils publiant moins de 1 fois par semaine.',
+            'Pertes massives d\'attention entre chaque publication : Un intervalle de 30 jours casse la mémorisation auprès de votre audience.',
+            'Structure des accroches et absence de carrousels PDF pour retenir l\'attention (Dwell Time sous-optimisé).',
+          ]
+        : [
+            'Régularité à consolider pour atteindre au moins 3 publications par semaine.',
+            'Accroches des 3 premières lignes nécessitant plus de levier contre-intuitif.',
+            'Absence d\'un premier commentaire automatique d\'appel à l\'action.',
+          ]
       : [
           'Sous-utilisation flagrante des Carrousels PDF verticaux (perte de Dwell Time).',
           'Accroches des 3 premières lignes sans levier de curiosité ni chiffres percutants.',
@@ -179,11 +198,17 @@ export async function POST(request: Request) {
         ];
 
     const actionSteps = sync?.isConnected
-      ? [
-          `1. Maintenez votre rythme de ${realPostFreq} posts/semaine en convertissant 50% de vos contenus en carrousels PDF (4:5).`,
-          '2. Placez vos liens d\'offres et newsletter uniquement dans le 1er commentaire pour protéger votre reach.',
-          '3. Publiez aux créneaux recommandés et laissez 5 commentaires qualifiés dans votre secteur 15 min avant de poster.',
-        ]
+      ? realPostFreq <= 0.5
+        ? [
+            '1. Définir un plan éditorial simple pour passer progressivement de 1 post/mois à 1 post/semaine (multiplication par 4 de votre portée).',
+            '2. Convertir chaque publication mensuelle en Carrousel PDF (4:5) pour capter au moins 45s de Dwell Time par lecteur.',
+            '3. Publier aux créneaux recommandés et laisser 5 commentaires qualifiés dans votre secteur 15 min avant de poster.',
+          ]
+        : [
+            `1. Maintenez votre rythme de ${realPostFreq} posts/semaine en convertissant 50% de vos contenus en carrousels PDF (4:5).`,
+            '2. Placez vos liens d\'offres et newsletter uniquement dans le 1er commentaire pour protéger votre reach.',
+            '3. Publiez aux créneaux recommandés et laissez 5 commentaires qualifiés dans votre secteur 15 min avant de poster.',
+          ]
       : [
           '1. Repositionnez votre titre de profil : "J\'aide [Cible] à [Résultat] grâce à [Méthode]".',
           '2. Placez désormais TOUS les liens externes uniquement dans le 1er commentaire.',
@@ -204,7 +229,7 @@ export async function POST(request: Request) {
       currentDiagnostic: {
         ssiScore: realSsi,
         engagementRate: realEngagement,
-        dwellTimeScore: sync?.isConnected ? 84 : 72,
+        dwellTimeScore,
         currentPublishingFrequency: frequencyDisplay,
         lastObservedPost: realLastPost,
         observedFormatDistribution: sync?.primaryFormat

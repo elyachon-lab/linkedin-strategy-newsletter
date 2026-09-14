@@ -205,7 +205,7 @@ export default function DedicatedClientSpacePage() {
                 </span>
                 {isAccountSynced ? (
                   <span className="bg-emerald-400 text-slate-950 font-extrabold text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    🟢 Compte LinkedIn Connecté ({profile?.userSyncData?.weeklyPostFrequency} posts/sem)
+                    🟢 Compte LinkedIn Connecté ({profile?.userSyncData?.weeklyPostFrequency && profile.userSyncData.weeklyPostFrequency <= 0.3 ? '~1 post/mois' : `${profile?.userSyncData?.weeklyPostFrequency} posts/sem`})
                   </span>
                 ) : (
                   <span className="bg-amber-400/20 text-amber-200 border border-amber-300/40 text-xs font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">

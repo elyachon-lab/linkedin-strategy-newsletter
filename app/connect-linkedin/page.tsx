@@ -25,6 +25,7 @@ export default function ConnectLinkedInPage() {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('Créateur B2B');
   const [industry, setIndustry] = useState('SaaS & Tech');
+  const [postFrequency, setPostFrequency] = useState('0.25'); // Default: 1 post / mois (~0.25 / semaine)
   
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionSuccess, setConnectionSuccess] = useState(false);
@@ -41,6 +42,9 @@ export default function ConnectLinkedInPage() {
         if (parsed.email) setEmail(parsed.email);
         if (parsed.industry) setIndustry(parsed.industry);
         if (parsed.role) setRole(parsed.role);
+        if (parsed.userSyncData?.weeklyPostFrequency !== undefined) {
+          setPostFrequency(parsed.userSyncData.weeklyPostFrequency.toString());
+        }
       } catch {}
     }
   }, []);
@@ -72,6 +76,7 @@ export default function ConnectLinkedInPage() {
       }
 
       const p = data.profile;
+      const freqNum = parseFloat(postFrequency) || 0.25;
 
       const connectedUserProfile = {
         userId: p.linkedinId,
@@ -87,11 +92,11 @@ export default function ConnectLinkedInPage() {
         connectedAt: data.connectedAt,
         userSyncData: {
           isConnected: true,
-          weeklyPostFrequency: 4,
+          weeklyPostFrequency: freqNum,
           followerCount: p.followerCount,
-          ssiScore: 84,
-          engagementRate: '4.5%',
-          lastPostDate: 'Hier à 14h30',
+          ssiScore: 82,
+          engagementRate: '3.8%',
+          lastPostDate: freqNum <= 0.3 ? 'Il y a 3 semaines' : 'Hier à 14h30',
           primaryFormat: 'Carrousels PDF Verticaux (4:5)',
         },
       };
@@ -223,15 +228,20 @@ export default function ConnectLinkedInPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                Intitulé de Poste / Role
+                Fréquence Réelle de Publication <span className="text-rose-500">*</span>
               </label>
-              <input
-                type="text"
-                placeholder="ex: Head of Marketing, CEO..."
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium text-slate-900"
-              />
+              <select
+                value={postFrequency}
+                onChange={(e) => setPostFrequency(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white text-slate-900"
+              >
+                <option value="0.25">🔴 1 post / mois (~0,25 post/semaine)</option>
+                <option value="0.5">🟡 1 post / 2 semaines (~0,5 post/semaine)</option>
+                <option value="1">🟡 1 post / semaine</option>
+                <option value="2">🟢 2 posts / semaine</option>
+                <option value="3">🟢 3 posts / semaine</option>
+                <option value="4">🟢 4 posts ou + / semaine</option>
+              </select>
             </div>
 
             <div>
