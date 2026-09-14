@@ -5,7 +5,7 @@ import { StrategyCard, StrategyCategory } from '@/lib/types';
 import { INITIAL_STRATEGIES } from '@/lib/supabase/fallback-data';
 import { StrategyCardComponent } from '@/components/linkedin/strategy-card';
 import { StrategyModal } from '@/components/linkedin/strategy-modal';
-import { Search, Plus, BookOpen, Filter, Pin, RefreshCw, Sparkles } from 'lucide-react';
+import { Search, Plus, BookOpen, Filter, RefreshCw, Feather } from 'lucide-react';
 
 export default function StrategyCenterPage() {
   const [strategies, setStrategies] = useState<StrategyCard[]>(INITIAL_STRATEGIES);
@@ -38,7 +38,6 @@ export default function StrategyCenterPage() {
 
   const handleSaveCard = async (cardData: Partial<StrategyCard>) => {
     if (cardData.id) {
-      // Update
       setStrategies((prev) =>
         prev.map((c) => (c.id === cardData.id ? ({ ...c, ...cardData } as StrategyCard) : c))
       );
@@ -50,7 +49,6 @@ export default function StrategyCenterPage() {
         });
       } catch {}
     } else {
-      // Insert
       const newCard: StrategyCard = {
         id: 'strat-' + Date.now(),
         title: cardData.title || '',
@@ -74,7 +72,7 @@ export default function StrategyCenterPage() {
   };
 
   const handleDeleteCard = async (id: string) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette fiche ?')) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
       setStrategies((prev) => prev.filter((c) => c.id !== id));
       try {
         await fetch(`/api/linkedin-strategies?id=${id}`, { method: 'DELETE' });
@@ -89,11 +87,9 @@ export default function StrategyCenterPage() {
 
   const filteredStrategies = strategies
     .filter((strat) => {
-      // Category filter
       if (selectedCategory !== 'Tous' && strat.category !== selectedCategory) {
         return false;
       }
-      // Keyword search
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase();
       return (
@@ -112,24 +108,26 @@ export default function StrategyCenterPage() {
     });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-6xl mx-auto">
       
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      {/* Editorial Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-            <BookOpen className="w-7 h-7 text-blue-600" />
-            Centre de Stratégie LinkedIn
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full mb-2">
+            <Feather className="w-3.5 h-3.5" /> Blog Strategy & Best Practices
+          </div>
+          <h1 className="font-serif text-3xl font-extrabold text-slate-900 tracking-tight">
+            Les Fiches Stratégiques & Règlements LinkedIn
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Recherchez et gérez vos fiches stratégiques, formules d'accroches et consignes algorithmiques.
+          <p className="font-sans text-sm text-slate-500 mt-1">
+            Découvrez nos articles détaillés, guides de rédaction et consignes d'optimisation d'audience.
           </p>
         </div>
 
         <div className="flex items-center space-x-3">
           <button
             onClick={fetchStrategies}
-            className="p-2.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+            className="p-2.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
             title="Rafraîchir"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -140,29 +138,26 @@ export default function StrategyCenterPage() {
               setEditingCard(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm shadow-sm transition-all hover:shadow hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-blue-600 text-white rounded-full font-semibold text-xs shadow-xs transition-all hover:shadow"
           >
-            <Plus className="w-4 h-4" /> Nouvelle Fiche
+            <Plus className="w-4 h-4" /> Nouvel Article
           </button>
         </div>
       </div>
 
-      {/* Search & Filters Toolbar */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-        
-        {/* Keyword Search Input */}
-        <div className="relative">
+      {/* Search & Category Filter */}
+      <div className="space-y-4">
+        <div className="relative max-w-2xl">
           <Search className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
           <input
             type="text"
-            placeholder="Recherche intelligente par mots-clés (titre, tag, exemple, notion d'algorithme)..."
+            placeholder="Rechercher par mot-clé dans les articles (titre, tag, algorithme)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:bg-white transition-all"
+            className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-full text-sm font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs"
           />
         </div>
 
-        {/* Category Pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1 shrink-0 mr-1">
             <Filter className="w-3.5 h-3.5" /> Catégories :
@@ -171,7 +166,7 @@ export default function StrategyCenterPage() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
                 selectedCategory === cat
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -183,11 +178,11 @@ export default function StrategyCenterPage() {
         </div>
       </div>
 
-      {/* Strategy Grid */}
+      {/* Articles Grid */}
       {filteredStrategies.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 space-y-3">
-          <Sparkles className="w-10 h-10 text-slate-300 mx-auto" />
-          <h3 className="text-base font-bold text-slate-800">Aucune fiche ne correspond à votre recherche</h3>
+          <BookOpen className="w-10 h-10 text-slate-300 mx-auto" />
+          <h3 className="font-serif text-lg font-bold text-slate-800">Aucun article ne correspond à votre recherche</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
             Essayez de modifier votre mot-clé "{searchQuery}" ou de sélectionner une autre catégorie.
           </p>
@@ -196,13 +191,13 @@ export default function StrategyCenterPage() {
               setSearchQuery('');
               setSelectedCategory('Tous');
             }}
-            className="text-xs font-semibold text-blue-600 hover:underline pt-2 inline-block"
+            className="text-xs font-semibold text-blue-600 hover:underline pt-2 inline-block font-sans"
           >
             Réinitialiser les filtres
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredStrategies.map((card) => (
             <StrategyCardComponent
               key={card.id}
@@ -215,7 +210,7 @@ export default function StrategyCenterPage() {
         </div>
       )}
 
-      {/* Add / Edit Modal */}
+      {/* Modal */}
       <StrategyModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
