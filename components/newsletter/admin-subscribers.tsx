@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Subscriber } from '@/lib/types';
-import { Users, UserPlus, Trash2, Download, Search, Lock, ShieldAlert, Sparkles, CheckCircle2, RefreshCw, Mail } from 'lucide-react';
+import { Users, UserPlus, Trash2, Download, Search, Lock, RefreshCw, Mail, KeyRound } from 'lucide-react';
+
+const ROBUST_ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'LinkedIn_Pro2026!Secured';
 
 export function AdminSubscribersManager() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
@@ -35,12 +37,11 @@ export function AdminSubscribersManager() {
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Default admin code for managing subscribers (admin / admin123 / custom)
-    if (passwordInput === 'admin' || passwordInput === 'admin123' || passwordInput.length >= 4) {
+    if (passwordInput === ROBUST_ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       setPasswordError('');
     } else {
-      setPasswordError('Mot de passe incorrect (utilisez "admin" ou 4 caractères min).');
+      setPasswordError('Mot de passe administrateur incorrect.');
     }
   };
 
@@ -108,38 +109,41 @@ export function AdminSubscribersManager() {
     return (
       <div className="bg-white p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow max-w-md mx-auto my-8 space-y-4">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-metricool-purple text-metricool-yellow rounded-2xl flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 bg-metricool-purple text-metricool-yellow rounded-2xl flex items-center justify-center mx-auto shadow-md">
             <Lock className="w-6 h-6" />
           </div>
           <h3 className="text-xl font-extrabold text-metricool-purple">Espace Administrateur Newsletter</h3>
           <p className="text-xs font-medium text-slate-500">
-            Saisissez le mot de passe administrateur pour accéder à la liste des abonnés et les gérer.
+            Zone protégée. Saisissez votre mot de passe administrateur sécurisé.
           </p>
         </div>
 
-        <form onSubmit={handleAdminLogin} className="space-y-3 pt-2">
+        <form onSubmit={handleAdminLogin} className="space-y-4 pt-2">
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
-              Mot de passe Administrateur
+            <label className="block text-xs font-extrabold uppercase text-metricool-purple mb-1.5 flex items-center gap-1.5">
+              <KeyRound className="w-3.5 h-3.5 text-metricool-pink" /> Mot de passe Administrateur
             </label>
             <input
               type="password"
-              placeholder="Entrez votre mot de passe (ex: admin)"
+              required
+              placeholder="Entrez votre mot de passe sécurisé"
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
-              className="w-full px-4 py-2.5 text-sm border-2 border-metricool-purple rounded-xl focus:outline-none focus:ring-2 focus:ring-metricool-yellow"
+              className="w-full px-4 py-3 text-sm border-2 border-metricool-purple rounded-2xl focus:outline-none focus:ring-4 focus:ring-metricool-yellow/50 font-bold"
             />
           </div>
 
           {passwordError && (
-            <p className="text-xs font-bold text-rose-600 text-center">{passwordError}</p>
+            <p className="text-xs font-bold text-rose-600 text-center bg-rose-50 p-2 rounded-xl border border-rose-200">
+              {passwordError}
+            </p>
           )}
 
           <button
             type="submit"
-            className="w-full py-3 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-xl text-xs shadow-sm transition-all"
+            className="w-full py-3.5 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all hover:scale-105"
           >
-            Se connecter à la gestion
+            Se connecter à l'Administration
           </button>
         </form>
       </div>
@@ -157,7 +161,7 @@ export function AdminSubscribersManager() {
             Gestion de l'Audience & Abonnés Newsletter ({subscribers.length})
           </h3>
           <p className="text-xs font-medium text-slate-500 mt-0.5">
-            Liste des destinataires enregistrés pour recevoir les éditions hebdomadaires de veille.
+            Liste sécurisée des destinataires de la veille hebdomadaire.
           </p>
         </div>
 
@@ -171,6 +175,13 @@ export function AdminSubscribersManager() {
           </button>
 
           <button
+            onClick={() => setIsAuthenticated(false)}
+            className="px-3 py-2 text-xs font-extrabold text-rose-700 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors border border-rose-200"
+          >
+            Déconnexion
+          </button>
+
+          <button
             onClick={handleExportCSV}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-extrabold text-metricool-purple bg-metricool-yellow border-2 border-metricool-purple rounded-xl hover:bg-yellow-300 transition-colors shadow-2xs"
           >
@@ -180,19 +191,19 @@ export function AdminSubscribersManager() {
       </div>
 
       {/* Add New Subscriber Form */}
-      <form onSubmit={handleAddSubscriber} className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row gap-3">
+      <form onSubmit={handleAddSubscriber} className="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 flex flex-col sm:flex-row gap-3">
         <input
           type="email"
           required
           placeholder="Ajouter manuellement un e-mail abonné (ex: abonné@societe.com)"
           value={newEmail}
           onChange={(e) => setNewEmail(e.target.value)}
-          className="flex-1 px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-metricool-purple"
+          className="flex-1 px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
         />
         <button
           type="submit"
           disabled={isAdding}
-          className="px-4 py-2 bg-metricool-purple text-metricool-yellow font-extrabold rounded-xl text-xs shadow-2xs hover:bg-black transition-colors shrink-0 flex items-center justify-center gap-1.5"
+          className="px-5 py-2.5 bg-metricool-purple text-metricool-yellow font-extrabold rounded-xl text-xs shadow-2xs hover:bg-black transition-colors shrink-0 flex items-center justify-center gap-1.5"
         >
           <UserPlus className="w-4 h-4" /> Ajouter l'abonné
         </button>
@@ -206,22 +217,22 @@ export function AdminSubscribersManager() {
           placeholder="Filtrer les abonnés par adresse e-mail..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-metricool-purple"
+          className="w-full pl-10 pr-4 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
         />
       </div>
 
       {/* Subscribers Table */}
-      <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+      <div className="overflow-x-auto border-2 border-metricool-purple rounded-2xl">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-100 text-metricool-purple font-extrabold uppercase tracking-wider">
+          <thead className="bg-metricool-purple text-metricool-yellow font-extrabold uppercase tracking-wider">
             <tr>
-              <th className="px-4 py-3">Adresse E-mail</th>
-              <th className="px-4 py-3">Statut</th>
-              <th className="px-4 py-3">Date d'inscription</th>
-              <th className="px-4 py-3 text-right">Actions</th>
+              <th className="px-4 py-3.5">Adresse E-mail</th>
+              <th className="px-4 py-3.5">Statut</th>
+              <th className="px-4 py-3.5">Date d'inscription</th>
+              <th className="px-4 py-3.5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200 bg-white font-medium">
+          <tbody className="divide-y-2 divide-slate-100 bg-white font-medium">
             {filteredSubscribers.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-4 py-8 text-center text-slate-400 font-normal">
@@ -231,22 +242,22 @@ export function AdminSubscribersManager() {
             ) : (
               filteredSubscribers.map((sub) => (
                 <tr key={sub.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 font-bold text-slate-900 flex items-center gap-2">
+                  <td className="px-4 py-3.5 font-bold text-slate-900 flex items-center gap-2">
                     <Mail className="w-3.5 h-3.5 text-metricool-blue" />
                     {sub.email}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-extrabold text-[11px] bg-emerald-100 text-emerald-900 border border-emerald-300">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Actif
+                      Actif
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-500">
+                  <td className="px-4 py-3.5 text-slate-500 font-bold">
                     {new Date(sub.created_at).toLocaleDateString('fr-FR')}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <button
                       onClick={() => handleDeleteSubscriber(sub.id)}
-                      className="p-1 text-slate-400 hover:text-rose-600 transition-colors"
+                      className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors"
                       title="Désinscrire l'abonné"
                     >
                       <Trash2 className="w-4 h-4" />
