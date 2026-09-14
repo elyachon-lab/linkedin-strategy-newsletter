@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { StrategyCard } from '@/lib/types';
-import { Pin, Copy, Check, Edit2, Trash2, ChevronDown, ChevronUp, Sparkles, Clock, ArrowRight } from 'lucide-react';
+import { Pin, Copy, Check, Edit2, Trash2, Sparkles, Clock, ArrowRight, BookOpen } from 'lucide-react';
 
 interface StrategyCardProps {
   card: StrategyCard;
@@ -12,9 +13,7 @@ interface StrategyCardProps {
 }
 
 export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete }: StrategyCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [copiedContent, setCopiedContent] = useState(false);
 
   // Metricool signature category badge colors
   const categoryBadges: Record<string, string> = {
@@ -26,15 +25,10 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
     Copywriting: 'bg-blue-200 text-blue-950 font-extrabold border-2 border-metricool-purple',
   };
 
-  const copyToClipboard = (text: string, index?: number) => {
+  const copyToClipboard = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
-    if (index !== undefined) {
-      setCopiedIndex(index);
-      setTimeout(() => setCopiedIndex(null), 2000);
-    } else {
-      setCopiedContent(true);
-      setTimeout(() => setCopiedContent(false), 2000);
-    }
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   const wordCount = (card.summary + ' ' + (card.content || '')).split(/\s+/).length;
@@ -103,9 +97,11 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
         </div>
       </div>
 
-      {/* Article Title */}
+      {/* Article Title - Click to open Full Page */}
       <h2 className="text-xl sm:text-2xl font-extrabold text-metricool-purple leading-snug hover:text-metricool-blue transition-colors">
-        {highlightText(card.title)}
+        <Link href={`/linkedin-strategy/${card.id}`}>
+          {highlightText(card.title)}
+        </Link>
       </h2>
 
       {/* Summary */}
@@ -160,32 +156,19 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
         </div>
       )}
 
-      {/* Expandable Article Content */}
-      {card.content && (
-        <div className="pt-2">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full inline-flex items-center justify-between text-xs font-extrabold text-metricool-purple hover:text-metricool-blue transition-colors py-2 px-4 bg-slate-100 rounded-2xl border border-slate-200"
-          >
-            <span>{isExpanded ? 'Masquer l\'article détaillé' : 'Lire le guide complet & consignes'}</span>
-            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
-
-          {isExpanded && (
-            <div className="mt-3 p-5 bg-white rounded-2xl border-2 border-metricool-purple text-xs font-medium text-slate-800 space-y-3 leading-relaxed whitespace-pre-line shadow-xs">
-              <div className="flex justify-end mb-1">
-                <button
-                  onClick={() => copyToClipboard(card.content)}
-                  className="text-xs font-bold text-metricool-purple bg-metricool-yellow border border-metricool-purple px-3 py-1 rounded-xl shadow-2xs"
-                >
-                  {copiedContent ? 'Copié !' : 'Copier tout le texte'}
-                </button>
-              </div>
-              {highlightText(card.content)}
-            </div>
-          )}
-        </div>
-      )}
+      {/* Direct Full Page Link Button */}
+      <div className="pt-3">
+        <Link
+          href={`/linkedin-strategy/${card.id}`}
+          className="w-full inline-flex items-center justify-between text-xs font-extrabold text-metricool-purple hover:text-metricool-blue transition-colors py-2.5 px-4 bg-slate-100 hover:bg-metricool-yellow rounded-2xl border-2 border-metricool-purple shadow-2xs"
+        >
+          <span className="flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-metricool-purple" />
+            Lire l'article complet en pleine page
+          </span>
+          <ArrowRight className="w-4 h-4 text-metricool-purple" />
+        </Link>
+      </div>
 
     </article>
   );
