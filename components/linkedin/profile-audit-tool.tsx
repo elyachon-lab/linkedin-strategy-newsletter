@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { DeepAuditReport } from '@/app/api/linkedin-audit-deep/route';
+import { DeepAuditReport, AdviceSource } from '@/app/api/linkedin-audit-deep/route';
 import {
   Search,
   ExternalLink,
@@ -26,7 +26,55 @@ import {
   Activity,
   PieChart,
   Lightbulb,
+  ChevronDown,
+  BookOpen,
 } from 'lucide-react';
+
+function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: AdviceSource; darkTheme?: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  if (!source) return null;
+
+  return (
+    <div className="pt-2">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full text-left px-3 py-2 border rounded-xl text-[11px] font-extrabold flex items-center justify-between transition-colors ${
+          darkTheme
+            ? 'bg-white/10 hover:bg-white/20 border-white/20 text-metricool-yellow'
+            : 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-metricool-purple'
+        }`}
+      >
+        <span className="flex items-center gap-1.5">
+          <BookOpen className="w-3.5 h-3.5 text-metricool-pink" />
+          📚 Source vérifiée & Justification algorithmique
+        </span>
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <div
+          className={`mt-2 p-3.5 border rounded-xl text-xs space-y-1.5 animate-fadeIn ${
+            darkTheme
+              ? 'bg-black/40 border-white/15 text-slate-200'
+              : 'bg-white border-purple-200 text-slate-800 shadow-2xs'
+          }`}
+        >
+          <div className="font-extrabold text-metricool-yellow text-[11px] uppercase tracking-wider flex items-center gap-1">
+            <span>{source.title}</span>
+          </div>
+          <p className="text-[11px] text-slate-300 font-bold">
+            Référence étude : <span className="text-white italic">{source.reference}</span>
+          </p>
+          <p className="text-[11px] leading-relaxed font-medium bg-white/5 p-2 rounded-lg border border-white/10">
+            💡 <strong>Justification de l'algorithme :</strong> {source.rationale}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function ProfileAuditTool() {
   const [queryInput, setQueryInput] = useState('');
@@ -135,10 +183,10 @@ export function ProfileAuditTool() {
           <Sparkles className="w-4 h-4 text-metricool-purple" /> Outil d'Audit IA LinkedIn 2.0
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Audit de Profil & Page LinkedIn avec Auto-Détection du Secteur
+          Audit de Profil & Page LinkedIn avec Sources Algorithmiques Vérifiées
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-2xl leading-relaxed">
-          Saisissez un nom, une URL LinkedIn ou des mots-clés. L'IA extrait automatiquement le secteur d'activité, génère le lien de validation cliquable et construit votre rapport d'audit sur-mesure.
+          Saisissez un nom, une URL LinkedIn ou des mots-clés. L'IA extrait automatiquement le secteur d'activité, génère le lien de validation cliquable et construit votre rapport d'audit avec justifications algorithmiques repliables.
         </p>
       </div>
 
@@ -443,104 +491,119 @@ export function ProfileAuditTool() {
           </div>
 
           {/* ========================================================================= */}
-          {/* PHASE 2: RECOMMANDATIONS & CONSEILS PERSONNALISÉS IA */}
+          {/* PHASE 2: RECOMMANDATIONS & CONSEILS PERSONNALISÉS IA AVEC SOURCES REPLIABLES */}
           {/* ========================================================================= */}
           <div className="bg-metricool-purple text-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
             
             <div className="border-b border-white/10 pb-4">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-metricool-yellow text-metricool-purple text-xs font-extrabold border border-metricool-purple mb-2">
-                <Sparkles className="w-3.5 h-3.5 text-metricool-purple" /> PHASE 2 : CONSEILS PERSONNALISÉS IA
+                <Lightbulb className="w-3.5 h-3.5 text-metricool-purple" /> PHASE 2 : CONSEILS PERSONNALISÉS IA
               </div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-white">
                 🎯 Recommandations & Conseils Personnalisés Sur-Mesure IA
               </h2>
               <p className="text-xs text-slate-300 font-medium mt-1">
-                Plan d'action et hooks rédigés sur-mesure pour le secteur <strong>{auditReport.industry}</strong>.
+                Plan d'action et hooks rédigés sur-mesure pour le secteur <strong>{auditReport.industry}</strong>, appuyés par des sources et justifications algorithmiques.
               </p>
             </div>
 
             {/* STRENGTHS & WEAKNESSES */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-emerald-950/40 p-5 rounded-2xl border border-emerald-400/40 space-y-3">
-                <h3 className="text-sm font-extrabold text-emerald-300 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Points Forts à Conserver
-                </h3>
-                <div className="space-y-2 text-xs font-bold text-slate-200">
-                  {(auditReport.recommendations?.strengths || auditReport.strengths).map((str, idx) => (
-                    <div key={idx} className="bg-white/10 p-3 rounded-xl border border-white/10 flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>{str}</span>
-                    </div>
-                  ))}
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-emerald-950/40 p-5 rounded-2xl border border-emerald-400/40 space-y-3">
+                  <h3 className="text-sm font-extrabold text-emerald-300 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Points Forts à Conserver
+                  </h3>
+                  <div className="space-y-2 text-xs font-bold text-slate-200">
+                    {(auditReport.recommendations?.strengths || auditReport.strengths).map((str, idx) => (
+                      <div key={idx} className="bg-white/10 p-3 rounded-xl border border-white/10 flex items-center gap-2">
+                        <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>{str}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-rose-950/40 p-5 rounded-2xl border border-rose-400/40 space-y-3">
+                  <h3 className="text-sm font-extrabold text-rose-300 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-rose-400" /> Axes d'Amélioration Prioritaires
+                  </h3>
+                  <div className="space-y-2 text-xs font-bold text-slate-200">
+                    {(auditReport.recommendations?.weaknesses || auditReport.weaknesses).map((weak, idx) => (
+                      <div key={idx} className="bg-white/10 p-3 rounded-xl border border-white/10 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-rose-400 shrink-0" />
+                        <span>{weak}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-rose-950/40 p-5 rounded-2xl border border-rose-400/40 space-y-3">
-                <h3 className="text-sm font-extrabold text-rose-300 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-rose-400" /> Axes d'Amélioration Prioritaires
-                </h3>
-                <div className="space-y-2 text-xs font-bold text-slate-200">
-                  {(auditReport.recommendations?.weaknesses || auditReport.weaknesses).map((weak, idx) => (
-                    <div key={idx} className="bg-white/10 p-3 rounded-xl border border-white/10 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-rose-400 shrink-0" />
-                      <span>{weak}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* COLLAPSIBLE SOURCE FOR STRENGTHS / WEAKNESSES */}
+              <CollapsibleSourceAccordion source={auditReport.recommendations?.sources?.strengthsWeaknesses} />
             </div>
 
             {/* RECOMMENDED EDITORIAL MIX & TAILORED HOOKS */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
               {/* Recommended Format Mix */}
-              <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-4">
-                <h3 className="text-sm font-extrabold text-metricool-yellow flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-metricool-pink" /> Nouvelle Répartition Éditoriale Recommandée
-                </h3>
-                <div className="space-y-3 pt-1">
-                  {(auditReport.recommendations?.recommendedFormatMix || auditReport.editorialStrategy.recommendedMix).map((item, idx) => (
-                    <div key={idx} className="space-y-1">
-                      <div className="flex justify-between text-xs font-extrabold text-slate-200">
-                        <span>{item.format}</span>
-                        <span className="text-metricool-yellow">{item.percentage}%</span>
+              <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-4 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <h3 className="text-sm font-extrabold text-metricool-yellow flex items-center gap-2">
+                    <Layers className="w-4 h-4 text-metricool-pink" /> Nouvelle Répartition Éditoriale Recommandée
+                  </h3>
+                  <div className="space-y-3 pt-1">
+                    {(auditReport.recommendations?.recommendedFormatMix || auditReport.editorialStrategy.recommendedMix).map((item, idx) => (
+                      <div key={idx} className="space-y-1">
+                        <div className="flex justify-between text-xs font-extrabold text-slate-200">
+                          <span>{item.format}</span>
+                          <span className="text-metricool-yellow">{item.percentage}%</span>
+                        </div>
+                        <div className="w-full bg-white/20 rounded-full h-2.5 overflow-hidden">
+                          <div className="bg-metricool-yellow h-2.5 rounded-full" style={{ width: `${item.percentage}%` }} />
+                        </div>
                       </div>
-                      <div className="w-full bg-white/20 rounded-full h-2.5 overflow-hidden">
-                        <div className="bg-metricool-yellow h-2.5 rounded-full" style={{ width: `${item.percentage}%` }} />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
+
+                {/* COLLAPSIBLE SOURCE FOR EDITORIAL MIX */}
+                <CollapsibleSourceAccordion source={auditReport.recommendations?.sources?.editorialMix} />
               </div>
 
               {/* Tailored Hooks with Copy Button */}
-              <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-4">
-                <h3 className="text-sm font-extrabold text-metricool-yellow flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-metricool-pink" /> Accroches IA Optimisées pour {auditReport.industry}
-                </h3>
-                <div className="space-y-2">
-                  {(auditReport.recommendations?.tailoredHooks || auditReport.editorialStrategy.tailoredHooks).map((hook, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-white text-metricool-purple p-3 rounded-xl text-xs font-bold flex items-center justify-between gap-3 shadow-sm"
-                    >
-                      <span className="italic">"{hook}"</span>
-                      <button
-                        onClick={() => copyToClipboard(hook, idx)}
-                        className="bg-metricool-yellow text-metricool-purple text-[11px] font-extrabold px-2.5 py-1 rounded-lg border border-metricool-purple hover:bg-yellow-300 transition-colors shrink-0"
+              <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-4 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <h3 className="text-sm font-extrabold text-metricool-yellow flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-metricool-pink" /> Accroches IA Optimisées pour {auditReport.industry}
+                  </h3>
+                  <div className="space-y-2">
+                    {(auditReport.recommendations?.tailoredHooks || auditReport.editorialStrategy.tailoredHooks).map((hook, idx) => (
+                      <div
+                        key={idx}
+                        className="bg-white text-metricool-purple p-3 rounded-xl text-xs font-bold flex items-center justify-between gap-3 shadow-sm"
                       >
-                        {copiedIndex === idx ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
-                      </button>
-                    </div>
-                  ))}
+                        <span className="italic">"{hook}"</span>
+                        <button
+                          onClick={() => copyToClipboard(hook, idx)}
+                          className="bg-metricool-yellow text-metricool-purple text-[11px] font-extrabold px-2.5 py-1 rounded-lg border border-metricool-purple hover:bg-yellow-300 transition-colors shrink-0"
+                        >
+                          {copiedIndex === idx ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
+                {/* COLLAPSIBLE SOURCE FOR TAILORED HOOKS */}
+                <CollapsibleSourceAccordion source={auditReport.recommendations?.sources?.tailoredHooks} />
               </div>
 
             </div>
 
             {/* ACTION PLAN */}
             <div className="space-y-4 pt-2">
-              <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-3">
+              <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-4">
                 <h3 className="text-sm font-extrabold text-metricool-yellow flex items-center gap-2">
                   <Target className="w-4 h-4 text-amber-400" /> Plan d'Action Stratégique en 3 Étapes
                 </h3>
@@ -554,6 +617,9 @@ export function ProfileAuditTool() {
                     </div>
                   ))}
                 </div>
+
+                {/* COLLAPSIBLE SOURCE FOR ACTION PLAN */}
+                <CollapsibleSourceAccordion source={auditReport.recommendations?.sources?.actionPlan} />
               </div>
             </div>
 
