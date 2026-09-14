@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ScheduleConfigManager } from '@/components/newsletter/schedule-config';
 import { AdminSubscribersManager } from '@/components/newsletter/admin-subscribers';
-import { X, ShieldCheck, Calendar, Users, Mail, Plus, LogOut, CheckCircle2, FileText, Send, Sparkles } from 'lucide-react';
+import { X, ShieldCheck, Calendar, Users, Mail, Plus, LogOut, CheckCircle2, FileText, Send, Sparkles, AlertTriangle } from 'lucide-react';
 
 interface AdminControlModalProps {
   isOpen: boolean;
@@ -22,11 +22,15 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
   const [articleTags, setArticleTags] = useState('LinkedIn, Veille 2026, Growth');
   const [isPublishingArticle, setIsPublishingArticle] = useState(false);
   const [articleSuccess, setArticleSuccess] = useState('');
+  const [articleError, setArticleError] = useState('');
 
   if (!isOpen) return null;
 
   const handleCreateArticle = async (e: React.FormEvent) => {
     e.preventDefault();
+    setArticleError('');
+    setArticleSuccess('');
+
     if (!articleTitle.trim() || !articleContent.trim()) return;
 
     setIsPublishingArticle(true);
@@ -48,8 +52,15 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
       });
 
       const data = await res.json();
+
+      if (!res.ok || data.isDuplicate) {
+        setArticleError(data.error || '⚠️ Article similaire détecté. Veuillez modifier le titre ou l\'angle.');
+        setIsPublishingArticle(false);
+        return;
+      }
+
       if (data.strategy || data.item) {
-        setArticleSuccess('Article publié avec succès sur le blog LinkedIn !');
+        setArticleSuccess('Article unique publié avec succès sur le blog LinkedIn !');
         setArticleTitle('');
         setArticleSummary('');
         setArticleContent('');
@@ -151,15 +162,15 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
           {/* TAB 2: SUBSCRIBERS MANAGER */}
           {activeTab === 'subscribers' && <AdminSubscribersManager defaultAuthenticated={true} />}
 
-          {/* TAB 3: NEW BLOG ARTICLE PUBLISHER */}
+          {/* TAB 3: NEW BLOG ARTICLE PUBLISHER WITH ANTI-DUPLICATION */}
           {activeTab === 'new-article' && (
             <form onSubmit={handleCreateArticle} className="space-y-4 bg-white p-6 rounded-3xl border-2 border-metricool-purple metricool-card-shadow">
               <div className="bg-purple-50 p-4 rounded-2xl border border-purple-200 text-xs space-y-1">
                 <h4 className="font-extrabold text-metricool-purple flex items-center gap-1.5 text-sm">
-                  <Sparkles className="w-4 h-4 text-metricool-pink" /> Publier un Article dans la Base de Données LinkedIn
+                  <Sparkles className="w-4 h-4 text-metricool-pink" /> Publier un Article Unique dans la Base LinkedIn
                 </h4>
                 <p className="text-slate-600 font-medium">
-                  Rédigez directement un nouvel article expert. Il apparaîtra instantanément sur la page principale du blog.
+                  Rédigez un nouvel article. L'algorithme d'anti-duplication vérifie automatiquement qu'aucun contenu similaire n'existe déjà.
                 </p>
               </div>
 
@@ -235,6 +246,13 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
                 />
               </div>
 
+              {articleError && (
+                <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-xs font-extrabold text-rose-900 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>{articleError}</span>
+                </div>
+              )}
+
               {articleSuccess && (
                 <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-extrabold text-emerald-900 flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -247,7 +265,7 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
                 disabled={isPublishingArticle}
                 className="w-full py-3 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
               >
-                <Send className="w-4 h-4" /> Publier l'Article dans la Base Supabase
+                <Send className="w-4 h-4" /> Vérifier l'Unicité & Publier l'Article Supabase
               </button>
             </form>
           )}

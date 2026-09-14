@@ -10,6 +10,41 @@ function verifyAdminPermission(request: Request, body?: any): boolean {
   return headerPass === ADMIN_PASSWORD || bodyPass === ADMIN_PASSWORD;
 }
 
+function checkArticleSimilarity(
+  newTitle: string,
+  existingArticles: Array<{ title: string; summary?: string }>
+): { isSimilar: boolean; matchingTitle?: string } {
+  const normalize = (str: string) =>
+    (str || '').toLowerCase().replace(/[^a-z0-9àâçéèêëîïôûùüÿñæœ]/gi, ' ').trim();
+
+  const cleanNewTitle = normalize(newTitle);
+  const wordsNew = new Set(cleanNewTitle.split(/\s+/).filter((w) => w.length > 3));
+
+  for (const art of existingArticles) {
+    const cleanExistingTitle = normalize(art.title);
+
+    // Exact or direct inclusion match
+    if (cleanNewTitle === cleanExistingTitle) {
+      return { isSimilar: true, matchingTitle: art.title };
+    }
+
+    // Keyword overlap similarity check
+    const wordsExisting = new Set(cleanExistingTitle.split(/\s+/).filter((w) => w.length > 3));
+    if (wordsNew.size > 0 && wordsExisting.size > 0) {
+      let intersection = 0;
+      wordsNew.forEach((w) => {
+        if (wordsExisting.has(w)) intersection++;
+      });
+      const minLength = Math.min(wordsNew.size, wordsExisting.size);
+      if (intersection / minLength >= 0.75) {
+        return { isSimilar: true, matchingTitle: art.title };
+      }
+    }
+  }
+
+  return { isSimilar: false };
+}
+
 export async function GET() {
   try {
     const supabase = createClientServer();
@@ -33,7 +68,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // Admin authorization guard
+    // 1. Admin authorization guard
     if (!verifyAdminPermission(request, body)) {
       return NextResponse.json(
         { error: 'Accès refusé : Seul un administrateur authentifié peut créer ou publier des articles.' },
@@ -41,7 +76,24 @@ export async function POST(request: Request) {
       );
     }
 
+    // 2. Anti-duplication / similarity check against existing articles
     const supabase = createClientServer();
+    let existingList = INITIAL_STRATEGIES;
+    try {
+      const { data: dbData } = await supabase.from('linkedin_strategies').select('title, summary');
+      if (dbData && dbData.length > 0) existingList = dbData as any;
+    } catch {}
+
+    const similarityCheck = checkArticleSimilarity(body.title || '', existingList);
+    if (similarityCheck.isSimilar) {
+      return NextResponse.json(
+        {
+          error: `⚠️ Article similaire détecté ("${similarityCheck.matchingTitle}"). Afin d'éviter la réplication, modifiez le titre ou l'angle de votre article.`,
+          isDuplicate: true,
+        },
+        { status: 400 }
+      );
+    }
 
     const { data, error } = await supabase
       .from('linkedin_strategies')
