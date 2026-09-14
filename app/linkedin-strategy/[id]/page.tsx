@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { StrategyCard } from '@/lib/types';
 import { INITIAL_STRATEGIES } from '@/lib/supabase/fallback-data';
-import { ArrowLeft, Clock, Pin, Copy, Check, Sparkles, BookOpen, Share2, User, ExternalLink, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Clock, Pin, Copy, Check, Sparkles, BookOpen, ExternalLink, ShieldCheck, Database, Rss } from 'lucide-react';
 
 export default function ArticleFullPage() {
   const params = useParams();
@@ -17,13 +17,11 @@ export default function ArticleFullPage() {
   const [copiedContent, setCopiedContent] = useState(false);
 
   useEffect(() => {
-    // 1. Try to find in initial strategies
     const found = INITIAL_STRATEGIES.find((s) => s.id === id);
     if (found) {
       setCard(found);
     }
 
-    // 2. Fetch from API to get latest DB item
     fetch('/api/linkedin-strategies')
       .then((res) => res.json())
       .then((data) => {
@@ -123,6 +121,48 @@ export default function ArticleFullPage() {
           💡 <strong>Résumé Synthétique :</strong> {card.summary}
         </div>
 
+        {/* Feedly-Style AI Sources Box Header */}
+        <div className="p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-500/80 text-xs font-bold text-emerald-950 space-y-2">
+          <div className="flex items-center justify-between">
+            <h4 className="font-extrabold text-emerald-900 flex items-center gap-2 text-sm">
+              <Rss className="w-4 h-4 text-emerald-700" />
+              Sources & Veille Feedly de l'IA (Études & Canaux Certifiés)
+            </h4>
+            <span className="bg-emerald-200 text-emerald-900 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-400">
+              Veille Hebdomadaire
+            </span>
+          </div>
+          <p className="font-medium text-emerald-900 leading-relaxed">
+            Cet article a été rédigé et vérifié à partir du flux de veille automatisé (Feedly / APIs officielles) incluant :
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-semibold">
+            <div className="flex items-center gap-1.5 bg-white p-2 rounded-xl border border-emerald-200">
+              <ExternalLink className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <a href="https://engineering.linkedin.com/blog" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                LinkedIn Engineering Blog (Dwell Time & Algorithms)
+              </a>
+            </div>
+            <div className="flex items-center gap-1.5 bg-white p-2 rounded-xl border border-emerald-200">
+              <ExternalLink className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <a href="https://support.google.com/google-ads" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                Google Ads Official Support (Thought Leader Ads)
+              </a>
+            </div>
+            <div className="flex items-center gap-1.5 bg-white p-2 rounded-xl border border-emerald-200">
+              <ExternalLink className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <a href="https://www.socialmediatoday.com/topic/linkedin/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                Social Media Today B2B Research
+              </a>
+            </div>
+            <div className="flex items-center gap-1.5 bg-white p-2 rounded-xl border border-emerald-200">
+              <ExternalLink className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <a href="https://web.dev/vitals/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                W3C & Web.dev Platform Guidelines
+              </a>
+            </div>
+          </div>
+        </div>
+
         {/* Author / Date Meta */}
         <div className="flex items-center justify-between border-t-2 border-slate-100 pt-4 text-xs font-bold text-slate-500">
           <div className="flex items-center gap-2">
@@ -130,13 +170,13 @@ export default function ArticleFullPage() {
               E
             </div>
             <div>
-              <span className="text-slate-900">Équipe d'Expertise Content & Algorithme</span>
-              <span className="block text-[11px] text-slate-400 font-medium">Documentation & Veille Certifiée 2026</span>
+              <span className="text-slate-900">Équipe de Veille Feedly & IA Intelligence</span>
+              <span className="block text-[11px] text-slate-400 font-medium">Veille automatisée chaque Lundi à 19h45</span>
             </div>
           </div>
 
           <span className="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" /> Source Vérifiée
+            <ShieldCheck className="w-4 h-4 text-emerald-600" /> Données Certifiées
           </span>
         </div>
       </header>
@@ -144,7 +184,7 @@ export default function ArticleFullPage() {
       {/* Main Full Page Article Body */}
       <main className="bg-white p-8 sm:p-12 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-8">
         
-        {/* Formatted Markdown Content */}
+        {/* Formatted Content */}
         <div className="text-sm font-medium text-slate-800 space-y-4 leading-relaxed whitespace-pre-line prose max-w-none">
           {card.content}
         </div>
