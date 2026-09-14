@@ -131,113 +131,65 @@ La croissance de votre compte ne dépend pas uniquement de vos propres publicati
   },
   {
     id: 'strat-6',
-    title: 'Copywriting B2B : Les Formules AIDA & PAS',
-    category: 'Copywriting',
-    tags: ['copywriting', 'conversion', 'structure', 'rédaction'],
-    summary: 'Comment structurer le corps de vos posts pour transformer des lecteurs passifs en clients engagés.',
-    content: `### Formule 1 : La Méthode PAS (Problem - Agitate - Solve)
-- **Problem (Problème)** : Identifier clairement le point de douleur ("Vous passez des heures à rédiger sans obtenir de rdv ?").
-- **Agitate (Agitation)** : Montrer les conséquences d'ignorer ce problème ("Résultat : votre prospect va chez vos concurrents et votre budget s'épuise").
-- **Solve (Solution)** : Apporter votre cadre ou méthodologie en 3 points clairs.
+    title: 'Le Social Selling B2B : La Méthode Inbound pour Générer des Leads',
+    category: 'Engagement',
+    tags: ['social selling', 'leads', 'b2b', 'prospection', 'ssi'],
+    summary: 'Comment attirer des prospects qualifiés sur votre profil LinkedIn sans envoyer de messages de prospection à froid.',
+    content: `### Qu'est-ce que le Social Selling B2B ?
+Le Social Selling consiste à utiliser LinkedIn pour écouter, interagir et apporter de la valeur à vos prospects cibles avant même de tenter une vente. L'objectif est d'être la première personne à laquelle votre prospect pense lorsqu'il ressent un besoin.
 
-### Formule 2 : La Méthode AIDA (Attention - Intérêt - Désir - Action)
-- **Attention** : Le Hook visuel et textuel.
-- **Intérêt** : Une histoire ou une statistique frappante.
-- **Désir** : La transformation concrète offerte par votre conseil.
-- **Action** : Un Call-to-Action unique et simple ("Donnez votre avis en commentaire").`,
+### Les 4 Piliers du Social Selling Index (SSI) :
+1. **Créer une marque professionnelle forte** (profil optimisé client-centric).
+2. **Trouver les bonnes personnes** (recherche ciblée de décideurs).
+3. **Échanger des informations** (partager du contenu à forte valeur ajoutée).
+4. **Construire des relations de confiance** (commenter et échanger en message privé avec empathie).
+
+### La Méthode des Triggers (Déclencheurs d'Achat) :
+- Surveillez les mouvements dans les entreprises cibles (levées de fonds, recrutements, nominations).
+- Réagissez aux publications de vos prospects dans les 30 minutes avec un commentaire d'expert.
+- Envoyez un message privé contextualisé uniquement APRÈS avoir interagi avec leur contenu.`,
     examples: [
-      "💡 Règle de clarté : 1 post = 1 seule idée principale = 1 seul appel à l'action."
+      "Exemple de premier message privé : 'Bonjour [Prénom], j'ai adoré votre réflexion sur [Sujet]. De notre côté, nous avons remarqué que [Donnée]. Au plaisir d'échanger !'"
     ],
     is_pinned: false,
     created_at: new Date().toISOString(),
   },
   {
     id: 'strat-7',
-    title: 'Optimisation du Profil LinkedIn : Convertir les Vues en Leads',
-    category: 'Format',
-    tags: ['profil', 'conversion', 'bannière', 'titre', 'leads'],
-    summary: 'Transformez votre profil personnel en une page de vente haute conversion.',
-    content: `### Les 5 Éléments Clés d'un Profil Vendeur :
+    title: 'Comment Rédiger des Posts Storytelling Captivants (La Structure en 5 Actes)',
+    category: 'Copywriting',
+    tags: ['storytelling', 'émotion', 'rédaction', 'histoire', 'conversion'],
+    summary: 'Le storytelling est l\'outil le plus puissant pour humaniser votre marque et susciter l\'empathie de vos lecteurs.',
+    content: `### La Structure en 5 Actes d'un Storytelling LinkedIn Virant :
 
-1. **Le Titre de Profil (Headline)** :
-   Ne vous contentez pas de votre poste ("CEO chez X"). Utilisez la formule : *J'aide [Cible] à obtenir [Résultat] grâce à [Méthode].*
-
-2. **La Bannière Visuelle** :
-   Elle constitue votre panneau publicitaire principal. Affichez votre proposition de valeur, votre preuve sociale (logos clients) et un CTA vers votre lien.
-
-3. **La Section Sélection (Featured)** :
-   Mettez en avant votre meilleur carrousel, votre lien de prise de rendez-vous ou l'inscription à votre newsletter.
-
-4. **Le Mode Créateur & Lien de Profil** :
-   Activez le bouton de lien personnalisé sous votre titre (ex: "Recevoir ma newsletter gratuite").
-
-5. **La Section À propos (About)** :
-   Racontez votre histoire avec la structure : Problème constaté -> Votre mission -> Résultats obtenus -> Prochaine étape pour le lecteur.`,
+1. **L'Élément Déclencheur (Slide / Ligne 1)** : Présenter la situation initiale et la rupture ("En 2022, j'ai pris la pire décision de ma carrière d'entrepreneur").
+2. **L'Épreuve / Le Creux de la Vague** : Montrer la vulnérabilité et les obstacles rencontrés ("0 client pendant 4 mois, un solde bancaire au plus bas").
+3. **La Prise de Conscience / Le Délicat Pivot** : L'élément clé qui a tout débloqué ("Puis j'ai compris la règle fondamentale du positionnement B2B").
+4. **Les Résultats Concrets** : Chiffres et preuves à l'appui (+150k€ de CA générés).
+5. **La Leçon pour le Lecteur & CTA** : Ce que votre réseau doit retenir pour éviter la même erreur.`,
     examples: [
-      "Exemple de titre efficace : 'J'aide les fondateurs SaaS à doubler leur ARR avec du contenu LinkedIn B2B | Top Voice Content 2026'"
+      "💡 Règle de vulnérabilité : Soyez authentique mais ne vous victimisez pas. Montrez toujours comment vous avez surmonté l'obstacle."
     ],
     is_pinned: false,
     created_at: new Date().toISOString(),
   },
   {
     id: 'strat-8',
-    title: 'Format Vidéo & Native Shorts : Les Règles 2026',
+    title: 'La Stratégie de Repurposing : 1 Seul Contenu Décliné en 7 Formats',
     category: 'Format',
-    tags: ['vidéo', 'shorts', 'tiktok-style', 'engagement', 'algorithme'],
-    summary: 'La vidéo verticale courte prend une place prépondérante dans l\'algorithme LinkedIn.',
-    content: `### Les Bonnes Pratiques de la Vidéo LinkedIn :
+    tags: ['repurposing', 'productivité', 'recyclage', 'content-engine'],
+    summary: 'Ne réinventez pas la roue à chaque post. Maximisez le rendement de chaque idée forte.',
+    content: `### Comment Décliner un Seul Article ou Podcast en 7 Contenus :
 
-1. **Durée Idéale** : 45 à 90 secondes maximum. Les vidéos trop longues ont un taux d'abandon élevé.
-2. **Format Vertical (9:16 ou 4:5)** : Optimisé pour la consultation sur smartphone.
-3. **Sous-titres Obligatoires** : 85% des vidéos sur LinkedIn sont visionnées SANS LE SON.
-4. **Hook visuel dans les 2 premières secondes** : Mouvement, texte à l'écran ou question directe.
-5. **Texte d'accompagnement** : Rédigez tout de même un résumé sous forme de post texte pour les utilisateurs qui préfèrent lire.`,
+- **Jour 1** : 1 Carrousel PDF synthèse des 5 points clés.
+- **Jour 2** : 1 Post Texte axé sur la contre-intuition (Le Hook choc).
+- **Jour 3** : 1 Vidéo courte / Short (60 secondes résumant l'idée 1).
+- **Jour 4** : 1 Post Storytelling sur les coulisses de cette découverte.
+- **Jour 5** : 1 Sondage interactif pour faire réagir votre communauté.
+- **Jour 6** : 1 Édition de Newsletter récapitulative.
+- **Jour 7** : 1 Citation visuelle forte sous forme d'image.`,
     examples: [
-      "📌 Outil conseillé : Utilisez CapCut ou Submagic pour générer des sous-titres dynamiques et animés."
-    ],
-    is_pinned: false,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'strat-9',
-    title: 'Les 7 Erreurs Fatales qui Détruisent la Portée d\'un Post',
-    category: 'Algorithme',
-    tags: ['erreurs', 'pénalités', 'portée', 'algorithme', 'bonnes-pratiques'],
-    summary: 'Évitez les pièges classiques qui bloquent la diffusion algorithmique de vos contenus.',
-    content: `### Les 7 Péchés Capitaux sur LinkedIn :
-
-1. **Mettre un lien externe dans le corps du post** (réduit le reach de 40%).
-2. **Modifier le texte dans les 15 minutes après publication**.
-3. **Utiliser des pods d'engagement artificiels ou des robots de likes** (LinkedIn détecte et shadowban les comptes concernés).
-4. **Ne pas répondre aux commentaires sous son post**.
-5. **Publier 2 posts à moins de 4 heures d'intervalle** (le 2ème post cannibalise la portée du 1er).
-6. **Mettre plus de 5 à 6 hashtags** (la recommandation actuelle est de 3 à 5 hashtags très ciblés).
-7. **Rédiger de gros pavés de texte non aérés** sans sauts de ligne.`,
-    examples: [
-      "🚫 À bannir : Les groupes WhatsApp / Telegram de 'like pour like' qui dénaturent votre algorithme d'audience."
-    ],
-    is_pinned: false,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'strat-10',
-    title: 'Stratégie de Newsletter LinkedIn : Créer une Audience Captive',
-    category: 'Copywriting',
-    tags: ['newsletter', 'audience', 'email', 'fidélisation'],
-    summary: 'Comment utiliser le format Newsletter natif de LinkedIn pour envoyer une notification à 100% de vos abonnés.',
-    content: `### Pourquoi lancer une Newsletter LinkedIn ?
-Lorsqu'un membre s'abonne à votre Newsletter LinkedIn, il reçoit **une notification Push ET un e-mail automatique** à chaque nouvelle édition. C'est l'un des rares canaux à fort taux de délivrabilité.
-
-### Les Règles d'une Newsletter à Succès :
-- **Périodicité constante** : Publiez une fois par semaine ou tous les 15 jours à jour fixe.
-- **Titre clair et accrocheur** : Donnez un nom explicite (ex: *La Veille B2B*, *Le Decodeur IA*).
-- **Structure éditoriale récurrente** :
-  1. Édito d'ouverture (200 mots)
-  2. 3 Actualités ou Ressources analysées
-  3. Le conseil de la semaine
-  4. Appel à l'action vers votre produit/service.`,
-    examples: [
-      "💡 Astuce : Recyclez vos meilleures éditions de newsletter en carrousels PDF pour maximiser votre retour sur investissement."
+      "💡 Gain de temps : 2 heures de création de contenu le lundi suffisent pour alimenter toute votre semaine."
     ],
     is_pinned: false,
     created_at: new Date().toISOString(),
