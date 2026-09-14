@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Mail, Lock, User, Linkedin, Sparkles, ArrowRight, Loader2, KeyRound, UserPlus } from 'lucide-react';
+import { Mail, Lock, User, Linkedin, Sparkles, ArrowRight, Loader2, KeyRound, UserPlus, CheckCircle2 } from 'lucide-react';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -16,7 +16,32 @@ export default function SignupPage() {
   const [role, setRole] = useState('Créateur B2B');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
+  const [detectionNotice, setDetectionNotice] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const handleAutoDetectIndustry = async () => {
+    if (!username.trim() && !fullName.trim() && !role.trim()) return;
+
+    setIsDetecting(true);
+    setDetectionNotice('');
+
+    try {
+      const res = await fetch('/api/ai-detect-industry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, fullName, role }),
+      });
+      const data = await res.json();
+
+      if (data.detectedIndustry) {
+        setIndustry(data.detectedIndustry);
+        setDetectionNotice(`🤖 Secteur déduit par l'IA : "${data.detectedIndustry}" (Certitude ${data.confidenceScore}%)`);
+      }
+    } catch {} finally {
+      setIsDetecting(false);
+    }
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,9 +118,9 @@ export default function SignupPage() {
         <div className="w-12 h-12 bg-metricool-purple text-metricool-yellow rounded-2xl flex items-center justify-center mx-auto shadow-md">
           <UserPlus className="w-6 h-6 text-metricool-yellow" />
         </div>
-        <h1 className="text-2xl font-extrabold text-metricool-purple">Inscription & Inscription Gratuit</h1>
+        <h1 className="text-2xl font-extrabold text-metricool-purple">Inscription & Auto-Détection IA</h1>
         <p className="text-xs font-medium text-slate-500">
-          Créez votre compte membre pour personnaliser vos conseils LinkedIn et recevoir notre veille tech.
+          Renseignez vos informations. L'IA détecte automatiquement votre secteur pour personnaliser votre profil Supabase.
         </p>
       </div>
 
@@ -144,8 +169,15 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-metricool-pink" /> Secteur d'Activité
+            <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center justify-between">
+              <span>Secteur IA</span>
+              <button
+                type="button"
+                onClick={handleAutoDetectIndustry}
+                className="text-[10px] font-extrabold text-metricool-purple hover:underline"
+              >
+                {isDetecting ? 'Détection...' : '🤖 Auto-IA'}
+              </button>
             </label>
             <select
               value={industry}
@@ -158,9 +190,18 @@ export default function SignupPage() {
               <option value="FinTech & Finance">FinTech & Finance</option>
               <option value="E-Commerce & Retail">E-Commerce & Retail</option>
               <option value="Conseil & Consulting">Conseil & Consulting</option>
+              <option value="Immobilier">Immobilier</option>
+              <option value="Santé & MedTech">Santé & MedTech</option>
             </select>
           </div>
         </div>
+
+        {detectionNotice && (
+          <div className="p-2.5 bg-emerald-50 border border-emerald-300 rounded-xl text-[11px] font-extrabold text-emerald-900 flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span>{detectionNotice}</span>
+          </div>
+        )}
 
         <div>
           <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
@@ -189,7 +230,7 @@ export default function SignupPage() {
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Création du compte...
+              <Loader2 className="w-4 h-4 animate-spin" /> Création du compte & Enregistrement Supabase...
             </>
           ) : (
             <>

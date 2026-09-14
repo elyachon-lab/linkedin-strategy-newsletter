@@ -28,6 +28,7 @@ import {
 export function ProfileAuditTool() {
   const [queryInput, setQueryInput] = useState('');
   const [industryInput, setIndustryInput] = useState('');
+  const [detectedConfidence, setDetectedConfidence] = useState<number | null>(null);
   const [validatedUrl, setValidatedUrl] = useState<string | null>(null);
   const [previewHandle, setPreviewHandle] = useState<string | null>(null);
   const [previewName, setPreviewName] = useState<string | null>(null);
@@ -37,8 +38,8 @@ export function ProfileAuditTool() {
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
-  // Step 1 -> Step 2: Validate input and show clickable preview link
-  const handleValidateSearch = (e: React.FormEvent) => {
+  // Step 1 -> Step 2: Validate input, call AI Industry Detector, and show clickable preview link
+  const handleValidateSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
     if (!queryInput.trim()) return;
@@ -62,12 +63,25 @@ export function ProfileAuditTool() {
 
     const name = handle.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-    setTimeout(() => {
-      setValidatedUrl(url);
-      setPreviewHandle(handle);
-      setPreviewName(name);
-      setIsSearching(false);
-    }, 400);
+    // Call AI Industry Auto-Detection API
+    try {
+      const res = await fetch('/api/ai-detect-industry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ linkedinUrl: url, username: handle, fullName: name, role: input }),
+      });
+      const data = await res.json();
+
+      if (data.detectedIndustry) {
+        setIndustryInput(data.detectedIndustry);
+        setDetectedConfidence(data.confidenceScore || 98);
+      }
+    } catch {}
+
+    setValidatedUrl(url);
+    setPreviewHandle(handle);
+    setPreviewName(name);
+    setIsSearching(false);
   };
 
   // Step 2 -> Step 3 & 4: Trigger Audit Analysis
@@ -118,10 +132,10 @@ export function ProfileAuditTool() {
           <Sparkles className="w-4 h-4 text-metricool-purple" /> Outil d'Audit IA LinkedIn 2.0
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Audit de Profil & Page LinkedIn
+          Audit de Profil & Page LinkedIn avec Auto-Détection du Secteur
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-2xl leading-relaxed">
-          Saisissez un nom, un secteur ou l'URL LinkedIn de votre compte. Vérifiez visuellement le profil via son lien cliquable puis lancez l'analyse IA complète.
+          Saisissez un nom, une URL LinkedIn ou des mots-clés. L'IA extrait automatiquement le secteur d'activité, génère le lien de validation cliquable et construit votre rapport d'audit sur-mesure.
         </p>
       </div>
 
@@ -148,7 +162,7 @@ export function ProfileAuditTool() {
                   value={queryInput}
                   onChange={(e) => {
                     setQueryInput(e.target.value);
-                    setValidatedUrl(null); // Reset validation when user edits query
+                    setValidatedUrl(null);
                     setAuditReport(null);
                   }}
                   className="w-full pl-10 pr-4 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
@@ -157,15 +171,20 @@ export function ProfileAuditTool() {
             </div>
 
             <div>
-              <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                Secteur d'Activité (Optionnel)
+              <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center justify-between">
+                <span>Secteur d'Activité</span>
+                {detectedConfidence && (
+                  <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
+                    🤖 IA {detectedConfidence}%
+                  </span>
+                )}
               </label>
               <input
                 type="text"
-                placeholder="ex: SaaS & Tech, RH..."
+                placeholder="Détecté automatiquement par l'IA..."
                 value={industryInput}
                 onChange={(e) => setIndustryInput(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+                className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900 bg-white"
               />
             </div>
 
@@ -179,11 +198,11 @@ export function ProfileAuditTool() {
             >
               {isSearching ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Verification de l'identifiant...
+                  <Loader2 className="w-4 h-4 animate-spin" /> Analyse IA du profil & auto-détection du secteur...
                 </>
               ) : (
                 <>
-                  <Search className="w-4 h-4" /> Générer le Lien de Prévisualisation
+                  <Sparkles className="w-4 h-4 text-metricool-yellow" /> Détecter le Secteur & Générer le Lien Cliquable
                 </>
               )}
             </button>
@@ -197,7 +216,7 @@ export function ProfileAuditTool() {
           
           <div className="flex items-center gap-2 text-metricool-purple">
             <UserCheck className="w-6 h-6 text-emerald-600" />
-            <h3 className="text-lg font-extrabold">2. Vérification Visuelle du Compte LinkedIn</h3>
+            <h3 className="text-lg font-extrabold">2. Validation du Compte & Secteur Détecté par l'IA</h3>
           </div>
           <p className="text-xs text-slate-700 font-medium">
             Veuillez cliquer sur le lien direct ci-dessous pour confirmer qu'il s'agit bien du compte ou de la page souhaitée avant de lancer l'analyse IA.
@@ -205,8 +224,11 @@ export function ProfileAuditTool() {
 
           <div className="bg-white p-5 rounded-2xl border-2 border-metricool-purple flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="font-extrabold text-metricool-purple text-base">{previewName}</span>
+                <span className="bg-metricool-yellow text-metricool-purple border border-metricool-purple text-[10px] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  🤖 Secteur IA : {industryInput || 'SaaS & Tech'}
+                </span>
                 <span className="bg-emerald-100 text-emerald-900 border border-emerald-300 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3 text-emerald-600" /> Profil Valide
                 </span>
@@ -214,7 +236,7 @@ export function ProfileAuditTool() {
 
               {/* CLICKABLE LINK REQUIREMENT */}
               <div className="flex items-center gap-1.5 text-xs font-bold text-metricool-blue pt-1">
-                <ExternalLink className="w-4 h-4 shrink-0" />
+                <ExternalLink className="w-4 h-4 shrink-0 text-metricool-purple" />
                 <a
                   href={validatedUrl}
                   target="_blank"
@@ -244,11 +266,11 @@ export function ProfileAuditTool() {
             >
               {isAuditing ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" /> Analyse IA approfondie du compte en cours...
+                  <Loader2 className="w-5 h-5 animate-spin" /> Génération de l'audit adapté au secteur {industryInput}...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5 text-metricool-yellow" /> ✅ Confirmer le Profil & Lancer l'Audit IA
+                  <Sparkles className="w-5 h-5 text-metricool-yellow" /> ✅ Confirmer & Lancer l'Audit IA Sectoriel
                 </>
               )}
             </button>
@@ -274,12 +296,12 @@ export function ProfileAuditTool() {
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-extrabold text-white">{auditReport.displayName}</h2>
                 <span className="bg-metricool-yellow text-metricool-purple text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase border border-metricool-purple">
-                  🤖 Secteur : {auditReport.industry}
+                  🤖 Secteur IA : {auditReport.industry}
                 </span>
               </div>
               <p className="text-xs text-slate-300 font-bold flex items-center gap-2">
-                <a href={auditReport.profileUrl} target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1">
-                  @{auditReport.username} <ExternalLink className="w-3 h-3" />
+                <a href={auditReport.profileUrl} target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1 text-metricool-yellow">
+                  @{auditReport.username} <ExternalLink className="w-3 h-3 text-metricool-yellow" />
                 </a> •
                 <span>{auditReport.accountType}</span>
               </p>
@@ -310,7 +332,7 @@ export function ProfileAuditTool() {
               </div>
               <div className="text-2xl font-extrabold text-metricool-purple">{auditReport.metrics.ssiScore}/100</div>
               <span className="text-[10px] text-purple-700 font-extrabold bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
-                Top 15% du secteur
+                Top 15% secteur {auditReport.industry}
               </span>
             </div>
 
@@ -377,7 +399,7 @@ export function ProfileAuditTool() {
             {/* Recommended Content Mix */}
             <div className="bg-white p-6 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-4">
               <h3 className="text-base font-extrabold text-metricool-purple flex items-center gap-2">
-                <Layers className="w-5 h-5 text-metricool-pink" /> Répartition Optimale de la Ligne Éditoriale
+                <Layers className="w-5 h-5 text-metricool-pink" /> Répartition Éditoriale pour {auditReport.industry}
               </h3>
 
               <div className="space-y-3 pt-1">
@@ -401,7 +423,7 @@ export function ProfileAuditTool() {
             {/* Posting Windows & Copyable Hooks */}
             <div className="bg-metricool-lightBlue/40 p-6 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-4">
               <h3 className="text-base font-extrabold text-metricool-purple flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-metricool-pink" /> Accroches IA Sur-Mesure à Tester
+                <Sparkles className="w-5 h-5 text-metricool-pink" /> Accroches IA Adaptées au Secteur {auditReport.industry}
               </h3>
 
               <div className="space-y-2">
@@ -427,7 +449,7 @@ export function ProfileAuditTool() {
           {/* ACTION PLAN */}
           <div className="bg-slate-50 p-6 sm:p-8 rounded-3xl border-2 border-slate-200 space-y-3">
             <h3 className="text-base font-extrabold text-metricool-purple flex items-center gap-2">
-              <Target className="w-5 h-5 text-amber-500" /> Plan d'Action en 3 Étapes pour Booster le Compte
+              <Target className="w-5 h-5 text-amber-500" /> Plan d'Action Stratégique en 3 Étapes
             </h3>
             <div className="space-y-2 text-xs font-bold text-slate-800">
               {auditReport.editorialStrategy.actionSteps.map((step, idx) => (
