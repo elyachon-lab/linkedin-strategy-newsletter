@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Mail, Lock, User, Linkedin, Sparkles, ArrowRight, Loader2, KeyRound, UserPlus, CheckCircle2 } from 'lucide-react';
+import { Mail, User, Linkedin, ArrowRight, Loader2, KeyRound, UserPlus } from 'lucide-react';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -12,36 +12,10 @@ export default function SignupPage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
-  const [industry, setIndustry] = useState('SaaS & Tech');
   const [role, setRole] = useState('Créateur B2B');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isDetecting, setIsDetecting] = useState(false);
-  const [detectionNotice, setDetectionNotice] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
-  const handleAutoDetectIndustry = async () => {
-    if (!username.trim() && !fullName.trim() && !role.trim()) return;
-
-    setIsDetecting(true);
-    setDetectionNotice('');
-
-    try {
-      const res = await fetch('/api/ai-detect-industry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, fullName, role }),
-      });
-      const data = await res.json();
-
-      if (data.detectedIndustry) {
-        setIndustry(data.detectedIndustry);
-        setDetectionNotice(`🤖 Secteur déduit par l'IA : "${data.detectedIndustry}" (Certitude ${data.confidenceScore}%)`);
-      }
-    } catch {} finally {
-      setIsDetecting(false);
-    }
-  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +28,21 @@ export default function SignupPage() {
       const supabase = createClient();
       const cleanUsername = (username || email.split('@')[0]).replace('@', '').trim();
 
+      // 1. Silent Background AI Industry Auto-Detection based on page/profile name & info
+      let detectedIndustry = 'SaaS & Tech';
+      try {
+        const detectRes = await fetch('/api/ai-detect-industry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: cleanUsername, fullName, role }),
+        });
+        const detectData = await detectRes.json();
+        if (detectData.detectedIndustry) {
+          detectedIndustry = detectData.detectedIndustry;
+        }
+      } catch {}
+
+      // 2. Supabase Auth Signup
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
@@ -61,7 +50,7 @@ export default function SignupPage() {
           data: {
             full_name: fullName.trim(),
             username: cleanUsername,
-            industry,
+            industry: detectedIndustry,
             role,
             linkedin_url: `https://www.linkedin.com/in/${cleanUsername}`,
           },
@@ -77,7 +66,7 @@ export default function SignupPage() {
       const userProfile = {
         username: cleanUsername,
         fullName: fullName.trim(),
-        industry,
+        industry: detectedIndustry,
         role,
         followerCount: 2500,
         linkedinUrl: `https://www.linkedin.com/in/${cleanUsername}`,
@@ -87,7 +76,7 @@ export default function SignupPage() {
       localStorage.setItem('linkedin_user_profile', JSON.stringify(userProfile));
       document.cookie = `linkedin_user_profile=true; path=/; max-age=86400`;
 
-      // Post to profile API to persist in Supabase table
+      // Persist in Supabase user_profiles table
       try {
         await fetch('/api/profile', {
           method: 'POST',
@@ -97,13 +86,13 @@ export default function SignupPage() {
             fullName: fullName.trim(),
             email: email.trim(),
             username: cleanUsername,
-            industry,
+            industry: detectedIndustry,
             role,
           }),
         });
       } catch {}
 
-      router.push('/profil');
+      router.push('/mon-espace-linkedin');
     } catch {
       setErrorMessage('Impossible de créer le compte. Veuillez réessayer.');
     } finally {
@@ -118,9 +107,9 @@ export default function SignupPage() {
         <div className="w-12 h-12 bg-metricool-purple text-metricool-yellow rounded-2xl flex items-center justify-center mx-auto shadow-md">
           <UserPlus className="w-6 h-6 text-metricool-yellow" />
         </div>
-        <h1 className="text-2xl font-extrabold text-metricool-purple">Inscription & Auto-Détection IA</h1>
+        <h1 className="text-2xl font-extrabold text-metricool-purple">Inscription Membre</h1>
         <p className="text-xs font-medium text-slate-500">
-          Renseignez vos informations. L'IA détecte automatiquement votre secteur pour personnaliser votre profil Supabase.
+          Créez votre compte. L'application détecte automatiquement le secteur d'activité de votre profil pour personnaliser vos rapports.
         </p>
       </div>
 
@@ -154,54 +143,33 @@ export default function SignupPage() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <Linkedin className="w-3.5 h-3.5 text-metricool-blue" /> Identifiant LinkedIn
+              <Linkedin className="w-3.5 h-3.5 text-metricool-blue" /> Identifiant ou URL LinkedIn
             </label>
             <input
               type="text"
               placeholder="jeandupont"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center justify-between">
-              <span>Secteur IA</span>
-              <button
-                type="button"
-                onClick={handleAutoDetectIndustry}
-                className="text-[10px] font-extrabold text-metricool-purple hover:underline"
-              >
-                {isDetecting ? 'Détection...' : '🤖 Auto-IA'}
-              </button>
+            <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-metricool-purple" /> Intitulé de Poste / Bio
             </label>
-            <select
-              value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
-              className="w-full px-3 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white text-slate-900"
-            >
-              <option value="SaaS & Tech">SaaS & Tech</option>
-              <option value="Marketing & Growth">Marketing & Growth</option>
-              <option value="RH & Recrutement">RH & Recrutement</option>
-              <option value="FinTech & Finance">FinTech & Finance</option>
-              <option value="E-Commerce & Retail">E-Commerce & Retail</option>
-              <option value="Conseil & Consulting">Conseil & Consulting</option>
-              <option value="Immobilier">Immobilier</option>
-              <option value="Santé & MedTech">Santé & MedTech</option>
-            </select>
+            <input
+              type="text"
+              placeholder="ex: Head of Growth, CEO..."
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium text-slate-900"
+            />
           </div>
         </div>
-
-        {detectionNotice && (
-          <div className="p-2.5 bg-emerald-50 border border-emerald-300 rounded-xl text-[11px] font-extrabold text-emerald-900 flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>{detectionNotice}</span>
-          </div>
-        )}
 
         <div>
           <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
@@ -230,7 +198,7 @@ export default function SignupPage() {
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Création du compte & Enregistrement Supabase...
+              <Loader2 className="w-4 h-4 animate-spin" /> Analyse du profil & Création du compte...
             </>
           ) : (
             <>
