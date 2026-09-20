@@ -135,6 +135,7 @@ export async function POST(request: Request) {
         { error: 'Veuillez renseigner un nom, un secteur d\'activité ou une URL LinkedIn valide.' },
         { status: 400 }
       );
+    }
     const { handle, url, accountType } = extractHandleAndUrl(query);
     const { industry: autoIndustry, confidence } = detectIndustryFromQuery(query);
     const finalIndustry = industry || autoIndustry || 'Communication & Marketing';
