@@ -58,14 +58,26 @@ export default function UserProfilePage() {
         if (savedLocal) {
           try {
             const parsed = JSON.parse(savedLocal);
-            if (parsed.fullName) setFullName(parsed.fullName);
-            if (parsed.username) setUsername(parsed.username);
-            if (parsed.industry) setIndustry(parsed.industry);
-            if (parsed.role) setRole(parsed.role);
-            if (parsed.followerCount) setFollowerCount(parsed.followerCount.toString());
-            if (parsed.websiteUrl) setWebsiteUrl(parsed.websiteUrl);
+            if (
+              parsed &&
+              parsed.linkedinUrl &&
+              parsed.username &&
+              parsed.username !== 'elyachon' &&
+              parsed.username !== 'jeandupont'
+            ) {
+              if (parsed.fullName) setFullName(parsed.fullName);
+              if (parsed.username) setUsername(parsed.username);
+              if (parsed.linkedinUrl) setLinkedinUrl(parsed.linkedinUrl);
+              if (parsed.industry) setIndustry(parsed.industry);
+              if (parsed.role) setRole(parsed.role);
+              if (parsed.followerCount) setFollowerCount(parsed.followerCount.toString());
+              if (parsed.websiteUrl) setWebsiteUrl(parsed.websiteUrl);
+              setIsLoading(false);
+              return;
+            }
           } catch {}
         }
+        localStorage.removeItem('linkedin_user_profile');
         setIsLoading(false);
       });
   }, []);

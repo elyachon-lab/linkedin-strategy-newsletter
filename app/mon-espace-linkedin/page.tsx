@@ -123,13 +123,19 @@ export default function DedicatedClientSpacePage() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
 
-  // Load user profile & trigger auto-audit ONLY if profile exists with URL/username
+  // Load user profile & trigger auto-audit ONLY if profile exists with valid URL
   useEffect(() => {
     const saved = localStorage.getItem('linkedin_user_profile');
     if (saved) {
       try {
         const parsed: LinkedInUserProfile = JSON.parse(saved);
-        if (parsed && (parsed.linkedinUrl || parsed.username)) {
+        if (
+          parsed &&
+          parsed.linkedinUrl &&
+          parsed.username &&
+          parsed.username !== 'elyachon' &&
+          parsed.username !== 'jeandupont'
+        ) {
           setProfile(parsed);
           if (parsed.websiteUrl) setWebsiteUrl(parsed.websiteUrl);
           runAutoAuditForRegisteredUser(parsed);
@@ -137,6 +143,10 @@ export default function DedicatedClientSpacePage() {
         }
       } catch {}
     }
+    // Effacement du cache local si aucun profil valide n'est lié
+    localStorage.removeItem('linkedin_user_profile');
+    localStorage.removeItem('registered_linkedin_accounts');
+    document.cookie = 'linkedin_user_profile=; path=/; max-age=0';
     setProfile(null);
   }, []);
 
@@ -160,7 +170,7 @@ export default function DedicatedClientSpacePage() {
     }
 
     if (!handle) {
-      setOnboardingError('Veuillez saisir une URL ou un pseudo LinkedIn valide.');
+      setOnboardingError('Veuillez saisir une URL LinkedIn valide.');
       setIsOnboardingSubmitting(false);
       return;
     }
@@ -182,6 +192,7 @@ export default function DedicatedClientSpacePage() {
       industry: detectedIndustry,
       role: 'Professionnel B2B',
       linkedinUrl: fullUrl,
+      followerCount: 0,
       userSyncData: {
         isConnected: false,
         connectedAt: new Date().toISOString(),
@@ -251,46 +262,43 @@ export default function DedicatedClientSpacePage() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const registeredUrl = profile?.linkedinUrl || (profile?.username ? `https://www.linkedin.com/in/${profile.username}` : '');
+  const registeredUrl = profile?.linkedinUrl || '';
   const isAccountSynced = !!profile?.userSyncData?.isConnected;
 
-  // IF NO LINKED PROFILE: RENDER MANDATORY LOCKED ONBOARDING GATE
-  if (!profile || (!profile.linkedinUrl && !profile.username)) {
+  // IF NO LINKED PROFILE: RENDER MANDATORY LOCKED ONBOARDING GATE (GUARD STATE)
+  if (!profile || !profile.linkedinUrl) {
     return (
-      <div className="max-w-3xl mx-auto py-12 px-4 space-y-8 animate-fadeIn">
-        <div className="bg-[#0D1322] border border-zinc-800 rounded-3xl p-8 sm:p-12 text-center brand-card-shadow space-y-8">
+      <div className="min-h-[75vh] flex items-center justify-center py-12 px-4 animate-fadeIn">
+        <div className="bg-[#0D1117] border border-zinc-800 rounded-xl p-8 sm:p-12 text-center max-w-xl w-full brand-card-shadow space-y-6">
           
-          <div className="w-20 h-20 rounded-3xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto shadow-inner">
-            <Lock className="w-10 h-10 text-cyan-400" />
+          <div className="w-16 h-16 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400 flex items-center justify-center mx-auto">
+            <Lock className="w-8 h-8 text-sky-400" />
           </div>
 
-          <div className="space-y-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs font-extrabold uppercase tracking-wider">
-              🔒 Espace Audit Verrouillé
-            </span>
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Liez votre Profil LinkedIn pour Débloquer votre Audit
+          <div className="space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Validez votre Profil LinkedIn
             </h1>
-            <p className="text-sm text-zinc-400 font-medium max-w-xl mx-auto leading-relaxed">
-              Veuillez renseigner votre URL LinkedIn ou connecter votre compte pour accéder à votre audit et à vos recommandations IA adaptées à vos vraies données.
+            <p className="text-xs sm:text-sm text-zinc-400 font-medium max-w-md mx-auto leading-relaxed">
+              L'accès au tableau d'audit nécessite un profil LinkedIn valide. Renseignez votre profil pour débloquer votre espace.
             </p>
           </div>
 
-          {/* Interactive URL Input Form */}
-          <form onSubmit={handleOnboardingSubmit} className="space-y-4 max-w-lg mx-auto text-left">
+          {/* Interactive Single Field Form */}
+          <form onSubmit={handleOnboardingSubmit} className="space-y-4 text-left">
             <div>
-              <label className="block text-xs font-extrabold uppercase text-zinc-300 mb-2">
-                URL du Profil LinkedIn ou Pseudo
+              <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">
+                URL de votre profil LinkedIn
               </label>
               <div className="relative">
-                <Linkedin className="absolute left-4 top-3.5 w-5 h-5 text-zinc-400" />
+                <Linkedin className="absolute left-3.5 top-3.5 w-4 h-4 text-zinc-500" />
                 <input
-                  type="text"
+                  type="url"
                   required
-                  placeholder="ex: https://www.linkedin.com/in/votre-nom ou pseudo"
+                  placeholder="https://www.linkedin.com/in/votre-profil"
                   value={onboardingUrl}
                   onChange={(e) => setOnboardingUrl(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-[#111827] border border-zinc-800 rounded-2xl text-sm font-semibold text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 bg-[#161B22] border border-zinc-800 rounded-xl text-xs font-semibold text-white placeholder-zinc-500 focus:outline-none focus:border-sky-500 transition-colors"
                 />
               </div>
             </div>
@@ -304,35 +312,19 @@ export default function DedicatedClientSpacePage() {
             <button
               type="submit"
               disabled={isOnboardingSubmitting}
-              className="w-full py-3.5 px-6 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-extrabold rounded-2xl text-sm shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 px-6 bg-sky-600 hover:bg-sky-500 text-white font-extrabold rounded-xl text-xs transition-all flex items-center justify-center gap-2"
             >
               {isOnboardingSubmitting ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin text-white" /> Analyse & Détection du Profil...
+                  <Loader2 className="w-4 h-4 animate-spin text-white" /> Analyse du profil...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5 text-cyan-200" /> Valider mon profil & Lancer l'audit
+                  <Sparkles className="w-4 h-4 text-sky-200" /> Connecter mon profil réel
                 </>
               )}
             </button>
           </form>
-
-          <div className="flex items-center gap-4 max-w-lg mx-auto my-6">
-            <div className="flex-1 h-px bg-zinc-800" />
-            <span className="text-xs font-extrabold uppercase text-zinc-500">OU</span>
-            <div className="flex-1 h-px bg-zinc-800" />
-          </div>
-
-          {/* 1-Click LinkedIn OAuth Button */}
-          <div className="max-w-lg mx-auto">
-            <button
-              onClick={() => setIsConnectModalOpen(true)}
-              className="w-full py-3.5 px-6 bg-[#0A66C2] hover:bg-[#084e96] text-white font-extrabold rounded-2xl text-sm transition-all shadow-md flex items-center justify-center gap-2"
-            >
-              <Linkedin className="w-5 h-5" /> 1-Click Connexion Officielle LinkedIn
-            </button>
-          </div>
 
         </div>
 

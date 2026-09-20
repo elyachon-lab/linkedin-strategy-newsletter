@@ -88,7 +88,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
           username: handle,
           fullName,
           role: 'Membre LinkedIn B2B',
-          followerCount: 2500,
+          followerCount: 0,
         }),
       });
 
@@ -100,7 +100,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
         fullName,
         industry: detectedIndustry,
         role: 'Créateur & Expert B2B',
-        followerCount: 2500,
+        followerCount: 0,
         linkedinUrl: `https://www.linkedin.com/in/${handle}`,
         auditResult: data.auditResult,
       };

@@ -67,7 +67,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const count = parseInt(followerCount) || 2500;
+    const count = parseInt(followerCount) || 0;
 
     // 2. AI Auto-Detection of Industry
     const combinedText = `${username || ''} ${fullName || ''} ${role || ''}`;

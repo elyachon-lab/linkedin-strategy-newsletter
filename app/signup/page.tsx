@@ -103,7 +103,7 @@ export default function SignupPage() {
         email: email.trim(),
         industry: detectedIndustry,
         role: 'Créateur & Expert B2B',
-        followerCount: 2500,
+        followerCount: 0,
         linkedinUrl: `https://www.linkedin.com/in/${cleanUsername}`,
       };
 
@@ -142,7 +142,7 @@ export default function SignupPage() {
         email: email.trim(),
         industry: 'SaaS & Tech',
         role: 'Créateur B2B',
-        followerCount: 2500,
+        followerCount: 0,
         linkedinUrl: `https://www.linkedin.com/in/${cleanUsername}`,
       };
       localStorage.setItem('linkedin_user_profile', JSON.stringify(userProfile));

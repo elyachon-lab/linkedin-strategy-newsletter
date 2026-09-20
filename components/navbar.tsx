@@ -22,12 +22,21 @@ export function Navbar() {
     if (savedProfile) {
       try {
         const parsed = JSON.parse(savedProfile);
-        if (parsed && (parsed.linkedinUrl || parsed.username)) {
+        if (
+          parsed &&
+          parsed.linkedinUrl &&
+          parsed.username &&
+          parsed.username !== 'elyachon' &&
+          parsed.username !== 'jeandupont'
+        ) {
           setClientProfile(parsed);
         } else {
+          localStorage.removeItem('linkedin_user_profile');
+          document.cookie = 'linkedin_user_profile=; path=/; max-age=0';
           setClientProfile(null);
         }
       } catch {
+        localStorage.removeItem('linkedin_user_profile');
         setClientProfile(null);
       }
     }

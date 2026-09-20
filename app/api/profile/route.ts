@@ -60,12 +60,12 @@ export async function POST(request: Request) {
     const profileData = {
       id: userId,
       email: session?.user?.email || body.email,
-      full_name: body.full_name || body.fullName,
-      linkedin_url: body.linkedin_url || body.linkedinUrl || `https://www.linkedin.com/in/${body.username || 'user'}`,
-      username: (body.username || 'user').replace('@', '').trim(),
+      full_name: body.full_name || body.fullName || '',
+      linkedin_url: body.linkedin_url || body.linkedinUrl || '',
+      username: (body.username || '').replace('@', '').trim(),
       industry: body.industry || 'SaaS & Tech',
-      role: body.role || 'Créateur B2B',
-      follower_count: parseInt(body.follower_count || body.followerCount) || 2500,
+      role: body.role || 'Professionnel B2B',
+      follower_count: parseInt(body.follower_count || body.followerCount) || 0,
       website_url: body.website_url || body.websiteUrl || '',
       updated_at: new Date().toISOString(),
     };
