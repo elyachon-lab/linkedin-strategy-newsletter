@@ -150,46 +150,37 @@ export default function DedicatedClientSpacePage() {
     setProfile(null);
   }, []);
 
-  const handleOnboardingSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!onboardingUrl.trim()) return;
+  const handleOnboardingSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const cleanInput = onboardingUrl.trim();
+    if (!cleanInput) {
+      setOnboardingError('Veuillez saisir votre URL ou identifiant LinkedIn.');
+      return;
+    }
 
     setIsOnboardingSubmitting(true);
     setOnboardingError('');
 
-    let rawInput = onboardingUrl.trim();
-    let handle = rawInput;
-    let fullUrl = rawInput;
+    let handle = cleanInput;
+    let fullUrl = cleanInput;
 
-    if (rawInput.includes('linkedin.com/in/')) {
-      const extracted = rawInput.split('linkedin.com/in/')[1]?.split('/')[0]?.split('?')[0];
+    if (cleanInput.includes('linkedin.com/in/')) {
+      const extracted = cleanInput.split('linkedin.com/in/')[1]?.split('/')[0]?.split('?')[0];
       if (extracted) handle = extracted;
     } else {
-      handle = rawInput.replace('@', '').replace('https://', '').replace('http://', '').trim();
+      handle = cleanInput.replace('@', '').replace('https://', '').replace('http://', '').trim();
+    }
+
+    if (!fullUrl.startsWith('http://') && !fullUrl.startsWith('https://')) {
       fullUrl = `https://www.linkedin.com/in/${handle}`;
     }
 
-    if (!handle) {
-      setOnboardingError('Veuillez saisir une URL LinkedIn valide.');
-      setIsOnboardingSubmitting(false);
-      return;
-    }
-
-    let detectedIndustry = 'SaaS & Tech';
-    try {
-      const res = await fetch('/api/ai-detect-industry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ linkedinUrl: fullUrl, username: handle }),
-      });
-      const data = await res.json();
-      if (data.industry) detectedIndustry = data.industry;
-    } catch {}
+    const formattedName = (handle || 'Membre').charAt(0).toUpperCase() + (handle || 'membre').slice(1).replace(/[-_]/g, ' ');
 
     const newProfile: LinkedInUserProfile = {
-      username: handle,
-      fullName: handle.charAt(0).toUpperCase() + handle.slice(1),
-      industry: detectedIndustry,
+      username: handle || 'membre',
+      fullName: formattedName,
+      industry: 'SaaS & Tech',
       role: 'Professionnel B2B',
       linkedinUrl: fullUrl,
       followerCount: 0,
@@ -201,12 +192,33 @@ export default function DedicatedClientSpacePage() {
       },
     };
 
+    // 1. INSTANTLY UNLOCK UI & UPDATE STATE SYNCHRONOUSLY
     setProfile(newProfile);
     localStorage.setItem('linkedin_user_profile', JSON.stringify(newProfile));
     document.cookie = `linkedin_user_profile=true; path=/; max-age=86400`;
     setIsOnboardingSubmitting(false);
 
-    runAutoAuditForRegisteredUser(newProfile);
+    // 2. NON-BLOCKING ASYNCHRONOUS BACKGROUND DATA SYNC & AUDIT
+    (async () => {
+      let detectedIndustry = 'SaaS & Tech';
+      try {
+        const res = await fetch('/api/ai-detect-industry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ linkedinUrl: fullUrl, username: handle }),
+        });
+        const data = await res.json();
+        if (data.industry) {
+          detectedIndustry = data.industry;
+          const updatedProf = { ...newProfile, industry: detectedIndustry };
+          setProfile(updatedProf);
+          localStorage.setItem('linkedin_user_profile', JSON.stringify(updatedProf));
+          runAutoAuditForRegisteredUser(updatedProf);
+          return;
+        }
+      } catch {}
+      runAutoAuditForRegisteredUser(newProfile);
+    })();
   };
 
   const runAutoAuditForRegisteredUser = async (userProf: LinkedInUserProfile) => {
@@ -293,7 +305,7 @@ export default function DedicatedClientSpacePage() {
               <div className="relative">
                 <Linkedin className="absolute left-3.5 top-3.5 w-4 h-4 text-zinc-500" />
                 <input
-                  type="url"
+                  type="text"
                   required
                   placeholder="https://www.linkedin.com/in/votre-profil"
                   value={onboardingUrl}
@@ -311,12 +323,13 @@ export default function DedicatedClientSpacePage() {
 
             <button
               type="submit"
+              onClick={() => handleOnboardingSubmit()}
               disabled={isOnboardingSubmitting}
-              className="w-full py-3 px-6 bg-sky-600 hover:bg-sky-500 text-white font-extrabold rounded-xl text-xs transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 px-6 bg-sky-600 hover:bg-sky-500 text-white font-extrabold rounded-xl text-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               {isOnboardingSubmitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-white" /> Analyse du profil...
+                  <Loader2 className="w-4 h-4 animate-spin text-white" /> Connexion du profil...
                 </>
               ) : (
                 <>
