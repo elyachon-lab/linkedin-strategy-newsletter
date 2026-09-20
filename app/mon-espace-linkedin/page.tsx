@@ -300,7 +300,7 @@ export default function DedicatedClientSpacePage() {
           <form onSubmit={handleOnboardingSubmit} className="space-y-4 text-left">
             <div>
               <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">
-                URL de votre profil LinkedIn
+                Collez votre URL de profil LinkedIn
               </label>
               <div className="relative">
                 <Linkedin className="absolute left-3.5 top-3.5 w-4 h-4 text-zinc-500" />
@@ -329,11 +329,11 @@ export default function DedicatedClientSpacePage() {
             >
               {isOnboardingSubmitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-white" /> Connexion du profil...
+                  <Loader2 className="w-4 h-4 animate-spin text-white" /> Connexion & Déverrouillage...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-sky-200" /> Connecter mon profil réel
+                  <Sparkles className="w-4 h-4 text-sky-200" /> Valider et accéder à mon audit
                 </>
               )}
             </button>
@@ -375,11 +375,11 @@ export default function DedicatedClientSpacePage() {
                 </span>
                 {isAccountSynced ? (
                   <span className="bg-emerald-950 text-emerald-400 border border-emerald-800 font-extrabold text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    🟢 Compte LinkedIn Synchronisé ({profile?.userSyncData?.weeklyPostFrequency && profile.userSyncData.weeklyPostFrequency <= 0.3 ? '~1 post/mois' : `${profile?.userSyncData?.weeklyPostFrequency} posts/sem`})
+                    🟢 Compte LinkedIn Synchronisé ({registeredAudit?.currentDiagnostic?.currentPublishingFrequency || (profile?.userSyncData?.weeklyPostFrequency ? `${profile.userSyncData.weeklyPostFrequency} posts/sem` : 'Rythme réactif')})
                   </span>
                 ) : (
                   <span className="bg-cyan-950 text-cyan-300 border border-cyan-800 text-xs font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    🔗 Profil LinkedIn Lié
+                    🔗 Profil LinkedIn Lié ({registeredAudit?.currentDiagnostic?.currentPublishingFrequency || 'Analyse IA disponible'})
                   </span>
                 )}
               </div>

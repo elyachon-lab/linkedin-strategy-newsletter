@@ -101,8 +101,8 @@ function LoginContent() {
 
       <form onSubmit={handleLoginSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-bold uppercase text-zinc-300 mb-1 flex items-center gap-1.5">
-            <Linkedin className="w-3.5 h-3.5 text-sky-400" /> URL de votre profil LinkedIn <span className="text-rose-500">*</span>
+          <label className="block text-xs font-bold uppercase text-zinc-300 mb-2 flex items-center gap-1.5">
+            <Linkedin className="w-4 h-4 text-sky-400" /> Collez votre URL de profil LinkedIn <span className="text-rose-500">*</span>
           </label>
           <input
             type="text"
@@ -110,7 +110,7 @@ function LoginContent() {
             placeholder="https://www.linkedin.com/in/votre-profil"
             value={linkedinUrl}
             onChange={(e) => setLinkedinUrl(e.target.value)}
-            className="w-full px-4 py-3 text-xs bg-[#161B22] border border-zinc-800 rounded-xl focus:border-sky-500 font-bold text-white placeholder-zinc-500 transition-all"
+            className="w-full px-4 py-3 text-xs bg-[#161B22] border border-zinc-800 rounded-xl focus:outline-none focus:border-sky-500 font-semibold text-white placeholder-zinc-500 transition-all"
           />
         </div>
 
@@ -127,11 +127,11 @@ function LoginContent() {
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Connexion en cours...
+              <Loader2 className="w-4 h-4 animate-spin text-white" /> Connexion & Déverrouillage...
             </>
           ) : (
             <>
-              Connecter mon profil réel <ArrowRight className="w-4 h-4" />
+              Valider et accéder à mon audit <ArrowRight className="w-4 h-4" />
             </>
           )}
         </button>
