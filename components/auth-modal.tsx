@@ -269,7 +269,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
                     <input
                       type="text"
                       required
-                      placeholder="ex: https://linkedin.com/in/jean-dupont ou jeandupont"
+                      placeholder="https://www.linkedin.com/in/votre-profil"
                       value={linkedinUrl}
                       onChange={(e) => setLinkedinUrl(e.target.value)}
                       className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"

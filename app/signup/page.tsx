@@ -185,52 +185,24 @@ export default function SignupPage() {
       <form onSubmit={handleSignup} className="space-y-4">
         
         <div>
-          <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-            <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" /> URL ou Identifiant LinkedIn <span className="text-rose-500">*</span>
+          <label className="block text-xs font-bold uppercase text-zinc-300 mb-1 flex items-center gap-1.5">
+            <Linkedin className="w-3.5 h-3.5 text-sky-400" /> URL de votre profil LinkedIn <span className="text-rose-500">*</span>
           </label>
           <input
             type="text"
             required
-            placeholder="ex: https://linkedin.com/in/jean-dupont ou jeandupont"
+            placeholder="https://www.linkedin.com/in/votre-profil"
             value={linkedinInput}
             onChange={(e) => setLinkedinInput(e.target.value)}
-            className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 font-bold text-slate-900 transition-all"
+            className="w-full px-4 py-3 text-xs bg-[#161B22] border border-zinc-800 rounded-xl focus:border-sky-500 font-bold text-white placeholder-zinc-500 transition-all"
           />
-          <p className="text-[10px] text-slate-400 mt-1">
-            ✨ Détection IA automatique du secteur, du nom et des métriques de publication.
+          <p className="text-[10px] text-zinc-400 mt-1">
+            🤖 Détection IA automatique du secteur et de vos métriques de publication sans aucune saisie manuelle.
           </p>
         </div>
 
-        <div>
-          <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-            <Mail className="w-3.5 h-3.5 text-indigo-600" /> Adresse E-mail <span className="text-rose-500">*</span>
-          </label>
-          <input
-            type="email"
-            required
-            placeholder="votre.email@exemple.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 font-bold text-slate-900 transition-all"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-            <KeyRound className="w-3.5 h-3.5 text-indigo-600" /> Mot de Passe <span className="text-rose-500">*</span>
-          </label>
-          <input
-            type="password"
-            required
-            placeholder="6 caractères minimum"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 font-bold text-slate-900 transition-all"
-          />
-        </div>
-
         {errorMessage && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs font-extrabold text-rose-900 text-center">
+          <div className="p-3 bg-rose-950/40 border border-rose-800/50 rounded-xl text-xs font-bold text-rose-300 text-center">
             {errorMessage}
           </div>
         )}
@@ -238,15 +210,15 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+          className="w-full py-3.5 bg-sky-600 hover:bg-sky-500 text-white font-extrabold rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Détection IA & Création de compte...
+              <Loader2 className="w-4 h-4 animate-spin text-white" /> Détection IA & Accès...
             </>
           ) : (
             <>
-              Créer mon Compte LinkedIn <ArrowRight className="w-4 h-4" />
+              Connecter mon profil réel <ArrowRight className="w-4 h-4" />
             </>
           )}
         </button>

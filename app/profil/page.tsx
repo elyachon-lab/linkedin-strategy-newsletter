@@ -219,7 +219,7 @@ export default function UserProfilePage() {
             </label>
             <input
               type="text"
-              placeholder="jeandupont"
+              placeholder="votre-pseudo"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
@@ -231,8 +231,8 @@ export default function UserProfilePage() {
               <ExternalLink className="w-3.5 h-3.5 text-indigo-600" /> URL du Profil LinkedIn
             </label>
             <input
-              type="url"
-              placeholder="https://www.linkedin.com/in/jeandupont"
+              type="text"
+              placeholder="https://www.linkedin.com/in/votre-profil"
               value={linkedinUrl}
               onChange={(e) => setLinkedinUrl(e.target.value)}
               className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
@@ -240,23 +240,13 @@ export default function UserProfilePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-violet-600" /> Secteur d'Activité (Auto-Détecté par IA)
+            <label className="block text-xs font-bold uppercase text-slate-400 mb-1 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-sky-400" /> Secteur d'Activité (Détecté par IA)
             </label>
-            <select
-              value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white text-slate-900"
-            >
-              <option value="SaaS & Tech">SaaS & Tech</option>
-              <option value="Marketing & Growth">Marketing & Growth</option>
-              <option value="RH & Recrutement">RH & Recrutement</option>
-              <option value="FinTech & Finance">FinTech & Finance</option>
-              <option value="E-Commerce & Retail">E-Commerce & Retail</option>
-              <option value="Conseil & Consulting">Conseil & Consulting</option>
-              <option value="Immobilier">Immobilier</option>
-              <option value="Santé & MedTech">Santé & MedTech</option>
-            </select>
+            <div className="w-full px-3.5 py-2.5 text-xs bg-[#161B22] border border-zinc-800 rounded-xl font-bold text-sky-300 flex items-center justify-between">
+              <span>🤖 {industry || 'SaaS & Tech'}</span>
+              <span className="text-[10px] uppercase font-semibold text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded-full">Scanné par IA</span>
+            </div>
           </div>
 
           <div>

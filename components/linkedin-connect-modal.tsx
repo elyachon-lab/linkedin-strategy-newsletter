@@ -123,112 +123,23 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                 <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" /> URL du Profil LinkedIn <span className="text-rose-500">*</span>
               </label>
               <input
-                type="url"
+                type="text"
                 required
                 placeholder="https://www.linkedin.com/in/votre-pseudo"
                 value={linkedinUrl}
                 onChange={(e) => setLinkedinUrl(e.target.value)}
-                className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
+                className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
               />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                  Fréquence Réelle de Publication <span className="text-rose-500">*</span>
-                </label>
-                <select
-                  value={weeklyPostFrequency}
-                  onChange={(e) => setWeeklyPostFrequency(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white text-slate-900"
-                >
-                  <option value="0.25">🔴 1 post / mois (~0,25 post/semaine)</option>
-                  <option value="0.5">🟡 1 post / 2 semaines (~0,5 post/semaine)</option>
-                  <option value="1">🟡 1 post / semaine</option>
-                  <option value="2">🟢 2 posts / semaine</option>
-                  <option value="3">🟢 3 posts / semaine</option>
-                  <option value="4">🟢 4 posts ou + / semaine</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                  Nombre Réel d'Abonnés
-                </label>
-                <input
-                  type="number"
-                  placeholder="ex: 8500"
-                  value={followerCount}
-                  onChange={(e) => setFollowerCount(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                  Format Principal Publié
-                </label>
-                <select
-                  value={primaryFormat}
-                  onChange={(e) => setPrimaryFormat(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white text-slate-900"
-                >
-                  <option value="Carrousels PDF Verticaux (4:5)">Carrousels PDF Verticaux (4:5)</option>
-                  <option value="Posts Texte Storytelling">Posts Texte Storytelling</option>
-                  <option value="Vidéos Shorts / Démos">Vidéos Shorts / Démos</option>
-                  <option value="Images & Infographies">Images & Infographies</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                  Score SSI Réel (Optionnel)
-                </label>
-                <input
-                  type="number"
-                  placeholder="ex: 84"
-                  value={ssiScore}
-                  onChange={(e) => setSsiScore(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                  Taux d'Engagement Réel
-                </label>
-                <input
-                  type="text"
-                  placeholder="ex: 4.8%"
-                  value={engagementRate}
-                  onChange={(e) => setEngagementRate(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                  Date du Dernier Post
-                </label>
-                <input
-                  type="text"
-                  placeholder="ex: Hier à 14h30"
-                  value={lastPostDate}
-                  onChange={(e) => setLastPostDate(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
-                />
-              </div>
+              <p className="text-[10px] text-slate-400 mt-1">
+                🤖 Détection IA automatique : votre secteur, votre fréquence de publication et vos métriques sont scannés automatiquement sans saisie manuelle.
+              </p>
             </div>
           </div>
 
           {syncSuccess && (
             <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-extrabold text-emerald-900 flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>✅ Compte LinkedIn connecté et métriques réelles synchronisées !</span>
+              <span>✅ Profil LinkedIn connecté avec succès !</span>
             </div>
           )}
 
