@@ -58,8 +58,8 @@ function classifyIndustryByAI(inputString: string): { industry: string; confiden
     return { industry: 'Création de Contenu', confidence: 96, keywords: foundKeywords };
   }
 
-  // Fallback to SaaS & Tech with 92% confidence
-  return { industry: 'SaaS & Tech', confidence: 92, keywords: ['B2B', 'Innovation', 'LinkedIn Growth'] };
+  // Fallback to Communication & Marketing with 92% confidence
+  return { industry: 'Communication & Marketing', confidence: 92, keywords: ['B2B', 'Communication', 'LinkedIn Growth'] };
 }
 
 export async function POST(request: Request) {

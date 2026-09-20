@@ -86,3 +86,41 @@ export interface LinkedInUserProfile {
   userSyncData?: UserSyncData;
   auditResult?: AIAuditResult;
 }
+
+export const LINKEDIN_INDUSTRIES = [
+  'Communication & Marketing',
+  'Agence B2B & Conseil',
+  'Freelance & Indépendant',
+  'Création de Contenu & Média',
+  'SaaS, Tech & IA',
+  'RH, Recrutement & Coaching',
+  'Finance, Banque & Gestion',
+  'E-Commerce & Retail',
+  'Immobilier & Foncier',
+  'Santé & MedTech',
+  'Autre / Général',
+] as const;
+
+export function formatCleanLinkedInName(input: string): string {
+  if (!input || !input.trim()) return 'Membre LinkedIn';
+  let raw = input.trim();
+
+  // Extract handle if full URL is passed
+  if (raw.includes('linkedin.com/in/')) {
+    raw = raw.split('linkedin.com/in/')[1]?.split('/')[0]?.split('?')[0] || raw;
+  } else if (raw.includes('linkedin.com/company/')) {
+    raw = raw.split('linkedin.com/company/')[1]?.split('/')[0]?.split('?')[0] || raw;
+  }
+
+  // Remove leading @ or http/https
+  raw = raw.replace(/^https?:\/\//i, '').replace(/^@/, '');
+
+  const cleaned = raw.replace(/[-_.]+/g, ' ').trim();
+  if (!cleaned) return 'Membre LinkedIn';
+
+  return cleaned
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}

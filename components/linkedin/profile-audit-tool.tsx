@@ -32,6 +32,7 @@ import {
 
 import Link from 'next/link';
 import { AuditDiagnosticSkeleton } from './audit-skeletons';
+import { LINKEDIN_INDUSTRIES, formatCleanLinkedInName } from '@/lib/types';
 
 function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: AdviceSource; darkTheme?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -127,7 +128,7 @@ export function ProfileAuditTool() {
       url = `https://www.linkedin.com/in/${handle}`;
     }
 
-    const name = handle.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    const name = formatCleanLinkedInName(handle);
 
     // Call AI Industry Auto-Detection API
     try {

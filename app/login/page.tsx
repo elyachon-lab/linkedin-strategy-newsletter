@@ -1,31 +1,31 @@
 'use client';
 
 import { useState, Suspense } from 'react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { Mail, Lock, Sparkles, ArrowRight, Loader2, KeyRound, UserPlus, ShieldCheck, Linkedin } from 'lucide-react';
+import Link from 'next/link';
+import { Linkedin, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
+import { LINKEDIN_INDUSTRIES, formatCleanLinkedInName } from '@/lib/types';
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') || '/mon-espace-linkedin';
+  const redirectTo = searchParams.get('redirect') || '/mon-espace-linkedin';
 
   const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [selectedIndustry, setSelectedIndustry] = useState<string>('Communication & Marketing');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage('');
-
     const cleanInput = linkedinUrl.trim();
     if (!cleanInput) {
-      setErrorMessage('Veuillez renseigner votre URL ou identifiant LinkedIn.');
+      setErrorMessage('Veuillez saisir votre URL ou identifiant LinkedIn.');
       return;
     }
 
     setIsLoading(true);
+    setErrorMessage('');
 
     let handle = cleanInput;
     let fullUrl = cleanInput;
@@ -41,10 +41,12 @@ function LoginContent() {
       fullUrl = `https://www.linkedin.com/in/${handle}`;
     }
 
+    const cleanName = formatCleanLinkedInName(handle);
+
     const userProfile = {
       username: handle || 'membre',
-      fullName: (handle || 'Membre').charAt(0).toUpperCase() + (handle || 'membre').slice(1).replace(/[-_]/g, ' '),
-      industry: 'SaaS & Tech',
+      fullName: cleanName,
+      industry: selectedIndustry,
       role: 'Professionnel B2B',
       linkedinUrl: fullUrl,
       followerCount: 0,
@@ -79,7 +81,7 @@ function LoginContent() {
         </div>
         <h1 className="text-2xl font-black text-white">Accès à la Bible LinkedIn</h1>
         <p className="text-xs font-medium text-zinc-400">
-          Renseignez uniquement votre profil LinkedIn pour débloquer votre audit IA et vos fiches stratégiques.
+          Renseignez votre profil LinkedIn et votre secteur d'activité réel pour débloquer votre audit IA sur-mesure.
         </p>
       </div>
 
@@ -112,6 +114,23 @@ function LoginContent() {
             onChange={(e) => setLinkedinUrl(e.target.value)}
             className="w-full px-4 py-3 text-xs bg-[#161B22] border border-zinc-800 rounded-xl focus:outline-none focus:border-sky-500 font-semibold text-white placeholder-zinc-500 transition-all"
           />
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold uppercase text-zinc-300 mb-2 flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-sky-400" /> Votre secteur d'activité réel <span className="text-rose-500">*</span>
+          </label>
+          <select
+            value={selectedIndustry}
+            onChange={(e) => setSelectedIndustry(e.target.value)}
+            className="w-full px-4 py-3 text-xs bg-[#161B22] border border-zinc-800 rounded-xl focus:outline-none focus:border-sky-500 font-semibold text-white transition-all"
+          >
+            {LINKEDIN_INDUSTRIES.map((ind) => (
+              <option key={ind} value={ind} className="bg-[#161B22] text-white">
+                {ind}
+              </option>
+            ))}
+          </select>
         </div>
 
         {errorMessage && (

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { UserSyncData, LinkedInUserProfile } from '@/lib/types';
 import { X, Linkedin, Sparkles, CheckCircle2, RefreshCw, Link2, ShieldCheck, Zap } from 'lucide-react';
 
+import { LINKEDIN_INDUSTRIES, formatCleanLinkedInName } from '@/lib/types';
+
 interface LinkedInConnectModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,6 +16,7 @@ interface LinkedInConnectModalProps {
 export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSuccess }: LinkedInConnectModalProps) {
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [username, setUsername] = useState('');
+  const [industry, setIndustry] = useState('Communication & Marketing');
   const [weeklyPostFrequency, setWeeklyPostFrequency] = useState('0.25');
   const [followerCount, setFollowerCount] = useState('4500');
   const [ssiScore, setSsiScore] = useState('82');
@@ -28,6 +31,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
     if (currentProfile) {
       if (currentProfile.linkedinUrl) setLinkedinUrl(currentProfile.linkedinUrl);
       if (currentProfile.username) setUsername(currentProfile.username);
+      if (currentProfile.industry) setIndustry(currentProfile.industry);
       if (currentProfile.followerCount) setFollowerCount(currentProfile.followerCount.toString());
       if (currentProfile.userSyncData) {
         const sync = currentProfile.userSyncData;
@@ -47,6 +51,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
     setIsSyncing(true);
 
     const cleanUsername = (username || linkedinUrl.split('/in/')[1] || 'profil').replace(/[^a-zA-Z0-9_-]/g, '');
+    const cleanName = formatCleanLinkedInName(currentProfile?.fullName || cleanUsername);
 
     const syncData: UserSyncData = {
       isConnected: true,
@@ -60,10 +65,10 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
 
     const updatedProfile: LinkedInUserProfile = {
       ...(currentProfile || {
-        fullName: 'Membre LinkedIn',
-        industry: 'SaaS & Tech',
         role: 'Créateur B2B',
       }),
+      fullName: cleanName,
+      industry,
       username: cleanUsername,
       linkedinUrl: linkedinUrl.trim() || `https://www.linkedin.com/in/${cleanUsername}`,
       followerCount: parseInt(followerCount) || 4500,
@@ -130,9 +135,23 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                 onChange={(e) => setLinkedinUrl(e.target.value)}
                 className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
               />
-              <p className="text-[10px] text-slate-400 mt-1">
-                🤖 Détection IA automatique : votre secteur, votre fréquence de publication et vos métriques sont scannés automatiquement sans saisie manuelle.
-              </p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Votre Secteur d'Activité Réel <span className="text-rose-500">*</span>
+              </label>
+              <select
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900 bg-white"
+              >
+                {LINKEDIN_INDUSTRIES.map((ind) => (
+                  <option key={ind} value={ind}>
+                    {ind}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

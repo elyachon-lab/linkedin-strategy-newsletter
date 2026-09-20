@@ -100,12 +100,15 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
 import { LinkedInConnectModal } from '@/components/linkedin-connect-modal';
 import { Lock } from 'lucide-react';
 
+import { LINKEDIN_INDUSTRIES, formatCleanLinkedInName } from '@/lib/types';
+
 export default function DedicatedClientSpacePage() {
   const [profile, setProfile] = useState<LinkedInUserProfile | null>(null);
   const [activeTab, setActiveTab] = useState<'my_audit' | 'search_audit' | 'website_scan'>('my_audit');
   
-  // Onboarding URL input state
+  // Onboarding URL & Industry input state
   const [onboardingUrl, setOnboardingUrl] = useState('');
+  const [onboardingIndustry, setOnboardingIndustry] = useState<string>('Communication & Marketing');
   const [isOnboardingSubmitting, setIsOnboardingSubmitting] = useState(false);
   const [onboardingError, setOnboardingError] = useState('');
 
@@ -175,12 +178,12 @@ export default function DedicatedClientSpacePage() {
       fullUrl = `https://www.linkedin.com/in/${handle}`;
     }
 
-    const formattedName = (handle || 'Membre').charAt(0).toUpperCase() + (handle || 'membre').slice(1).replace(/[-_]/g, ' ');
+    const formattedName = formatCleanLinkedInName(handle);
 
     const newProfile: LinkedInUserProfile = {
       username: handle || 'membre',
       fullName: formattedName,
-      industry: 'SaaS & Tech',
+      industry: onboardingIndustry,
       role: 'Professionnel B2B',
       linkedinUrl: fullUrl,
       followerCount: 0,
@@ -192,33 +195,14 @@ export default function DedicatedClientSpacePage() {
       },
     };
 
-    // 1. INSTANTLY UNLOCK UI & UPDATE STATE SYNCHRONOUSLY
+    // 1. INSTANTLY UNLOCK UI & UPDATE STATE SYNCHRONOUSLY WITH USER-SELECTED INDUSTRY
     setProfile(newProfile);
     localStorage.setItem('linkedin_user_profile', JSON.stringify(newProfile));
     document.cookie = `linkedin_user_profile=true; path=/; max-age=86400`;
     setIsOnboardingSubmitting(false);
 
-    // 2. NON-BLOCKING ASYNCHRONOUS BACKGROUND DATA SYNC & AUDIT
-    (async () => {
-      let detectedIndustry = 'SaaS & Tech';
-      try {
-        const res = await fetch('/api/ai-detect-industry', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ linkedinUrl: fullUrl, username: handle }),
-        });
-        const data = await res.json();
-        if (data.industry) {
-          detectedIndustry = data.industry;
-          const updatedProf = { ...newProfile, industry: detectedIndustry };
-          setProfile(updatedProf);
-          localStorage.setItem('linkedin_user_profile', JSON.stringify(updatedProf));
-          runAutoAuditForRegisteredUser(updatedProf);
-          return;
-        }
-      } catch {}
-      runAutoAuditForRegisteredUser(newProfile);
-    })();
+    // 2. TRIGGER AUDIT ACCORDING TO USER'S REAL INDUSTRY
+    runAutoAuditForRegisteredUser(newProfile);
   };
 
   const runAutoAuditForRegisteredUser = async (userProf: LinkedInUserProfile) => {
@@ -296,7 +280,7 @@ export default function DedicatedClientSpacePage() {
             </p>
           </div>
 
-          {/* Interactive Single Field Form */}
+          {/* Interactive Onboarding Form */}
           <form onSubmit={handleOnboardingSubmit} className="space-y-4 text-left">
             <div>
               <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">
@@ -313,6 +297,23 @@ export default function DedicatedClientSpacePage() {
                   className="w-full pl-10 pr-4 py-3 bg-[#161B22] border border-zinc-800 rounded-xl text-xs font-semibold text-white placeholder-zinc-500 focus:outline-none focus:border-sky-500 transition-colors"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase text-zinc-400 mb-2 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-sky-400" /> Votre secteur d'activité réel
+              </label>
+              <select
+                value={onboardingIndustry}
+                onChange={(e) => setOnboardingIndustry(e.target.value)}
+                className="w-full px-4 py-3 bg-[#161B22] border border-zinc-800 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-sky-500 transition-colors"
+              >
+                {LINKEDIN_INDUSTRIES.map((ind) => (
+                  <option key={ind} value={ind} className="bg-[#161B22] text-white">
+                    {ind}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {onboardingError && (

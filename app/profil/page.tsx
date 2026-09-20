@@ -18,6 +18,7 @@ import {
   Mail,
   Users,
 } from 'lucide-react';
+import { LINKEDIN_INDUSTRIES } from '@/lib/types';
 
 export default function UserProfilePage() {
   const router = useRouter();
@@ -240,13 +241,20 @@ export default function UserProfilePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase text-slate-400 mb-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-sky-400" /> Secteur d'Activité (Détecté par IA)
+            <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Votre Secteur d'Activité Réel <span className="text-rose-500">*</span>
             </label>
-            <div className="w-full px-3.5 py-2.5 text-xs bg-[#161B22] border border-zinc-800 rounded-xl font-bold text-sky-300 flex items-center justify-between">
-              <span>🤖 {industry || 'SaaS & Tech'}</span>
-              <span className="text-[10px] uppercase font-semibold text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded-full">Scanné par IA</span>
-            </div>
+            <select
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900 bg-white"
+            >
+              {LINKEDIN_INDUSTRIES.map((ind) => (
+                <option key={ind} value={ind}>
+                  {ind}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
