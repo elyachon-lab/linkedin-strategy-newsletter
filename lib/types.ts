@@ -64,12 +64,14 @@ export interface AIAuditResult {
 
 export interface UserSyncData {
   isConnected: boolean;
+  connectedAt?: string;
   weeklyPostFrequency?: number;
   followerCount?: number;
   ssiScore?: number;
   engagementRate?: string;
   lastPostDate?: string;
   primaryFormat?: string;
+  averageDwellSeconds?: number;
 }
 
 export interface LinkedInUserProfile {
@@ -77,7 +79,7 @@ export interface LinkedInUserProfile {
   fullName: string;
   industry: string;
   role: string;
-  followerCount: number;
+  followerCount?: number;
   email?: string;
   linkedinUrl?: string;
   websiteUrl?: string;

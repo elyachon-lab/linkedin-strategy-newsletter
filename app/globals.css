@@ -6,32 +6,33 @@
 
 @layer base {
   body {
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: #090D16;
+    color: #F8FAFC;
     font-family: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 }
 
-/* Bible LinkedIn Accent Gradient Bar */
-.metricool-gradient-bar, .brand-gradient-bar {
-  background: linear-gradient(90deg, #1E1B4B 0%, #6366F1 50%, #06B6D4 100%);
+/* Accent Gradient Bar */
+.brand-gradient-bar {
+  background: linear-gradient(90deg, #6366F1 0%, #06B6D4 50%, #10B981 100%);
 }
 
-.metricool-gradient-text, .brand-gradient-text {
-  background: linear-gradient(90deg, #1E1B4B 0%, #6366F1 50%, #06B6D4 100%);
+.brand-gradient-text {
+  background: linear-gradient(90deg, #818CF8 0%, #38BDF8 50%, #34D399 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Sleek Floating Card Shadow (Modern Bible LinkedIn Style) */
-.metricool-card-shadow, .brand-card-shadow {
-  box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.06), 0 8px 10px -6px rgba(99, 102, 241, 0.04);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+/* Sleek Dark Floating Card Shadow */
+.brand-card-shadow {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.2s ease-in-out;
 }
 
-.metricool-card-shadow:hover, .brand-card-shadow:hover {
-  box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.12), 0 10px 15px -5px rgba(6, 182, 212, 0.08);
+.brand-card-shadow:hover {
+  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.25);
   transform: translateY(-2px);
 }
 

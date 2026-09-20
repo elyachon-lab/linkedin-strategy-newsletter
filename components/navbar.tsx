@@ -21,8 +21,15 @@ export function Navbar() {
     const savedProfile = localStorage.getItem('linkedin_user_profile');
     if (savedProfile) {
       try {
-        setClientProfile(JSON.parse(savedProfile));
-      } catch {}
+        const parsed = JSON.parse(savedProfile);
+        if (parsed && (parsed.linkedinUrl || parsed.username)) {
+          setClientProfile(parsed);
+        } else {
+          setClientProfile(null);
+        }
+      } catch {
+        setClientProfile(null);
+      }
     }
 
     const savedAdmin = localStorage.getItem('is_admin_logged_in');

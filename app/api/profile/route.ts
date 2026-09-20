@@ -19,17 +19,20 @@ export async function GET() {
       .single();
 
     if (error || !profile) {
-      // Return default profile object derived from auth user metadata
+      if (!session.user.user_metadata?.linkedin_url) {
+        return NextResponse.json({ authenticated: true, profile: null });
+      }
+
       const defaultProfile = {
         id: session.user.id,
         email: session.user.email,
-        full_name: session.user.user_metadata?.full_name || 'Membre LinkedIn',
+        full_name: session.user.user_metadata?.full_name || '',
         linkedin_url: session.user.user_metadata?.linkedin_url || '',
-        username: session.user.user_metadata?.username || session.user.email?.split('@')[0],
+        username: session.user.user_metadata?.username || '',
         industry: session.user.user_metadata?.industry || 'SaaS & Tech',
         role: session.user.user_metadata?.role || 'Créateur B2B',
-        follower_count: 2500,
-        website_url: '',
+        follower_count: session.user.user_metadata?.follower_count || 0,
+        website_url: session.user.user_metadata?.website_url || '',
       };
       return NextResponse.json({ authenticated: true, profile: defaultProfile });
     }

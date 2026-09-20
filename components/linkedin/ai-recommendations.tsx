@@ -39,7 +39,7 @@ export function AIAuditRecommendations({ profile, onRefreshAudit }: AIAuditRecom
               </span>
             </div>
             <p className="text-xs text-indigo-200 font-bold mt-1">
-              @{profile.username} • {profile.followerCount.toLocaleString()} abonnés • {profile.role}
+              @{profile.username} • {(profile.followerCount || 0).toLocaleString()} abonnés • {profile.role}
             </p>
           </div>
         </div>
@@ -62,7 +62,7 @@ export function AIAuditRecommendations({ profile, onRefreshAudit }: AIAuditRecom
             Accroches IA Générées pour le secteur {audit.industry}
           </h4>
           <p className="text-xs text-slate-600 font-medium">
-            Adaptées à votre taille d'audience ({profile.followerCount.toLocaleString()} abonnés).
+            Adaptées à votre taille d'audience ({(profile.followerCount || 0).toLocaleString()} abonnés).
           </p>
 
           <div className="space-y-2 pt-1">

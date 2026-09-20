@@ -28,7 +28,7 @@ export default function UserProfilePage() {
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [industry, setIndustry] = useState('SaaS & Tech');
   const [role, setRole] = useState('Créateur B2B');
-  const [followerCount, setFollowerCount] = useState('2500');
+  const [followerCount, setFollowerCount] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState('');
@@ -85,7 +85,7 @@ export default function UserProfilePage() {
       linkedinUrl: computedUrl,
       industry,
       role,
-      followerCount: parseInt(followerCount) || 2500,
+      followerCount: parseInt(followerCount) || 0,
       websiteUrl: websiteUrl.trim(),
     };
 
