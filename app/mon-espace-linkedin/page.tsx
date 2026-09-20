@@ -35,6 +35,7 @@ import {
   PieChart,
   Lightbulb,
   ChevronDown,
+  Building2,
 } from 'lucide-react';
 
 import { AuditDiagnosticSkeleton } from '@/components/linkedin/audit-skeletons';
@@ -110,8 +111,9 @@ export default function DedicatedClientSpacePage() {
   // Imported CSV stats state
   const [importedCsvStats, setImportedCsvStats] = useState<ParsedCSVStats | null>(null);
 
-  // Onboarding URL & Industry input state
+  // Onboarding URL, Account Type & Industry input state
   const [onboardingUrl, setOnboardingUrl] = useState('');
+  const [onboardingAccountType, setOnboardingAccountType] = useState<'Personal Profile' | 'Company Page'>('Personal Profile');
   const [onboardingIndustry, setOnboardingIndustry] = useState<string>('Communication & Marketing');
   const [isOnboardingSubmitting, setIsOnboardingSubmitting] = useState(false);
   const [onboardingError, setOnboardingError] = useState('');
@@ -188,7 +190,8 @@ export default function DedicatedClientSpacePage() {
       username: handle || 'membre',
       fullName: formattedName,
       industry: onboardingIndustry,
-      role: 'Professionnel B2B',
+      accountType: onboardingAccountType,
+      role: onboardingAccountType === 'Personal Profile' ? 'Profil Personnel' : 'Page Entreprise B2B',
       linkedinUrl: fullUrl,
       followerCount: 0,
       userSyncData: {
@@ -290,6 +293,38 @@ export default function DedicatedClientSpacePage() {
           <form onSubmit={handleOnboardingSubmit} className="space-y-4 text-left">
             <div>
               <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">
+                Type de Compte LinkedIn
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setOnboardingAccountType('Personal Profile')}
+                  className={`p-3 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    onboardingAccountType === 'Personal Profile'
+                      ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-xs'
+                      : 'bg-[#161B22] border-zinc-800 text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  <User className="w-4 h-4 text-sky-400" />
+                  Profil Privé (Personnel)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOnboardingAccountType('Company Page')}
+                  className={`p-3 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    onboardingAccountType === 'Company Page'
+                      ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300 shadow-xs'
+                      : 'bg-[#161B22] border-zinc-800 text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  <Building2 className="w-4 h-4 text-indigo-400" />
+                  Page Entreprise B2B
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">
                 Collez votre URL de profil LinkedIn
               </label>
               <div className="relative">
@@ -297,7 +332,7 @@ export default function DedicatedClientSpacePage() {
                 <input
                   type="text"
                   required
-                  placeholder="https://www.linkedin.com/in/votre-profil"
+                  placeholder={onboardingAccountType === 'Personal Profile' ? 'https://www.linkedin.com/in/votre-profil' : 'https://www.linkedin.com/company/votre-entreprise'}
                   value={onboardingUrl}
                   onChange={(e) => setOnboardingUrl(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-[#161B22] border border-zinc-800 rounded-xl text-xs font-semibold text-white placeholder-zinc-500 focus:outline-none focus:border-sky-500 transition-colors"
@@ -330,9 +365,8 @@ export default function DedicatedClientSpacePage() {
 
             <button
               type="submit"
-              onClick={() => handleOnboardingSubmit()}
               disabled={isOnboardingSubmitting}
-              className="w-full py-3 px-6 bg-sky-600 hover:bg-sky-500 text-white font-extrabold rounded-xl text-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 px-6 bg-sky-600 hover:bg-sky-500 text-white font-extrabold rounded-xl text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
             >
               {isOnboardingSubmitting ? (
                 <>

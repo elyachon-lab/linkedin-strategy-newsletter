@@ -79,6 +79,7 @@ export interface LinkedInUserProfile {
   fullName: string;
   industry: string;
   role: string;
+  accountType?: 'Personal Profile' | 'Company Page';
   followerCount?: number;
   email?: string;
   linkedinUrl?: string;

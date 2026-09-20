@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Linkedin, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
+import { Linkedin, Sparkles, ArrowRight, Loader2, User, Building2 } from 'lucide-react';
 import { LINKEDIN_INDUSTRIES, formatCleanLinkedInName } from '@/lib/types';
 
 function LoginContent() {
@@ -12,6 +12,7 @@ function LoginContent() {
   const redirectTo = searchParams.get('redirect') || '/mon-espace-linkedin';
 
   const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [selectedAccountType, setSelectedAccountType] = useState<'Personal Profile' | 'Company Page'>('Personal Profile');
   const [selectedIndustry, setSelectedIndustry] = useState<string>('Communication & Marketing');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -47,7 +48,8 @@ function LoginContent() {
       username: handle || 'membre',
       fullName: cleanName,
       industry: selectedIndustry,
-      role: 'Professionnel B2B',
+      accountType: selectedAccountType,
+      role: selectedAccountType === 'Personal Profile' ? 'Profil Personnel' : 'Page Entreprise B2B',
       linkedinUrl: fullUrl,
       followerCount: 0,
       userSyncData: {
@@ -103,13 +105,45 @@ function LoginContent() {
 
       <form onSubmit={handleLoginSubmit} className="space-y-4">
         <div>
+          <label className="block text-xs font-bold uppercase text-zinc-300 mb-2">
+            Type de Compte LinkedIn <span className="text-rose-500">*</span>
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setSelectedAccountType('Personal Profile')}
+              className={`p-3 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                selectedAccountType === 'Personal Profile'
+                  ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-xs'
+                  : 'bg-[#161B22] border-zinc-800 text-zinc-400 hover:text-white'
+              }`}
+            >
+              <User className="w-4 h-4 text-sky-400" />
+              Profil Privé
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedAccountType('Company Page')}
+              className={`p-3 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                selectedAccountType === 'Company Page'
+                  ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300 shadow-xs'
+                  : 'bg-[#161B22] border-zinc-800 text-zinc-400 hover:text-white'
+              }`}
+            >
+              <Building2 className="w-4 h-4 text-indigo-400" />
+              Page Entreprise
+            </button>
+          </div>
+        </div>
+
+        <div>
           <label className="block text-xs font-bold uppercase text-zinc-300 mb-2 flex items-center gap-1.5">
-            <Linkedin className="w-4 h-4 text-sky-400" /> Collez votre URL de profil LinkedIn <span className="text-rose-500">*</span>
+            <Linkedin className="w-4 h-4 text-sky-400" /> Collez votre URL LinkedIn <span className="text-rose-500">*</span>
           </label>
           <input
             type="text"
             required
-            placeholder="https://www.linkedin.com/in/votre-profil"
+            placeholder={selectedAccountType === 'Personal Profile' ? 'https://www.linkedin.com/in/votre-profil' : 'https://www.linkedin.com/company/votre-entreprise'}
             value={linkedinUrl}
             onChange={(e) => setLinkedinUrl(e.target.value)}
             className="w-full px-4 py-3 text-xs bg-[#161B22] border border-zinc-800 rounded-xl focus:outline-none focus:border-sky-500 font-semibold text-white placeholder-zinc-500 transition-all"

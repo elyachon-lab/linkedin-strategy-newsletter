@@ -190,14 +190,16 @@ export async function POST(request: Request) {
       : calculatedDwellTime;
 
     // Tailor strengths & weaknesses dynamically based on profile metrics
+    const networkLabel = finalAccountType === 'Personal Profile' ? 'relations' : 'abonnés';
+
     const strengths = sync?.isConnected
       ? [
           `Compte LinkedIn vérifié & synchronisé avec une fréquence réelle de ${realPostFreq <= 0.3 ? '1 post/mois' : `${realPostFreq} posts/semaine`}.`,
-          `Légitimité et autorité sectorielle dans le domaine ${finalIndustry} (${realFollowers.toLocaleString()} abonnés).`,
+          `Légitimité et autorité sectorielle dans le domaine ${finalIndustry} (${realFollowers.toLocaleString()} ${networkLabel}).`,
           `Taux d'engagement de ${realEngagement} offrant un potentiel d'amplification dès que la régularité sera rétablie.`,
         ]
       : [
-          `Légitimité métier constatée dans le secteur ${finalIndustry} (${realFollowers.toLocaleString()} abonnés).`,
+          `Légitimité métier constatée dans le secteur ${finalIndustry} (${realFollowers.toLocaleString()} ${networkLabel}).`,
           `Taux d'engagement mesuré de ${realEngagement} (${realSsi >= 75 ? 'supérieur' : 'aligné avec'} la moyenne sectorielle).`,
           `Fréquence de publication identifiée : ${frequencyDisplay}.`,
         ];

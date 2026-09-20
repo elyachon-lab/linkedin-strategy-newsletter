@@ -295,47 +295,113 @@ export function CSVStatsDropzone({ onStatsImported, darkTheme = true }: CSVStats
             </div>
           )}
 
-          {/* STEP 3 DROPZONE FIELD */}
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer ${
-              isDragging
-                ? 'border-cyan-400 bg-cyan-500/10 scale-[1.01]'
-                : 'border-zinc-800 hover:border-cyan-500/50 bg-[#111827]'
-            }`}
-          >
-            <input
-              type="file"
-              accept=".csv,.txt,.xlsx"
-              onChange={handleFileInput}
-              className="hidden"
-              id="csv-file-input"
-            />
-            <label htmlFor="csv-file-input" className="cursor-pointer space-y-3 block">
-              <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto">
-                {isParsing ? (
-                  <RefreshCw className="w-6 h-6 animate-spin text-cyan-400" />
-                ) : (
-                  <FileSpreadsheet className="w-7 h-7 text-cyan-400" />
-                )}
-              </div>
+          {/* STEP 3 DROPZONE FIELDS DEPENDING ON ACCOUNT TYPE */}
+          {accountType === 'Personal Profile' ? (
+            <div className="space-y-3">
+              <span className="block text-xs font-extrabold uppercase text-cyan-400">
+                3. Dépôt des Fichiers Analytics (2 Zones de Dépôt)
+              </span>
 
-              <div>
-                <span className="text-sm font-extrabold text-white block">
-                  Glissez-déposez votre fichier .CSV Analytics ici
-                </span>
-                <span className="text-xs text-zinc-400 font-medium mt-1 block">
-                  ou cliquez pour parcourir vos fichiers (export officiel des performances de posts LinkedIn)
-                </span>
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* ZONE 1: STATS DE CONTENU */}
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all cursor-pointer ${
+                    isDragging
+                      ? 'border-cyan-400 bg-cyan-500/10 scale-[1.01]'
+                      : 'border-zinc-800 hover:border-cyan-500/50 bg-[#111827]'
+                  }`}
+                >
+                  <input
+                    type="file"
+                    accept=".csv,.txt,.xlsx"
+                    onChange={handleFileInput}
+                    className="hidden"
+                    id="csv-file-content"
+                  />
+                  <label htmlFor="csv-file-content" className="cursor-pointer space-y-2 block">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto">
+                      {isParsing ? <RefreshCw className="w-5 h-5 animate-spin text-cyan-400" /> : <FileSpreadsheet className="w-6 h-6 text-cyan-400" />}
+                    </div>
+                    <div>
+                      <span className="text-xs font-extrabold text-white block">Zone 1 : Stats de Contenu (Posts)</span>
+                      <span className="text-[11px] text-zinc-400 font-medium block">Glissez l'export des performances de publications</span>
+                    </div>
+                  </label>
+                </div>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-800 text-zinc-300 rounded-full text-[11px] font-bold border border-zinc-700">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> Extraction 100% Locale & Conforme RGPD
+                {/* ZONE 2: STATS D'AUDIENCE (RELATIONS) */}
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all cursor-pointer ${
+                    isDragging
+                      ? 'border-indigo-400 bg-indigo-500/10 scale-[1.01]'
+                      : 'border-zinc-800 hover:border-indigo-500/50 bg-[#111827]'
+                  }`}
+                >
+                  <input
+                    type="file"
+                    accept=".csv,.txt,.xlsx"
+                    onChange={handleFileInput}
+                    className="hidden"
+                    id="csv-file-audience"
+                  />
+                  <label htmlFor="csv-file-audience" className="cursor-pointer space-y-2 block">
+                    <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center mx-auto">
+                      {isParsing ? <RefreshCw className="w-5 h-5 animate-spin text-indigo-400" /> : <User className="w-6 h-6 text-indigo-400" />}
+                    </div>
+                    <div>
+                      <span className="text-xs font-extrabold text-white block">Zone 2 : Stats d'Audience (Relations)</span>
+                      <span className="text-[11px] text-zinc-400 font-medium block">Glissez l'export de croissance du réseau (Relations)</span>
+                    </div>
+                  </label>
+                </div>
               </div>
-            </label>
-          </div>
+            </div>
+          ) : (
+            /* COMPANY PAGE SINGLE GLOBAL DROPZONE */
+            <div className="space-y-3">
+              <span className="block text-xs font-extrabold uppercase text-cyan-400">
+                3. Dépôt des Fichiers Analytics (Stats Globales Page Entreprise)
+              </span>
+
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer ${
+                  isDragging
+                    ? 'border-cyan-400 bg-cyan-500/10 scale-[1.01]'
+                    : 'border-zinc-800 hover:border-cyan-500/50 bg-[#111827]'
+                }`}
+              >
+                <input
+                  type="file"
+                  accept=".csv,.txt,.xlsx"
+                  onChange={handleFileInput}
+                  className="hidden"
+                  id="csv-file-company"
+                />
+                <label htmlFor="csv-file-company" className="cursor-pointer space-y-3 block">
+                  <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto">
+                    {isParsing ? <RefreshCw className="w-6 h-6 animate-spin text-cyan-400" /> : <Building2 className="w-7 h-7 text-cyan-400" />}
+                  </div>
+                  <div>
+                    <span className="text-sm font-extrabold text-white block">
+                      Stats Globales Page Entreprise (Abonnés & Portée)
+                    </span>
+                    <span className="text-xs text-zinc-400 font-medium mt-1 block">
+                      Glissez votre fichier d'export de croissance de la page entreprise (Abonnés & Vues)
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          )}
 
           {parseError && (
             <div className="p-4 bg-rose-950/40 border border-rose-800/50 rounded-2xl text-xs font-extrabold text-rose-300 flex items-center gap-2">
