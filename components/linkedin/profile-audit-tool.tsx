@@ -30,6 +30,9 @@ import {
   BookOpen,
 } from 'lucide-react';
 
+import Link from 'next/link';
+import { AuditDiagnosticSkeleton } from './audit-skeletons';
+
 function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: AdviceSource; darkTheme?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,10 +43,10 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full text-left px-3 py-2 border rounded-xl text-[11px] font-extrabold flex items-center justify-between transition-colors ${
+        className={`w-full text-left px-3.5 py-2.5 border rounded-xl text-[11px] font-extrabold flex items-center justify-between transition-colors ${
           darkTheme
             ? 'bg-white/10 hover:bg-white/20 border-white/20 text-metricool-yellow'
-            : 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-metricool-purple'
+            : 'bg-pink-50 hover:bg-pink-100 border-pink-200 text-metricool-pink'
         }`}
       >
         <span className="flex items-center gap-1.5">
@@ -55,10 +58,10 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
 
       {isOpen && (
         <div
-          className={`mt-2 p-3.5 border rounded-xl text-xs space-y-1.5 animate-fadeIn ${
+          className={`mt-2 p-3.5 border rounded-xl text-xs space-y-2 animate-fadeIn ${
             darkTheme
               ? 'bg-black/40 border-white/15 text-slate-200'
-              : 'bg-white border-purple-200 text-slate-800 shadow-2xs'
+              : 'bg-white border-pink-200 text-slate-800 shadow-2xs'
           }`}
         >
           <div className="font-extrabold text-metricool-yellow text-[11px] uppercase tracking-wider flex items-center gap-1">
@@ -70,6 +73,18 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
           <p className="text-[11px] leading-relaxed font-medium bg-white/5 p-2 rounded-lg border border-white/10">
             💡 <strong>Justification de l'algorithme :</strong> {source.rationale}
           </p>
+
+          {source.internalArticleUrl && (
+            <div className="pt-1 border-t border-white/10">
+              <Link
+                href={source.internalArticleUrl}
+                className="inline-flex items-center gap-1.5 text-xs font-extrabold text-metricool-yellow hover:underline"
+              >
+                <span>🔗 Fiche Stratégique Associée : {source.internalArticleTitle || 'Consulter la fiche'}</span>
+                <ArrowRight className="w-3.5 h-3.5 text-metricool-pink" />
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -327,6 +342,12 @@ export function ProfileAuditTool() {
             </button>
           </div>
 
+        </div>
+      )}
+
+      {isAuditing && (
+        <div className="pt-4">
+          <AuditDiagnosticSkeleton queryName={queryInput || 'le profil'} />
         </div>
       )}
 

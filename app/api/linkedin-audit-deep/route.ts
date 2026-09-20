@@ -4,6 +4,8 @@ export interface AdviceSource {
   title: string;
   reference: string;
   rationale: string;
+  internalArticleUrl?: string;
+  internalArticleTitle?: string;
 }
 
 export interface UserSyncData {
@@ -278,26 +280,36 @@ export async function POST(request: Request) {
             title: 'Rapport d\'Ingénierie LinkedIn & Étude SSI 2026',
             reference: 'LinkedIn Engineering - Feed Ranking & Social Selling Index Framework',
             rationale: `L'analyse algorithmique montre que la réactivité dans la première heure ("Golden Hour") et la régularité réelle de publication déterminent 70% de la distribution initiale dans le secteur ${finalIndustry}.`,
+            internalArticleUrl: '/linkedin-strategy/1',
+            internalArticleTitle: 'Guide : Comprendre l\'Algorithme LinkedIn 2026 & le SSI',
           },
           editorialMix: {
             title: 'Algorithme LinkedIn Dwell Time Optimization 2026',
             reference: 'LinkedIn Engineering Official Blog - Multi-Slide & Video Dwell Time Coefficient',
             rationale: `Le Dwell Time est le signal n°1 de pertinence. Les carrousels PDF verticaux captent 42 secondes par utilisateur contre 12 secondes pour un texte simple, générant un boost de portée de +240%.`,
+            internalArticleUrl: '/linkedin-strategy/2',
+            internalArticleTitle: 'Fiche : Maximiser le Dwell Time avec les Carrousels PDF Verticaux',
           },
           tailoredHooks: {
             title: 'Benchmark Copywriting & Pattern-Interrupt B2B 2026',
             reference: 'Thought Leader Ads & High-Converting Organic Hooks Study',
             rationale: `Les 3 premières lignes contrôlent le taux de clic "...voir plus". Les accroches basées sur la résolution d'une douleur spécifique au secteur ${finalIndustry} augmentent la vitesse d'ouverture de +180%.`,
+            internalArticleUrl: '/linkedin-strategy/3',
+            internalArticleTitle: 'Stratégie : Les 10 Structures d\'Accroches B2B à Fort Taux de Clic',
           },
           postingWindows: {
             title: 'Heatmap d\'Engagements & Fréquentation B2B 2026',
             reference: 'Google Ads & W3C Social Selling Peak Activity Data',
             rationale: `Dans le secteur ${finalIndustry}, 68% des consultations professionnelles s'effectuent sur mobile aux heures de transition (07h45-08h15 et 12h15), garantissant le meilleur ratio de commentaires qualifiés.`,
+            internalArticleUrl: '/linkedin-strategy/4',
+            internalArticleTitle: 'Fiche Pratique : Horaires & Jours d\'Engagements Maximaux en B2B',
           },
           actionPlan: {
             title: 'Étude d\'Impact des Liens Externes & Outbound Link Penalty',
             reference: 'Benchmark Algorithmique LinkedIn & Placement de liens',
             rationale: `Insérer un lien dans le corps du texte diminue le reach organique de 35% à 50%. Le placer en 1er commentaire ou commentaire épinglé préserve 100% du potentiel de distribution.`,
+            internalArticleUrl: '/linkedin-strategy/5',
+            internalArticleTitle: 'Tutoriel : Optimisation du Titre, de la Bio & du 1er Commentaire',
           },
         },
       },

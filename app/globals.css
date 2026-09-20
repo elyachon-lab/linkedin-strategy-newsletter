@@ -12,13 +12,13 @@
   }
 }
 
-/* Metricool Gradient Accent Line */
+/* Metricool Pink & Yellow Dominant Gradient Line */
 .metricool-gradient-bar {
-  background: linear-gradient(90deg, #589CBC 0%, #EE5B91 53%, #F5CA32 100%);
+  background: linear-gradient(90deg, #EE5B91 0%, #FACC15 50%, #EE5B91 100%);
 }
 
 .metricool-gradient-text {
-  background: linear-gradient(90deg, #589CBC 0%, #EE5B91 53%, #F5CA32 100%);
+  background: linear-gradient(90deg, #EE5B91 0%, #FACC15 50%, #EE5B91 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

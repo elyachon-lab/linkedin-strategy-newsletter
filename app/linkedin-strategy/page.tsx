@@ -111,15 +111,15 @@ export default function StrategyCenterPage() {
     <div className="space-y-8 max-w-6xl mx-auto">
       
       {/* Editorial Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-slate-200 pb-6 bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full mb-2">
-            <Feather className="w-3.5 h-3.5" /> Blog Strategy & Best Practices
+          <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-metricool-pink bg-pink-100 border border-pink-300 px-3 py-1 rounded-full mb-2">
+            <Feather className="w-3.5 h-3.5 text-metricool-pink" /> Blog Strategy & Best Practices
           </div>
-          <h1 className="font-serif text-3xl font-extrabold text-slate-900 tracking-tight">
-            Les Fiches Stratégiques & Règlements LinkedIn
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-metricool-purple tracking-tight">
+            Fiches Stratégiques & Guide de l'Algorithme
           </h1>
-          <p className="font-sans text-sm text-slate-500 mt-1">
+          <p className="text-sm font-medium text-slate-500 mt-1">
             Découvrez nos articles détaillés, guides de rédaction et consignes d'optimisation d'audience.
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function StrategyCenterPage() {
         <div className="flex items-center space-x-3">
           <button
             onClick={fetchStrategies}
-            className="p-2.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
+            className="p-2.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-2xl transition-colors border border-slate-200"
             title="Rafraîchir"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -138,9 +138,9 @@ export default function StrategyCenterPage() {
               setEditingCard(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-blue-600 text-white rounded-full font-semibold text-xs shadow-xs transition-all hover:shadow"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-metricool-pink hover:bg-rose-600 text-white rounded-2xl font-extrabold text-xs shadow-md transition-all border-2 border-metricool-purple"
           >
-            <Plus className="w-4 h-4" /> Nouvel Article
+            <Plus className="w-4 h-4 text-metricool-yellow" /> Nouvel Article
           </button>
         </div>
       </div>
@@ -148,28 +148,28 @@ export default function StrategyCenterPage() {
       {/* Search & Category Filter */}
       <div className="space-y-4">
         <div className="relative max-w-2xl">
-          <Search className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-4 top-3.5 w-5 h-5 text-metricool-pink" />
           <input
             type="text"
             placeholder="Rechercher par mot-clé dans les articles (titre, tag, algorithme)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-full text-sm font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs"
+            className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-300 rounded-2xl text-xs font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-metricool-purple transition-all shadow-2xs"
           />
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1 shrink-0 mr-1">
-            <Filter className="w-3.5 h-3.5" /> Catégories :
+          <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider flex items-center gap-1 shrink-0 mr-1">
+            <Filter className="w-3.5 h-3.5 text-metricool-pink" /> Catégories :
           </span>
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-colors ${
                 selectedCategory === cat
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-metricool-pink text-white shadow-xs border border-metricool-purple'
+                  : 'bg-white text-slate-700 hover:bg-pink-50 border border-slate-200'
               }`}
             >
               {cat}

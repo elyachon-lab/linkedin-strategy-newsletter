@@ -9,14 +9,17 @@ module.exports = {
     extend: {
       colors: {
         metricool: {
-          purple: '#2D1A29',
-          yellow: '#E7FF56',
-          blue: '#589CBC',
           pink: '#EE5B91',
+          rose: '#F43F5E',
+          yellow: '#E7FF56',
+          brightYellow: '#FACC15',
+          purple: '#2D1A29',
+          blue: '#589CBC',
           amber: '#F5CA32',
+          lightPink: '#FFF0F5',
+          lightYellow: '#FEFCE8',
           lightBlue: '#D5F0FE',
-          lightPink: '#FEF1F6',
-          bg: '#F9FAFC',
+          bg: '#FAF9FB',
         },
         linkedin: {
           blue: '#0A66C2',

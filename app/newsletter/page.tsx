@@ -15,8 +15,14 @@ export default function NewsletterDashboardPage() {
   const [selectedForSend, setSelectedForSend] = useState<NewsletterIssue | null>(null);
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'public' | 'issues' | 'admin'>('public');
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   useEffect(() => {
+    const savedAdmin = localStorage.getItem('is_admin_logged_in');
+    if (savedAdmin === 'true') {
+      setIsAdminLoggedIn(true);
+    }
+
     fetch('/api/newsletter')
       .then((res) => res.json())
       .then((data) => {
@@ -36,60 +42,64 @@ export default function NewsletterDashboardPage() {
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow">
         <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-100 text-purple-900 text-xs font-extrabold border border-purple-300 mb-2">
-            <Mail className="w-4 h-4 text-purple-700" /> Newsletter & Veille Tech Hebdomadaire
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-pink-100 text-metricool-pink text-xs font-extrabold border border-pink-300 mb-2">
+            <Mail className="w-4 h-4 text-metricool-pink" /> Newsletter & Veille Tech Hebdomadaire
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-metricool-purple tracking-tight">
-            Gestionnaire & Inscription à la Veille IA & LinkedIn
+            Veille IA & LinkedIn • Inscription & Éditions
           </h1>
           <p className="text-sm font-medium text-slate-500 mt-1">
-            Capturez les abonnés, gérez la liste en tant qu'administrateur et expédiez vos éditions par e-mail.
+            Recevez chaque semaine la synthèse certifiée des évolutions de l'algorithme, des études Dwell Time et des hacks B2B.
           </p>
         </div>
 
-        <Link
-          href="/newsletter/create"
-          className="inline-flex items-center gap-2 px-5 py-3 bg-metricool-purple hover:bg-black text-metricool-yellow rounded-2xl font-extrabold text-xs shadow-md transition-all shrink-0 hover:scale-105"
-        >
-          <Plus className="w-4 h-4" /> Rédiger une Nouvelle Édition
-        </Link>
+        {isAdminLoggedIn && (
+          <Link
+            href="/newsletter/create"
+            className="inline-flex items-center gap-2 px-5 py-3 bg-metricool-pink hover:bg-rose-600 text-white border-2 border-metricool-purple rounded-2xl font-extrabold text-xs shadow-md transition-all shrink-0 hover:scale-105"
+          >
+            <Plus className="w-4 h-4 text-metricool-yellow" /> Rédiger une Nouvelle Édition
+          </Link>
+        )}
       </div>
 
-      {/* Navigation Sub-Tabs */}
-      <div className="flex items-center gap-2 border-b-2 border-slate-200 pb-2 overflow-x-auto">
-        <button
-          onClick={() => setActiveTab('public')}
-          className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${
-            activeTab === 'public'
-              ? 'bg-metricool-purple text-metricool-yellow shadow-xs'
-              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-          }`}
-        >
-          <Mail className="w-3.5 h-3.5 inline mr-1.5" /> Widget d'Inscription Public
-        </button>
+      {/* Navigation Sub-Tabs (Conditionned by Admin Access) */}
+      {isAdminLoggedIn && (
+        <div className="flex items-center gap-2 border-b-2 border-slate-200 pb-2 overflow-x-auto">
+          <button
+            onClick={() => setActiveTab('public')}
+            className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${
+              activeTab === 'public'
+                ? 'bg-metricool-purple text-metricool-yellow shadow-xs'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+          >
+            <Mail className="w-3.5 h-3.5 inline mr-1.5" /> Widget d'Inscription Public
+          </button>
 
-        <button
-          onClick={() => setActiveTab('issues')}
-          className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${
-            activeTab === 'issues'
-              ? 'bg-metricool-purple text-metricool-yellow shadow-xs'
-              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-          }`}
-        >
-          <Sparkles className="w-3.5 h-3.5 inline mr-1.5" /> Éditions & Brouillons ({newsletters.length})
-        </button>
+          <button
+            onClick={() => setActiveTab('issues')}
+            className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${
+              activeTab === 'issues'
+                ? 'bg-metricool-purple text-metricool-yellow shadow-xs'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 inline mr-1.5" /> Éditions & Brouillons ({newsletters.length})
+          </button>
 
-        <button
-          onClick={() => setActiveTab('admin')}
-          className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${
-            activeTab === 'admin'
-              ? 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple shadow-xs'
-              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-          }`}
-        >
-          <Shield className="w-3.5 h-3.5 inline mr-1.5 text-metricool-purple" /> Espace Administrateur Abonnés 🔒
-        </button>
-      </div>
+          <button
+            onClick={() => setActiveTab('admin')}
+            className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${
+              activeTab === 'admin'
+                ? 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple shadow-xs'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+          >
+            <Shield className="w-3.5 h-3.5 inline mr-1.5 text-metricool-purple" /> Espace Administrateur Abonnés 🔒
+          </button>
+        </div>
+      )}
 
       {/* TAB 1: Public Subscribe Form */}
       {activeTab === 'public' && (

@@ -67,17 +67,17 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Brand Logo - Metricool Style */}
+          {/* Brand Logo - Metricool Pink & Yellow Style */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-2xl bg-metricool-purple text-metricool-yellow flex items-center justify-center font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-2xl bg-metricool-pink text-metricool-yellow flex items-center justify-center font-bold text-xl shadow-md group-hover:scale-105 transition-transform border-2 border-metricool-purple">
               M
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-xl text-metricool-purple tracking-tight leading-none flex items-center gap-1">
-                LinkedIn Blog <span className="w-2 h-2 rounded-full bg-metricool-pink inline-block animate-pulse" />
+                LinkedIn Strategy <span className="w-2.5 h-2.5 rounded-full bg-metricool-yellow inline-block animate-pulse border border-metricool-purple" />
               </span>
               <span className="text-xs text-slate-500 font-medium mt-1">
-                Guide des Réseaux Sociaux & Content Strategy
+                Guide Metricool • Audit IA & Veille
               </span>
             </div>
           </Link>
@@ -88,8 +88,8 @@ export function Navbar() {
               href="/"
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/'
-                  ? 'bg-metricool-lightBlue text-metricool-purple border border-metricool-blue/30'
-                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+                  ? 'bg-metricool-lightPink text-metricool-pink border border-metricool-pink/30 font-extrabold'
+                  : 'text-slate-700 hover:text-metricool-pink hover:bg-pink-50'
               }`}
             >
               Accueil Blog
@@ -98,9 +98,9 @@ export function Navbar() {
             <Link
               href="/linkedin-strategy"
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                pathname === '/linkedin-strategy'
-                  ? 'bg-metricool-lightBlue text-metricool-purple border border-metricool-blue/30'
-                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+                pathname.startsWith('/linkedin-strategy')
+                  ? 'bg-metricool-lightPink text-metricool-pink border border-metricool-pink/30 font-extrabold'
+                  : 'text-slate-700 hover:text-metricool-pink hover:bg-pink-50'
               }`}
             >
               Fiches & Stratégie
@@ -110,11 +110,11 @@ export function Navbar() {
               href="/audit-linkedin"
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/audit-linkedin'
-                  ? 'bg-purple-100 text-purple-900 border border-purple-300 font-extrabold'
-                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+                  ? 'bg-pink-100 text-metricool-pink border border-pink-300 font-extrabold'
+                  : 'text-slate-700 hover:text-metricool-pink hover:bg-pink-50'
               }`}
             >
-              <Search className="w-3.5 h-3.5 inline mr-1 text-metricool-purple" />
+              <Search className="w-3.5 h-3.5 inline mr-1 text-metricool-pink" />
               Audit LinkedIn
             </Link>
 
@@ -146,8 +146,8 @@ export function Navbar() {
               href="/newsletter"
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname.startsWith('/newsletter')
-                  ? 'bg-purple-50 text-purple-900 border border-purple-200'
-                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+                  ? 'bg-pink-50 text-metricool-pink border border-pink-200 font-extrabold'
+                  : 'text-slate-700 hover:text-metricool-pink hover:bg-pink-50'
               }`}
             >
               Newsletter de Veille
@@ -155,20 +155,23 @@ export function Navbar() {
           </nav>
 
           {/* Top Right Action Buttons */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            {isAdminLoggedIn && (
+              <button
+                onClick={() => setIsAdminControlOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-metricool-pink hover:bg-rose-600 text-white border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-sm transition-all"
+                title="Espace Administrateur"
+              >
+                <ShieldCheck className="w-4 h-4 text-metricool-yellow" />
+                <span>Espace Admin 🔒</span>
+              </button>
+            )}
+
             {clientProfile ? (
               <div className="flex items-center space-x-2">
                 <Link
-                  href="/connect-linkedin"
-                  className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-[#0077B5] border border-blue-200 rounded-2xl text-xs font-extrabold transition-all"
-                  title="Connecter mon compte LinkedIn officiel (Metricool Style)"
-                >
-                  <Linkedin className="w-3.5 h-3.5 fill-[#0077B5]" />
-                  <span>Lier Compte</span>
-                </Link>
-                <Link
                   href="/profil"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 bg-metricool-lightBlue text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs hover:bg-blue-100 transition-colors"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs hover:bg-yellow-300 transition-colors"
                 >
                   <User className="w-4 h-4 text-metricool-purple" />
                   @{clientProfile.username}
@@ -181,26 +184,7 @@ export function Navbar() {
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
-            ) : isAdminLoggedIn ? (
-              /* PILOT BUTTON MATCHING THE USER'S IMAGE EXACTLY */
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setIsAdminControlOpen(true)}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-metricool-yellow hover:bg-yellow-300 text-metricool-purple border-2 border-metricool-purple rounded-full text-sm font-extrabold shadow-md hover:scale-105 transition-all cursor-pointer"
-                  title="Ouvrir le Centre de Contrôle Administrateur"
-                >
-                  <ShieldCheck className="w-5 h-5 text-metricool-purple" />
-                  Admin Connecté
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors"
-                  title="Déconnexion Admin"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
+            ) : !isAdminLoggedIn ? (
               <div className="flex items-center space-x-2">
                 <Link
                   href="/login"
@@ -210,11 +194,19 @@ export function Navbar() {
                 </Link>
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-metricool-purple hover:bg-black text-metricool-yellow rounded-2xl text-xs font-extrabold transition-all shadow-md"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-metricool-pink hover:bg-rose-600 text-white rounded-2xl text-xs font-extrabold transition-all shadow-md border-2 border-metricool-purple"
                 >
                   <UserCheck className="w-3.5 h-3.5 text-metricool-yellow" /> S'inscrire
                 </Link>
               </div>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors"
+                title="Déconnexion Admin"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             )}
           </div>
 
