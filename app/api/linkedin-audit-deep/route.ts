@@ -189,62 +189,150 @@ export async function POST(request: Request) {
       ? (realPostFreq <= 0.3 ? 45 : realPostFreq <= 1 ? 65 : 84)
       : calculatedDwellTime;
 
-    // Tailor strengths & weaknesses dynamically based on profile metrics
+    // Tailor strengths & weaknesses dynamically based on profile metrics & CSV file data
     const networkLabel = finalAccountType === 'Personal Profile' ? 'relations' : 'abonnés';
 
-    const strengths = sync?.isConnected
-      ? [
-          `Compte LinkedIn vérifié & synchronisé avec une fréquence réelle de ${realPostFreq <= 0.3 ? '1 post/mois' : `${realPostFreq} posts/semaine`}.`,
-          `Légitimité et autorité sectorielle dans le domaine ${finalIndustry} (${realFollowers.toLocaleString()} ${networkLabel}).`,
-          `Taux d'engagement de ${realEngagement} offrant un potentiel d'amplification dès que la régularité sera rétablie.`,
-        ]
-      : [
-          `Légitimité métier constatée dans le secteur ${finalIndustry} (${realFollowers.toLocaleString()} ${networkLabel}).`,
-          `Taux d'engagement mesuré de ${realEngagement} (${realSsi >= 75 ? 'supérieur' : 'aligné avec'} la moyenne sectorielle).`,
-          `Fréquence de publication identifiée : ${frequencyDisplay}.`,
-        ];
+    let strengths: string[] = [];
+    let weaknesses: string[] = [];
+    let actionSteps: string[] = [];
+    let profileHeadlineStatus = '';
+    let linkPlacementStatus = '';
+    let customRationale = '';
+    let computedDwellTimeScore = dwellTimeScore;
+    let tailoredHooks: string[] = [];
 
-    const weaknesses = sync?.isConnected
-      ? realPostFreq <= 0.5
+    if (csvMetrics && typeof csvMetrics === 'object') {
+      const fileName = csvMetrics.fileName || 'export_analytics.csv';
+      const periodLabel = csvMetrics.periodLabel || `${csvMetrics.periodDays || 30} derniers jours`;
+      const periodDays = csvMetrics.periodDays || 30;
+      const totalPosts = csvMetrics.totalPosts ?? 0;
+      const weeklyPostFrequency = csvMetrics.weeklyPostFrequency ?? 0;
+      const avgEngagementRate = csvMetrics.avgEngagementRate || '2.5%';
+      const totalImpressions = csvMetrics.totalImpressions ?? 0;
+      const formatDist = csvMetrics.observedFormatDistribution || [];
+      const formatStr = formatDist.map((f: any) => `${f.format} (${f.percentage}%)`).join(', ');
+      const topFormat = formatDist[0] || { format: 'Posts Texte & Images', percentage: 50 };
+
+      // Compute dynamic dwell time index based on CSV format breakdown
+      const pdfFormat = formatDist.find((f: any) => /pdf|carrousel|carousel|document/i.test(f.format));
+      if (pdfFormat) {
+        computedDwellTimeScore = Math.min(95, 60 + Math.round(pdfFormat.percentage * 0.35));
+      } else {
+        computedDwellTimeScore = 65;
+      }
+
+      // STRENGTHS (100% SPECIFIC TO CSV FILE DATA)
+      strengths = [
+        `📊 Analyse de votre fichier d'export "${fileName}" (${periodLabel}) : Vous avez publié un total de ${totalPosts} publication${totalPosts > 1 ? 's' : ''} sur cette période, soit un rythme réel de ${weeklyPostFrequency} posts / semaine sur votre ${finalAccountType === 'Personal Profile' ? 'Profil Privé' : 'Page Entreprise'}.`,
+        `📈 Portée & Engagement Réels : Vos contenus ont généré un volume cumulé de ${totalImpressions.toLocaleString()} impressions avec un taux d'engagement moyen mesuré à ${avgEngagementRate} dans le secteur ${finalIndustry}.`,
+        `🎨 Ventilation des Formats Publiés : Vos données réelles révèlent la répartition suivante : ${formatStr || 'Formats textuels et visuels variés'}.`,
+      ];
+
+      // WEAKNESSES (100% SPECIFIC TO CSV FILE DATA)
+      weaknesses = [
+        weeklyPostFrequency < 0.8
+          ? `🔴 Rythme d'édition discontinu dans votre fichier (${totalPosts} posts en ${periodDays} jours, soit ${weeklyPostFrequency} post/semaine) : L'algorithme LinkedIn 2026 pénalise la portée des comptes publiant moins d'une fois par semaine.`
+          : weeklyPostFrequency < 2.0
+          ? `🟡 Fréquence de publication à accélérer (${totalPosts} posts sur ${periodLabel}, soit ${weeklyPostFrequency} posts/semaine) : Passer à 2 ou 3 posts par semaine permettrait de multiplier la portée auprès de vos ${networkLabel}.`
+          : `🟢 Très bon volume de publication (${totalPosts} posts sur ${periodLabel}, soit ${weeklyPostFrequency} posts/semaine), mais votre taux d'engagement (${avgEngagementRate}) peut être amélioré en affinant les accroches.`,
+
+        `⚠️ Index Dwell Time mesuré à ${computedDwellTimeScore}/100 sur vos données : Votre format dominant "${topFormat.format}" (${topFormat.percentage}% du volume) retient le lecteur moins longtemps que les Carrousels PDF Verticaux qui génèrent +240% de rétention.`,
+
+        `📉 Monétisation de votre audience (${totalImpressions.toLocaleString()} impressions cumulées) : Absence d'un appel à l'action systématique et d'un 1er commentaire structuré sous vos ${totalPosts} publications pour convertir vos lecteurs en opportunités.`,
+      ];
+
+      // ACTION STEPS (100% SPECIFIC TO CSV FILE DATA)
+      actionSteps = [
+        `1. Objectif Fréquence : Dépasser le volume actuel de ${totalPosts} posts sur ${periodDays} jours (${weeklyPostFrequency} post/sem) pour vous stabiliser à 2 ou 3 publications hebdomadaires et viser plus de ${(totalImpressions * 2.2).toFixed(0)} impressions.`,
+        `2. Rétention Dwell Time : Reconvertir 50% de vos formats actuels (${topFormat.format}) en Carrousels PDF Verticaux (1080x1350 px) afin de faire grimper votre taux d'engagement au-delà de ${avgEngagementRate}.`,
+        `3. Conversion des ${networkLabel} : Rédiger un 1er commentaire systématique sous chacune de vos nouvelles publications contenant le lien direct vers votre offre ou votre newsletter.`,
+      ];
+
+      profileHeadlineStatus = `📊 Analyse de ${fileName} : ${totalPosts} publications analysées (${weeklyPostFrequency} posts/semaine) avec un taux d'engagement moyen de ${avgEngagementRate} et ${totalImpressions.toLocaleString()} impressions.`;
+
+      linkPlacementStatus = `📊 Mesure sur ${totalPosts} posts (${fileName}) : Recommandation d'isoler les liens en 1er commentaire pour protéger vos ${totalImpressions.toLocaleString()} impressions.`;
+
+      customRationale = `Sur la base de l'analyse exacte de votre fichier d'export ${fileName} (${totalPosts} publications, ${totalImpressions.toLocaleString()} impressions, ${avgEngagementRate} d'engagement sur ${periodLabel}), l'ingénierie LinkedIn confirme que...`;
+
+      tailoredHooks = [
+        `"Comment nous avons généré +${(totalImpressions * 0.4).toFixed(0)} impressions en ${finalIndustry} avec un rythme de ${weeklyPostFrequency} posts/semaine."`,
+        `"L'analyse de nos ${totalPosts} derniers posts en ${finalIndustry} révèle cette erreur majeure à éviter absolument :"`,
+        `"Comment passer d'un taux d'engagement de ${avgEngagementRate} à plus de 6% grâce au format Carrousel PDF Verticaux."`,
+      ];
+    } else {
+      // Standard dynamic generation when no CSV file is attached
+      strengths = sync?.isConnected
         ? [
-            `🔴 Fréquence de publication faible (${realPostFreq} post/semaine) : L'algorithme LinkedIn pénalise la portée des profils publiant moins de 1 fois par semaine.`,
-            'Pertes d\'attention entre chaque publication : Les intervalles prolongés cassent la mémorisation auprès de votre audience.',
-            'Structure des accroches et absence de carrousels PDF pour retenir l\'attention (Dwell Time sous-optimisé).',
+            `Compte LinkedIn vérifié & synchronisé avec une fréquence réelle de ${realPostFreq <= 0.3 ? '1 post/mois' : `${realPostFreq} posts/semaine`}.`,
+            `Légitimité et autorité sectorielle dans le domaine ${finalIndustry} (${realFollowers.toLocaleString()} ${networkLabel}).`,
+            `Taux d'engagement de ${realEngagement} offrant un potentiel d'amplification dès que la régularité sera rétablie.`,
           ]
         : [
-            `Régularité à consolider pour dépasser le seuil des ${realPostFreq} posts/semaine actuels.`,
-            'Accroches des 3 premières lignes nécessitant plus de levier contre-intuitif.',
-            'Absence d\'un premier commentaire automatique d\'appel à l\'action.',
-          ]
-      : realPostFreq <= 0.8
-        ? [
-            `🔴 Rythme d'édition discontinu (${frequencyDisplay}) : La régularité est le premier levier de distribution sur l'algorithme 2026.`,
-            'Sous-utilisation des Carrousels PDF verticaux (Index Dwell Time à ' + dwellTimeScore + '/100).',
-            'Accroches des 3 premières lignes sans levier de curiosité ni chiffres percutants.',
-          ]
-        : [
-            `Régularité correcte (${realPostFreq} posts/semaine), mais opportunité d'optimiser le format des posts.`,
-            'Index Dwell Time (' + dwellTimeScore + '/100) améliorable par l\'ajout de carrousels multi-slides.',
-            'Absence d\'un 1er commentaire structuré pour capter la conversion vers vos offres.',
+            `Légitimité métier constatée dans le secteur ${finalIndustry} (${realFollowers.toLocaleString()} ${networkLabel}).`,
+            `Taux d'engagement mesuré de ${realEngagement} (${realSsi >= 75 ? 'supérieur' : 'aligné avec'} la moyenne sectorielle).`,
+            `Fréquence de publication identifiée : ${frequencyDisplay}.`,
           ];
 
-    const actionSteps = sync?.isConnected
-      ? realPostFreq <= 0.5
-        ? [
-            `1. Définir un plan éditorial simple pour passer de ${realPostFreq} post/semaine à au moins 2 posts/semaine (multiplication par 3.5 de votre portée).`,
-            '2. Convertir chaque publication en Carrousel PDF (4:5) pour capter au moins 45s de Dwell Time par lecteur.',
-            '3. Publier aux créneaux recommandés et laisser 5 commentaires qualifiés dans votre secteur 15 min avant de poster.',
-          ]
+      weaknesses = sync?.isConnected
+        ? realPostFreq <= 0.5
+          ? [
+              `🔴 Fréquence de publication faible (${realPostFreq} post/semaine) : L'algorithme LinkedIn pénalise la portée des profils publiant moins de 1 fois par semaine.`,
+              'Pertes d\'attention entre chaque publication : Les intervalles prolongés cassent la mémorisation auprès de votre audience.',
+              'Structure des accroches et absence de carrousels PDF pour retenir l\'attention (Dwell Time sous-optimisé).',
+            ]
+          : [
+              `Régularité à consolider pour dépasser le seuil des ${realPostFreq} posts/semaine actuels.`,
+              'Accroches des 3 premières lignes nécessitant plus de levier contre-intuitif.',
+              'Absence d\'un premier commentaire automatique d\'appel à l\'action.',
+            ]
+        : realPostFreq <= 0.8
+          ? [
+              `🔴 Rythme d'édition discontinu (${frequencyDisplay}) : La régularité est le premier levier de distribution sur l'algorithme 2026.`,
+              'Sous-utilisation des Carrousels PDF verticaux (Index Dwell Time à ' + dwellTimeScore + '/100).',
+              'Accroches des 3 premières lignes sans levier de curiosité ni chiffres percutants.',
+            ]
+          : [
+              `Régularité correcte (${realPostFreq} posts/semaine), mais opportunité d'optimiser le format des posts.`,
+              'Index Dwell Time (' + dwellTimeScore + '/100) améliorable par l\'ajout de carrousels multi-slides.',
+              'Absence d\'un 1er commentaire structuré pour capter la conversion vers vos offres.',
+            ];
+
+      actionSteps = sync?.isConnected
+        ? realPostFreq <= 0.5
+          ? [
+              `1. Définir un plan éditorial simple pour passer de ${realPostFreq} post/semaine à au moins 2 posts/semaine (multiplication par 3.5 de votre portée).`,
+              '2. Convertir chaque publication en Carrousel PDF (4:5) pour capter au moins 45s de Dwell Time par lecteur.',
+              '3. Publier aux créneaux recommandés et laisser 5 commentaires qualifiés dans votre secteur 15 min avant de poster.',
+            ]
+          : [
+              `1. Maintenez votre rythme de ${realPostFreq} posts/semaine en convertissant 50% de vos contenus en carrousels PDF (4:5).`,
+              '2. Placez vos liens d\'offres et newsletter uniquement dans le 1er commentaire pour protéger votre reach.',
+              '3. Publiez aux créneaux recommandés et laissez 5 commentaires qualifiés dans votre secteur 15 min avant de poster.',
+            ]
         : [
-            `1. Maintenez votre rythme de ${realPostFreq} posts/semaine en convertissant 50% de vos contenus en carrousels PDF (4:5).`,
-            '2. Placez vos liens d\'offres et newsletter uniquement dans le 1er commentaire pour protéger votre reach.',
-            '3. Publiez aux créneaux recommandés et laissez 5 commentaires qualifiés dans votre secteur 15 min avant de poster.',
-          ]
-      : [
-          `1. Augmenter le rythme éditorial actuel (${realPostFreq} post/sem) pour viser 2 à 3 publications hebdomadaires.`,
-          '2. Repositionner votre titre de profil : "J\'aide [Cible] à [Résultat] grâce à [Méthode]".',
-          '3. Publier des carrousels PDF (4:5) et placer vos liens externes uniquement dans le 1er commentaire.',
-        ];
+            `1. Augmenter le rythme éditorial actuel (${realPostFreq} post/sem) pour viser 2 à 3 publications hebdomadaires.`,
+            '2. Repositionner votre titre de profil : "J\'aide [Cible] à [Résultat] grâce à [Méthode]".',
+            '3. Publier des carrousels PDF (4:5) et placer vos liens externes uniquement dans le 1er commentaire.',
+          ];
+
+      profileHeadlineStatus = sync?.isConnected
+        ? '🟢 Titre de profil aligné avec votre cible et votre secteur d\'activité.'
+        : realSsi >= 75
+          ? '🟡 Titre clair mais optimisable avec une promesse de valeur chiffrée.'
+          : '⚠️ Titre générique ("Manager / Consultant") : Manque de bénéfice client explicite.';
+
+      linkPlacementStatus = sync?.isConnected
+        ? '🟢 Stratégie de liens optimisée (1er commentaire privilégié).'
+        : '⚠️ Liens d\'offres occasionnellement inclus dans le corps du post (perte de portée).';
+
+      customRationale = `L'analyse algorithmique montre que la réactivité dans la première heure ("Golden Hour") et la régularité réelle de publication déterminent 70% de la distribution initiale dans le secteur ${finalIndustry}.`;
+
+      tailoredHooks = [
+        `"Comment nous avons résolu [Problème majeur en ${finalIndustry}] en 30 jours sans augmenter nos coûts."`,
+        `"90% des décideurs en ${finalIndustry} commettent encore cette erreur stratégique. La solution :"`,
+        `"J'ai décortiqué 5 stratégies B2B en ${finalIndustry}. Voici les 3 règles d'or à copier d'urgence :"`,
+      ];
+    }
 
     // Compute dynamic format distribution percentages based on hash
     const fmt1Pct = 40 + (handleHash % 25);
@@ -265,9 +353,9 @@ export async function POST(request: Request) {
       currentDiagnostic: {
         ssiScore: realSsi,
         engagementRate: realEngagement,
-        dwellTimeScore,
-        currentPublishingFrequency: frequencyDisplay,
-        lastObservedPost: realLastPost,
+        dwellTimeScore: computedDwellTimeScore,
+        currentPublishingFrequency: csvMetrics ? `${csvMetrics.totalPosts} posts sur ${csvMetrics.periodLabel || 'la période'} (${csvMetrics.weeklyPostFrequency} posts/semaine)` : frequencyDisplay,
+        lastObservedPost: csvMetrics ? `Export officiel ${csvMetrics.fileName}` : realLastPost,
         observedFormatDistribution: csvMetrics?.observedFormatDistribution || (sync?.primaryFormat
           ? [
               { format: sync.primaryFormat, percentage: fmt1Pct },
@@ -279,14 +367,8 @@ export async function POST(request: Request) {
               { format: 'Posts Texte Storytelling', percentage: fmt2Pct },
               { format: 'Images & Liens Externes', percentage: fmt3Pct },
             ]),
-        profileHeadlineStatus: sync?.isConnected
-          ? '🟢 Titre de profil aligné avec votre cible et votre secteur d\'activité.'
-          : realSsi >= 75
-            ? '🟡 Titre clair mais optimisable avec une promesse de valeur chiffrée.'
-            : '⚠️ Titre générique ("Manager / Consultant") : Manque de bénéfice client explicite.',
-        linkPlacementStatus: sync?.isConnected
-          ? '🟢 Stratégie de liens optimisée (1er commentaire privilégié).'
-          : '⚠️ Liens d\'offres occasionnellement inclus dans le corps du post (perte de portée).',
+        profileHeadlineStatus,
+        linkPlacementStatus,
       },
 
       // PHASE 2: RECOMMANDATIONS & CONSEILS PERSONNALISÉS IA
@@ -303,11 +385,7 @@ export async function POST(request: Request) {
           'Mercredi à 12:15 (Pause déjeuner B2B sectorielle)',
           'Jeudi à 17:45 (Fin de journée & Synthèse hebdomadaire)',
         ],
-        tailoredHooks: [
-          `"Comment nous avons résolu [Problème majeur en ${finalIndustry}] en 30 jours sans augmenter nos coûts."`,
-          `"90% des décideurs en ${finalIndustry} commettent encore cette erreur stratégique. La solution :"`,
-          `"J'ai décortiqué 5 stratégies B2B en ${finalIndustry}. Voici les 3 règles d'or à copier d'urgence :"`,
-        ],
+        tailoredHooks,
         actionSteps,
         
         // VERIFIABLE COLLAPSIBLE SOURCES & ALGORITHMIC RATIONALE
@@ -315,7 +393,7 @@ export async function POST(request: Request) {
           strengthsWeaknesses: {
             title: 'Rapport d\'Ingénierie LinkedIn & Étude SSI 2026',
             reference: 'LinkedIn Engineering - Feed Ranking & Social Selling Index Framework',
-            rationale: `L'analyse algorithmique montre que la réactivité dans la première heure ("Golden Hour") et la régularité réelle de publication déterminent 70% de la distribution initiale dans le secteur ${finalIndustry}.`,
+            rationale: customRationale,
             internalArticleUrl: '/linkedin-strategy/strat-1',
             internalArticleTitle: 'Guide : Comprendre l\'Algorithme LinkedIn 2026 & le SSI',
           },
@@ -354,8 +432,8 @@ export async function POST(request: Request) {
       metrics: {
         engagementRate: realEngagement,
         ssiScore: realSsi,
-        dwellTimeScore: sync?.isConnected ? 84 : 72,
-        weeklyPostFrequency: `${realPostFreq} posts / semaine`,
+        dwellTimeScore: computedDwellTimeScore,
+        weeklyPostFrequency: csvMetrics ? `${csvMetrics.weeklyPostFrequency} posts / semaine` : `${realPostFreq} posts / semaine`,
         estimatedFollowers: realFollowers,
       },
       strengths,
@@ -371,11 +449,7 @@ export async function POST(request: Request) {
           'Mercredi à 12:15 (Pause déjeuner B2B sectorielle)',
           'Jeudi à 17:45 (Fin de journée & Synthèse hebdomadaire)',
         ],
-        tailoredHooks: [
-          `"Comment nous avons résolu [Problème majeur en ${finalIndustry}] en 30 jours sans augmenter nos coûts."`,
-          `"90% des décideurs en ${finalIndustry} commettent encore cette erreur stratégique. La solution :"`,
-          `"J'ai décortiqué 5 stratégies B2B en ${finalIndustry}. Voici les 3 règles d'or à copier d'urgence :"`,
-        ],
+        tailoredHooks,
         actionSteps,
       },
     };

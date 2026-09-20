@@ -134,6 +134,15 @@ export default function DedicatedClientSpacePage() {
 
   // Load user profile & trigger auto-audit ONLY if profile exists with valid URL
   useEffect(() => {
+    let initialCsvStats: ParsedCSVStats | null = null;
+    const savedCsv = typeof window !== 'undefined' ? localStorage.getItem('linkedin_imported_csv_stats') : null;
+    if (savedCsv) {
+      try {
+        initialCsvStats = JSON.parse(savedCsv);
+        setImportedCsvStats(initialCsvStats);
+      } catch {}
+    }
+
     const saved = localStorage.getItem('linkedin_user_profile');
     if (saved) {
       try {
@@ -147,7 +156,7 @@ export default function DedicatedClientSpacePage() {
         ) {
           setProfile(parsed);
           if (parsed.websiteUrl) setWebsiteUrl(parsed.websiteUrl);
-          runAutoAuditForRegisteredUser(parsed);
+          runAutoAuditForRegisteredUser(parsed, initialCsvStats || undefined);
           return;
         }
       } catch {}
@@ -223,7 +232,16 @@ export default function DedicatedClientSpacePage() {
     }
 
     try {
-      const activeCsv = overrideStats || importedCsvStats;
+      let activeCsv = overrideStats || importedCsvStats;
+      if (!activeCsv && typeof window !== 'undefined') {
+        const savedCsv = localStorage.getItem('linkedin_imported_csv_stats');
+        if (savedCsv) {
+          try {
+            activeCsv = JSON.parse(savedCsv);
+          } catch {}
+        }
+      }
+
       const res = await fetch('/api/linkedin-audit-deep', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -532,6 +550,9 @@ export default function DedicatedClientSpacePage() {
           <CSVStatsDropzone
             onStatsImported={(stats) => {
               setImportedCsvStats(stats);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('linkedin_imported_csv_stats', JSON.stringify(stats));
+              }
               if (profile) {
                 runAutoAuditForRegisteredUser(profile, stats);
               }

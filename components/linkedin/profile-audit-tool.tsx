@@ -159,12 +159,23 @@ export function ProfileAuditTool() {
     setErrorMessage('');
 
     try {
+      let csvMetrics = undefined;
+      if (typeof window !== 'undefined') {
+        const savedCsv = localStorage.getItem('linkedin_imported_csv_stats');
+        if (savedCsv) {
+          try {
+            csvMetrics = JSON.parse(savedCsv);
+          } catch {}
+        }
+      }
+
       const res = await fetch('/api/linkedin-audit-deep', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: queryInput,
           industry: industryInput || undefined,
+          csvMetrics,
         }),
       });
 
