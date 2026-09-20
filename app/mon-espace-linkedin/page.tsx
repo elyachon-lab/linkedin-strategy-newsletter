@@ -51,12 +51,12 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full text-left px-3.5 py-2.5 border rounded-xl text-[11px] font-extrabold flex items-center justify-between transition-colors ${
           darkTheme
-            ? 'bg-white/10 hover:bg-white/20 border-white/20 text-metricool-yellow'
-            : 'bg-pink-50 hover:bg-pink-100 border-pink-200 text-metricool-pink'
+            ? 'bg-indigo-900/60 hover:bg-indigo-900/80 border-indigo-700/50 text-cyan-300'
+            : 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-950'
         }`}
       >
         <span className="flex items-center gap-1.5">
-          <BookOpen className="w-3.5 h-3.5 text-metricool-pink" />
+          <BookOpen className="w-3.5 h-3.5 text-violet-400" />
           📚 Source vérifiée & Justification algorithmique
         </span>
         <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -70,7 +70,7 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
               : 'bg-white border-pink-200 text-slate-800 shadow-2xs'
           }`}
         >
-          <div className="font-extrabold text-metricool-yellow text-[11px] uppercase tracking-wider flex items-center gap-1">
+          <div className="font-extrabold text-cyan-300 text-[11px] uppercase tracking-wider flex items-center gap-1">
             <span>{source.title}</span>
           </div>
           <p className="text-[11px] text-slate-300 font-bold">
@@ -84,10 +84,10 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
             <div className="pt-1 border-t border-white/10">
               <Link
                 href={source.internalArticleUrl}
-                className="inline-flex items-center gap-1.5 text-xs font-extrabold text-metricool-yellow hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs font-extrabold text-cyan-300 hover:underline"
               >
                 <span>🔗 Fiche Stratégique Associée : {source.internalArticleTitle || 'Consulter la fiche'}</span>
-                <ArrowRight className="w-3.5 h-3.5 text-metricool-pink" />
+                <ArrowRight className="w-3.5 h-3.5 text-violet-400" />
               </Link>
             </div>
           )}
@@ -204,21 +204,21 @@ export default function DedicatedClientSpacePage() {
     <div className="space-y-8 max-w-7xl mx-auto pb-12">
       
       {/* HEADER BANNER: REGISTERED PROFILE IDENTITY & STATUS */}
-      <div className="bg-metricool-purple text-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
+      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-indigo-800/50 brand-card-shadow space-y-6">
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 rounded-2xl bg-metricool-yellow text-metricool-purple flex items-center justify-center font-extrabold text-2xl border-2 border-metricool-purple shadow-md shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white flex items-center justify-center font-extrabold text-2xl border border-indigo-400/30 shadow-md shrink-0">
               {(profile?.fullName || 'L').charAt(0).toUpperCase()}
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-extrabold text-white">{profile?.fullName}</h1>
-                <span className="bg-metricool-yellow text-metricool-purple text-xs font-extrabold px-3 py-0.5 rounded-full uppercase border border-metricool-purple">
+                <span className="bg-indigo-500/20 text-indigo-200 text-xs font-extrabold px-3 py-0.5 rounded-full uppercase border border-indigo-400/30">
                   🤖 Secteur IA : {profile?.industry}
                 </span>
                 {isAccountSynced ? (
-                  <span className="bg-emerald-400 text-slate-950 font-extrabold text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-extrabold text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1">
                     🟢 Compte LinkedIn Connecté ({profile?.userSyncData?.weeklyPostFrequency && profile.userSyncData.weeklyPostFrequency <= 0.3 ? '~1 post/mois' : `${profile?.userSyncData?.weeklyPostFrequency} posts/sem`})
                   </span>
                 ) : (
@@ -234,11 +234,11 @@ export default function DedicatedClientSpacePage() {
                   href={registeredUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:underline flex items-center gap-1 text-metricool-yellow underline-offset-2"
+                  className="hover:underline flex items-center gap-1 text-cyan-400 underline-offset-2"
                 >
-                  <Linkedin className="w-3.5 h-3.5 text-metricool-yellow" />
+                  <Linkedin className="w-3.5 h-3.5 text-cyan-400" />
                   {registeredUrl}
-                  <ExternalLink className="w-3 h-3 text-metricool-yellow" />
+                  <ExternalLink className="w-3 h-3 text-cyan-400" />
                 </a>
                 <span>•</span>
                 <span>@{profile?.username}</span>
@@ -251,9 +251,9 @@ export default function DedicatedClientSpacePage() {
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <button
               onClick={() => setIsConnectModalOpen(true)}
-              className="px-4 py-3 bg-metricool-yellow hover:bg-yellow-300 text-metricool-purple font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-1.5"
+              className="px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold rounded-2xl text-xs shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-1.5"
             >
-              <Zap className="w-4 h-4 text-metricool-purple" />
+              <Zap className="w-4 h-4 text-cyan-300" />
               {isAccountSynced ? '⚙️ Ajuster mes Métriques Réelles' : '🔗 Connecter & Synchroniser Mon Compte Réel'}
             </button>
 
@@ -261,7 +261,7 @@ export default function DedicatedClientSpacePage() {
               href="/profil"
               className="px-4 py-3 bg-white/10 hover:bg-white/20 text-white font-extrabold rounded-2xl text-xs border border-white/20 transition-all flex items-center gap-2"
             >
-              <Settings className="w-4 h-4 text-metricool-yellow" /> Paramètres
+              <Settings className="w-4 h-4 text-cyan-400" /> Paramètres
             </Link>
           </div>
         </div>
@@ -269,7 +269,7 @@ export default function DedicatedClientSpacePage() {
         {/* INFO NOTICE */}
         <div className="bg-white/10 p-4 rounded-2xl border border-white/15 text-xs text-slate-200 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-metricool-pink shrink-0" />
+            <Sparkles className="w-4 h-4 text-violet-400 shrink-0" />
             <span>
               <strong>Compte LinkedIn Actif :</strong> L'IA a scanné votre profil <strong>{profile?.fullName}</strong>, déduit votre secteur (<strong>{profile?.industry}</strong>) et généré un audit fondé sur les études algorithmiques vérifiées 2026.
             </span>
@@ -279,17 +279,17 @@ export default function DedicatedClientSpacePage() {
       </div>
 
       {/* NAVIGATION TABS: UNIFIED SPACE & AUDIT LINKEDIN */}
-      <div className="flex border-b-2 border-slate-200 bg-white p-2 rounded-2xl border-2 border-metricool-purple metricool-card-shadow gap-2 overflow-x-auto">
+      <div className="flex border border-indigo-100 bg-white p-2 rounded-2xl brand-card-shadow gap-2 overflow-x-auto">
         
         <button
           onClick={() => setActiveTab('my_audit')}
           className={`flex-1 min-w-[200px] py-3 px-4 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all ${
             activeTab === 'my_audit'
-              ? 'bg-metricool-purple text-metricool-yellow shadow-sm'
+              ? 'bg-indigo-950 text-cyan-300 shadow-sm'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <BarChart3 className="w-4 h-4 text-metricool-yellow" />
+          <BarChart3 className="w-4 h-4 text-cyan-400" />
           1. Audit IA & État des Lieux de Mon Compte
         </button>
 
@@ -297,11 +297,11 @@ export default function DedicatedClientSpacePage() {
           onClick={() => setActiveTab('search_audit')}
           className={`flex-1 min-w-[200px] py-3 px-4 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all ${
             activeTab === 'search_audit'
-              ? 'bg-metricool-purple text-metricool-yellow shadow-sm'
+              ? 'bg-indigo-950 text-cyan-300 shadow-sm'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <Search className="w-4 h-4 text-metricool-blue" />
+          <Search className="w-4 h-4 text-indigo-400" />
           2. Auditer un Autre Compte ou Page Tiers
         </button>
 
@@ -309,7 +309,7 @@ export default function DedicatedClientSpacePage() {
           onClick={() => setActiveTab('website_scan')}
           className={`flex-1 min-w-[200px] py-3 px-4 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all ${
             activeTab === 'website_scan'
-              ? 'bg-metricool-purple text-metricool-yellow shadow-sm'
+              ? 'bg-indigo-950 text-cyan-300 shadow-sm'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -330,14 +330,14 @@ export default function DedicatedClientSpacePage() {
               {/* ========================================================================= */}
               {/* PHASE 1: ÉTAT DES LIEUX & DIAGNOSTIC DE LA COMMUNICATION ACTUELLE */}
               {/* ========================================================================= */}
-              <div className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
+              <div className="bg-white p-6 sm:p-8 rounded-3xl border border-indigo-100 brand-card-shadow space-y-6">
                 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-100 pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                   <div className="space-y-1">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-blue-900 text-xs font-extrabold border border-blue-300">
-                      <Activity className="w-3.5 h-3.5 text-blue-700" /> PHASE 1 : DIAGNOSTIC DU PROFIL ACTUEL
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-900 text-xs font-extrabold border border-indigo-200">
+                      <Activity className="w-3.5 h-3.5 text-indigo-600" /> PHASE 1 : DIAGNOSTIC DU PROFIL ACTUEL
                     </div>
-                    <h2 className="text-xl sm:text-2xl font-extrabold text-metricool-purple pt-1">
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-indigo-950 pt-1">
                       📊 État des Lieux & Diagnostic de la Communication Actuelle
                     </h2>
                     <p className="text-xs text-slate-600 font-medium">
@@ -345,20 +345,20 @@ export default function DedicatedClientSpacePage() {
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 text-metricool-purple px-5 py-3 rounded-2xl border-2 border-metricool-purple text-center shrink-0">
+                  <div className="bg-indigo-50 text-indigo-950 px-5 py-3 rounded-2xl border border-indigo-200 text-center shrink-0">
                     <div className="text-[10px] font-extrabold uppercase text-slate-500">Score SSI Actuel</div>
-                    <div className="text-3xl font-extrabold text-metricool-purple">
+                    <div className="text-3xl font-extrabold text-indigo-950">
                       {registeredAudit.currentDiagnostic?.ssiScore || registeredAudit.metrics.ssiScore}/100
                     </div>
                   </div>
                 </div>
 
                 {/* DYNAMIC SECTOR AUTO-DETECTION BADGE */}
-                <div className="p-4 bg-purple-50 border-2 border-purple-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="p-4 bg-indigo-50/60 border border-indigo-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-metricool-purple shrink-0" />
+                    <Sparkles className="w-5 h-5 text-indigo-600 shrink-0" />
                     <div>
-                      <span className="text-xs font-extrabold text-metricool-purple block">
+                      <span className="text-xs font-extrabold text-indigo-950 block">
                         🤖 Secteur d'activité déduit par l'IA : {registeredAudit.industry} (Certitude {registeredAudit.industryConfidence || 98}%)
                       </span>
                       <span className="text-[11px] text-slate-600 font-medium">
@@ -370,7 +370,7 @@ export default function DedicatedClientSpacePage() {
                     href={registeredUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-extrabold text-metricool-purple hover:underline shrink-0 bg-white px-3 py-1.5 rounded-xl border border-purple-300"
+                    className="inline-flex items-center gap-1 text-xs font-extrabold text-indigo-900 hover:underline shrink-0 bg-white px-3 py-1.5 rounded-xl border border-indigo-300"
                   >
                     🔗 Voir le Profil Scanné <ExternalLink className="w-3 h-3" />
                   </a>
@@ -380,9 +380,9 @@ export default function DedicatedClientSpacePage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-1">
                     <div className="text-[11px] font-extrabold uppercase text-slate-500 flex items-center justify-center gap-1">
-                      <TrendingUp className="w-3.5 h-3.5 text-metricool-blue" /> Taux d'Engagement Constaté
+                      <TrendingUp className="w-3.5 h-3.5 text-indigo-600" /> Taux d'Engagement Constaté
                     </div>
-                    <div className="text-2xl font-extrabold text-metricool-purple">
+                    <div className="text-2xl font-extrabold text-indigo-950">
                       {registeredAudit.currentDiagnostic?.engagementRate || registeredAudit.metrics.engagementRate}
                     </div>
                     <span className="text-[10px] text-emerald-700 font-extrabold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -394,22 +394,22 @@ export default function DedicatedClientSpacePage() {
                     <div className="text-[11px] font-extrabold uppercase text-slate-500 flex items-center justify-center gap-1">
                       <Award className="w-3.5 h-3.5 text-amber-500" /> Score SSI Actuel
                     </div>
-                    <div className="text-2xl font-extrabold text-metricool-purple">
+                    <div className="text-2xl font-extrabold text-indigo-950">
                       {registeredAudit.currentDiagnostic?.ssiScore || registeredAudit.metrics.ssiScore}/100
                     </div>
-                    <span className="text-[10px] text-purple-700 font-extrabold bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
+                    <span className="text-[10px] text-indigo-700 font-extrabold bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
                       Index Social Selling
                     </span>
                   </div>
 
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-1">
                     <div className="text-[11px] font-extrabold uppercase text-slate-500 flex items-center justify-center gap-1">
-                      <BarChart3 className="w-3.5 h-3.5 text-metricool-pink" /> Index Dwell Time
+                      <BarChart3 className="w-3.5 h-3.5 text-violet-600" /> Index Dwell Time
                     </div>
-                    <div className="text-2xl font-extrabold text-metricool-purple">
+                    <div className="text-2xl font-extrabold text-indigo-950">
                       {registeredAudit.currentDiagnostic?.dwellTimeScore || registeredAudit.metrics.dwellTimeScore}/100
                     </div>
-                    <span className="text-[10px] text-blue-700 font-extrabold bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                    <span className="text-[10px] text-violet-700 font-extrabold bg-violet-50 px-2 py-0.5 rounded-full border border-violet-200">
                       Rétention Actuelle
                     </span>
                   </div>
@@ -418,7 +418,7 @@ export default function DedicatedClientSpacePage() {
                     <div className="text-[11px] font-extrabold uppercase text-slate-500 flex items-center justify-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-emerald-600" /> Fréquence Publiée
                     </div>
-                    <div className="text-sm font-extrabold text-metricool-purple pt-1">
+                    <div className="text-sm font-extrabold text-indigo-950 pt-1">
                       {registeredAudit.currentDiagnostic?.currentPublishingFrequency || registeredAudit.metrics.weeklyPostFrequency}
                     </div>
                     <span className="text-[10px] text-slate-600 font-extrabold bg-slate-100 px-2 py-0.5 rounded-full block">
@@ -431,7 +431,7 @@ export default function DedicatedClientSpacePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
                     <h3 className="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-2">
-                      <PieChart className="w-4 h-4 text-metricool-purple" /> Répartition Actuelle des Formats Publiés
+                      <PieChart className="w-4 h-4 text-indigo-600" /> Répartition Actuelle des Formats Publiés
                     </h3>
                     <div className="space-y-2 text-xs font-bold">
                       {(registeredAudit.currentDiagnostic?.observedFormatDistribution || [
@@ -442,10 +442,10 @@ export default function DedicatedClientSpacePage() {
                         <div key={idx} className="space-y-1">
                           <div className="flex justify-between text-slate-700">
                             <span>{item.format}</span>
-                            <span className="text-metricool-purple">{item.percentage}%</span>
+                            <span className="text-indigo-950">{item.percentage}%</span>
                           </div>
                           <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                            <div className="bg-slate-700 h-2 rounded-full" style={{ width: `${item.percentage}%` }} />
+                            <div className="bg-indigo-600 h-2 rounded-full" style={{ width: `${item.percentage}%` }} />
                           </div>
                         </div>
                       ))}
@@ -479,11 +479,11 @@ export default function DedicatedClientSpacePage() {
               {/* ========================================================================= */}
               {/* PHASE 2: RECOMMANDATIONS & CONSEILS PERSONNALISÉS IA AVEC SOURCES REPLIABLES */}
               {/* ========================================================================= */}
-              <div className="bg-metricool-purple text-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
+              <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-indigo-800/50 brand-card-shadow space-y-6">
                 
                 <div className="border-b border-white/10 pb-4">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-metricool-yellow text-metricool-purple text-xs font-extrabold border border-metricool-purple mb-2">
-                    <Lightbulb className="w-3.5 h-3.5 text-metricool-purple" /> PHASE 2 : CONSEILS PERSONNALISÉS IA
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-200 text-xs font-extrabold border border-indigo-400/30 mb-2">
+                    <Lightbulb className="w-3.5 h-3.5 text-cyan-300" /> PHASE 2 : CONSEILS PERSONNALISÉS IA
                   </div>
                   <h2 className="text-xl sm:text-2xl font-extrabold text-white">
                     🎯 Recommandations & Conseils Personnalisés Sur-Mesure IA
@@ -535,18 +535,18 @@ export default function DedicatedClientSpacePage() {
                   {/* Recommended Format Mix */}
                   <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-4 flex flex-col justify-between">
                     <div className="space-y-3">
-                      <h3 className="text-sm font-extrabold text-metricool-yellow flex items-center gap-2">
-                        <Layers className="w-4 h-4 text-metricool-pink" /> Nouvelle Répartition Éditoriale Recommandée
+                      <h3 className="text-sm font-extrabold text-cyan-300 flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-violet-400" /> Nouvelle Répartition Éditoriale Recommandée
                       </h3>
                       <div className="space-y-3 pt-1">
                         {(registeredAudit.recommendations?.recommendedFormatMix || registeredAudit.editorialStrategy.recommendedMix).map((item, idx) => (
                           <div key={idx} className="space-y-1">
                             <div className="flex justify-between text-xs font-extrabold text-slate-200">
                               <span>{item.format}</span>
-                              <span className="text-metricool-yellow">{item.percentage}%</span>
+                              <span className="text-cyan-300">{item.percentage}%</span>
                             </div>
                             <div className="w-full bg-white/20 rounded-full h-2.5 overflow-hidden">
-                              <div className="bg-metricool-yellow h-2.5 rounded-full" style={{ width: `${item.percentage}%` }} />
+                              <div className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-2.5 rounded-full" style={{ width: `${item.percentage}%` }} />
                             </div>
                           </div>
                         ))}
@@ -560,19 +560,19 @@ export default function DedicatedClientSpacePage() {
                   {/* Tailored Hooks with Copy Button */}
                   <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-4 flex flex-col justify-between">
                     <div className="space-y-3">
-                      <h3 className="text-sm font-extrabold text-metricool-yellow flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-metricool-pink" /> Accroches IA Optimisées pour {registeredAudit.industry}
+                      <h3 className="text-sm font-extrabold text-cyan-300 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-violet-400" /> Accroches IA Optimisées pour {registeredAudit.industry}
                       </h3>
                       <div className="space-y-2">
                         {(registeredAudit.recommendations?.tailoredHooks || registeredAudit.editorialStrategy.tailoredHooks).map((hook, idx) => (
                           <div
                             key={idx}
-                            className="bg-white text-metricool-purple p-3 rounded-xl text-xs font-bold flex items-center justify-between gap-3 shadow-sm"
+                            className="bg-white text-indigo-950 p-3 rounded-xl text-xs font-bold flex items-center justify-between gap-3 shadow-sm"
                           >
                             <span className="italic">"{hook}"</span>
                             <button
                               onClick={() => copyToClipboard(hook, idx)}
-                              className="bg-metricool-yellow text-metricool-purple text-[11px] font-extrabold px-2.5 py-1 rounded-lg border border-metricool-purple hover:bg-yellow-300 transition-colors shrink-0"
+                              className="bg-cyan-400 text-slate-950 text-[11px] font-extrabold px-2.5 py-1 rounded-lg border border-cyan-300 hover:bg-cyan-300 transition-colors shrink-0"
                             >
                               {copiedIndex === idx ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
                             </button>
@@ -590,13 +590,13 @@ export default function DedicatedClientSpacePage() {
                 {/* POSTING WINDOWS & ACTION PLAN */}
                 <div className="space-y-4 pt-2">
                   <div className="bg-white/10 p-5 rounded-2xl border border-white/15 space-y-4">
-                    <h3 className="text-sm font-extrabold text-metricool-yellow flex items-center gap-2">
+                    <h3 className="text-sm font-extrabold text-cyan-300 flex items-center gap-2">
                       <Target className="w-4 h-4 text-amber-400" /> Plan d'Action Stratégique en 3 Étapes
                     </h3>
                     <div className="space-y-2 text-xs font-bold text-slate-900">
                       {(registeredAudit.recommendations?.actionSteps || registeredAudit.editorialStrategy.actionSteps).map((step, idx) => (
                         <div key={idx} className="bg-white p-3.5 rounded-xl border border-slate-200 flex items-center gap-3">
-                          <span className="w-6 h-6 rounded-lg bg-metricool-purple text-metricool-yellow flex items-center justify-center font-extrabold shrink-0 text-xs">
+                          <span className="w-6 h-6 rounded-lg bg-indigo-900 text-cyan-300 flex items-center justify-center font-extrabold shrink-0 text-xs">
                             {idx + 1}
                           </span>
                           <span>{step}</span>
@@ -629,9 +629,9 @@ export default function DedicatedClientSpacePage() {
 
       {/* TAB 3: WEBSITE SCANNER & OFFER ALIGNMENT */}
       {activeTab === 'website_scan' && (
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-4 animate-fadeIn">
-          <div className="flex items-center gap-2 text-metricool-purple">
-            <Globe className="w-6 h-6 text-metricool-blue" />
+        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-indigo-100 brand-card-shadow space-y-4 animate-fadeIn">
+          <div className="flex items-center gap-2 text-indigo-950">
+            <Globe className="w-6 h-6 text-indigo-600" />
             <h2 className="text-xl font-extrabold">Analyse IA de votre Site Internet & Offres</h2>
           </div>
           <p className="text-xs text-slate-600 font-medium">
@@ -647,13 +647,13 @@ export default function DedicatedClientSpacePage() {
                 placeholder="https://votre-site-entreprise.com"
                 value={websiteUrl}
                 onChange={(e) => setWebsiteUrl(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold"
+                className="w-full pl-10 pr-4 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold"
               />
             </div>
             <button
               type="submit"
               disabled={isScanningSite}
-              className="px-6 py-2.5 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-xl text-xs shadow-md transition-all shrink-0 flex items-center justify-center gap-2"
+              className="px-6 py-2.5 bg-indigo-950 hover:bg-slate-900 text-cyan-300 font-extrabold rounded-xl text-xs shadow-md transition-all shrink-0 flex items-center justify-center gap-2"
             >
               {isScanningSite ? (
                 <>

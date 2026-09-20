@@ -86,16 +86,16 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border-2 border-metricool-purple overflow-hidden my-8 transform transition-all">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+      <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden my-8 transform transition-all">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-metricool-purple text-white flex items-center justify-between">
+        <div className="px-6 py-4 bg-indigo-950 text-white flex items-center justify-between border-b border-indigo-900/50">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-metricool-yellow text-metricool-purple flex items-center justify-center font-extrabold text-base">
-              <Link2 className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-xl bg-indigo-900 text-indigo-300 flex items-center justify-center font-extrabold text-base border border-indigo-700/50">
+              <Link2 className="w-4 h-4 text-indigo-300" />
             </div>
-            <h2 className="text-base font-extrabold text-white">Lier & Synchroniser Mon Compte LinkedIn</h2>
+            <h2 className="text-base font-black text-white">Lier & Synchroniser Mon Compte LinkedIn</h2>
           </div>
           <button
             onClick={onClose}
@@ -107,20 +107,20 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
 
         <form onSubmit={handleSyncSubmit} className="p-6 space-y-4">
           
-          <div className="p-4 bg-purple-50 border-2 border-purple-200 rounded-2xl text-xs space-y-1">
-            <div className="font-extrabold text-metricool-purple flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-metricool-pink shrink-0" />
-              <span>Connectez votre compte pour corriger les statistiques estimées</span>
+          <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl text-xs space-y-1">
+            <div className="font-extrabold text-indigo-950 flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" />
+              <span>Connectez votre compte pour affiner votre audit IA</span>
             </div>
             <p className="text-slate-600 font-medium leading-relaxed">
-              Renseignez vos métriques réelles de publication (*fréquence exacte, formats réels, abonnés, SSI*) pour que l'audit IA adapte ses conseils à votre volume de publication réel.
+              Vos données réelles de publication permettent à l'IA d'adapter les recommandations stratégiques à votre activité exacte.
             </p>
           </div>
 
           <div className="space-y-3">
             <div>
               <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-                <Linkedin className="w-3.5 h-3.5 text-metricool-blue" /> URL du Profil LinkedIn <span className="text-rose-500">*</span>
+                <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" /> URL du Profil LinkedIn <span className="text-rose-500">*</span>
               </label>
               <input
                 type="url"
@@ -128,7 +128,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                 placeholder="https://www.linkedin.com/in/votre-pseudo"
                 value={linkedinUrl}
                 onChange={(e) => setLinkedinUrl(e.target.value)}
-                className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+                className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
               />
             </div>
 
@@ -140,7 +140,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                 <select
                   value={weeklyPostFrequency}
                   onChange={(e) => setWeeklyPostFrequency(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white text-slate-900"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white text-slate-900"
                 >
                   <option value="0.25">🔴 1 post / mois (~0,25 post/semaine)</option>
                   <option value="0.5">🟡 1 post / 2 semaines (~0,5 post/semaine)</option>
@@ -160,7 +160,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                   placeholder="ex: 8500"
                   value={followerCount}
                   onChange={(e) => setFollowerCount(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
                 />
               </div>
             </div>
@@ -173,7 +173,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                 <select
                   value={primaryFormat}
                   onChange={(e) => setPrimaryFormat(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white text-slate-900"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white text-slate-900"
                 >
                   <option value="Carrousels PDF Verticaux (4:5)">Carrousels PDF Verticaux (4:5)</option>
                   <option value="Posts Texte Storytelling">Posts Texte Storytelling</option>
@@ -191,7 +191,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                   placeholder="ex: 84"
                   value={ssiScore}
                   onChange={(e) => setSsiScore(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
                 />
               </div>
             </div>
@@ -206,7 +206,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                   placeholder="ex: 4.8%"
                   value={engagementRate}
                   onChange={(e) => setEngagementRate(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
                 />
               </div>
 
@@ -219,7 +219,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                   placeholder="ex: Hier à 14h30"
                   value={lastPostDate}
                   onChange={(e) => setLastPostDate(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
                 />
               </div>
             </div>
@@ -236,7 +236,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
             <button
               type="submit"
               disabled={isSyncing}
-              className="w-full py-3.5 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
             >
               {isSyncing ? (
                 <>
@@ -244,7 +244,7 @@ export function LinkedInConnectModal({ isOpen, onClose, currentProfile, onSyncSu
                 </>
               ) : (
                 <>
-                  <Zap className="w-4 h-4 text-metricool-yellow" /> Enregistrer & Lier Mon Compte Réel
+                  <Zap className="w-4 h-4 text-white" /> Enregistrer & Lier Mon Compte Réel
                 </>
               )}
             </button>

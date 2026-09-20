@@ -130,15 +130,15 @@ export default function ConnectLinkedInPage() {
   return (
     <div className="max-w-2xl mx-auto my-12 space-y-8 px-4">
       
-      {/* HEADER BANNER - METRICOOL STYLE LINKEDIN CONNECTOR */}
-      <div className="bg-metricool-purple text-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-4 text-center">
-        <div className="w-14 h-14 bg-metricool-yellow text-metricool-purple rounded-2xl flex items-center justify-center mx-auto shadow-md border-2 border-metricool-purple">
-          <Linkedin className="w-8 h-8 text-metricool-purple" />
+      {/* HEADER BANNER - LINKEDIN CONNECTOR */}
+      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-indigo-800/50 brand-card-shadow space-y-4 text-center">
+        <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-violet-600 text-white rounded-2xl flex items-center justify-center mx-auto shadow-md border border-indigo-400/30">
+          <Linkedin className="w-8 h-8 text-cyan-300" />
         </div>
         
         <div className="space-y-1">
-          <span className="bg-metricool-yellow text-metricool-purple text-xs font-extrabold px-3.5 py-1 rounded-full border border-metricool-purple uppercase inline-block">
-            ⚡ Intégration Directe Metricool Style
+          <span className="bg-indigo-500/20 text-indigo-200 text-xs font-extrabold px-3.5 py-1 rounded-full border border-indigo-400/30 uppercase inline-block">
+            ⚡ Connexion Sécurisée & Synchronisation
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight pt-1">
             Connexion & Liaison Officielle du Compte LinkedIn
@@ -150,9 +150,9 @@ export default function ConnectLinkedInPage() {
       </div>
 
       {/* MAIN OAUTH CONNECTION CARD */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
+      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-indigo-100 brand-card-shadow space-y-6">
         
-        <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl text-xs space-y-2">
+        <div className="p-4 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs space-y-2">
           <div className="font-extrabold text-emerald-950 flex items-center gap-1.5 text-sm">
             <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
             <span>Autorisation OAuth 2.0 Sécurisée</span>
@@ -167,7 +167,7 @@ export default function ConnectLinkedInPage() {
           <button
             onClick={() => handleOAuthConnect()}
             disabled={isConnecting}
-            className="w-full py-4 bg-[#0A66C2] hover:bg-black text-white font-extrabold rounded-2xl text-sm shadow-md transition-all flex items-center justify-center gap-3 hover:scale-[1.01]"
+            className="w-full py-4 bg-[#0A66C2] hover:bg-indigo-950 text-white font-extrabold rounded-2xl text-sm shadow-md transition-all flex items-center justify-center gap-3 hover:scale-[1.01]"
           >
             {isConnecting ? (
               <>
@@ -175,7 +175,7 @@ export default function ConnectLinkedInPage() {
               </>
             ) : (
               <>
-                <Linkedin className="w-5 h-5 text-white" /> Se Connecter avec LinkedIn (OAuth Metricool) <ArrowRight className="w-5 h-5" />
+                <Linkedin className="w-5 h-5 text-white" /> Se Connecter avec LinkedIn (OAuth Direct) <ArrowRight className="w-5 h-5" />
               </>
             )}
           </button>
@@ -206,7 +206,7 @@ export default function ConnectLinkedInPage() {
                 placeholder="ex: Jean Dupont"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+                className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
               />
             </div>
 
@@ -220,7 +220,7 @@ export default function ConnectLinkedInPage() {
                 placeholder="ex: jeandupont"
                 value={vanityName}
                 onChange={(e) => setVanityName(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+                className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
               />
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function ConnectLinkedInPage() {
               <select
                 value={postFrequency}
                 onChange={(e) => setPostFrequency(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white text-slate-900"
+                className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white text-slate-900"
               >
                 <option value="0.25">🔴 1 post / mois (~0,25 post/semaine)</option>
                 <option value="0.5">🟡 1 post / 2 semaines (~0,5 post/semaine)</option>
@@ -251,7 +251,7 @@ export default function ConnectLinkedInPage() {
               <select
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white text-slate-900"
+                className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white text-slate-900"
               >
                 <option value="SaaS & Tech">SaaS & Tech</option>
                 <option value="Marketing & Growth">Marketing & Growth</option>
@@ -272,7 +272,7 @@ export default function ConnectLinkedInPage() {
           )}
 
           {connectionSuccess && (
-            <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl text-xs font-extrabold text-emerald-950 flex items-center justify-center gap-2">
+            <div className="p-4 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs font-extrabold text-emerald-950 flex items-center justify-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
               <span>🟢 Compte LinkedIn officiel lié avec succès ! Redirection vers votre Espace IA...</span>
             </div>
@@ -281,7 +281,7 @@ export default function ConnectLinkedInPage() {
           <button
             type="submit"
             disabled={isConnecting}
-            className="w-full py-3.5 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 bg-indigo-950 hover:bg-slate-900 text-cyan-300 font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
           >
             {isConnecting ? (
               <>
@@ -289,7 +289,7 @@ export default function ConnectLinkedInPage() {
               </>
             ) : (
               <>
-                <UserCheck className="w-4 h-4 text-metricool-yellow" /> Valider & Lier Mon Compte LinkedIn
+                <UserCheck className="w-4 h-4 text-cyan-300" /> Valider & Lier Mon Compte LinkedIn
               </>
             )}
           </button>

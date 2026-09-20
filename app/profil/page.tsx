@@ -129,9 +129,9 @@ export default function UserProfilePage() {
     <div className="max-w-4xl mx-auto space-y-8 py-6">
       
       {/* Header Banner */}
-      <div className="bg-metricool-purple text-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-indigo-800/50 brand-card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-4">
-          <div className="w-14 h-14 rounded-2xl bg-metricool-yellow text-metricool-purple flex items-center justify-center font-extrabold text-2xl border-2 border-metricool-purple shadow-md">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white flex items-center justify-center font-extrabold text-2xl border border-indigo-400/30 shadow-md">
             {(fullName || 'M').charAt(0).toUpperCase()}
           </div>
           <div>
@@ -145,7 +145,7 @@ export default function UserProfilePage() {
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/mon-espace-linkedin"
-            className="px-4 py-2.5 bg-metricool-yellow text-metricool-purple font-extrabold rounded-2xl text-xs shadow-xs hover:bg-yellow-300 transition-colors flex items-center gap-1.5"
+            className="px-4 py-2.5 bg-indigo-950 text-cyan-300 border border-indigo-800 font-extrabold rounded-2xl text-xs shadow-xs hover:bg-slate-900 transition-colors flex items-center gap-1.5"
           >
             <LayoutDashboard className="w-4 h-4" /> Mon Espace IA
           </Link>
@@ -160,12 +160,12 @@ export default function UserProfilePage() {
       </div>
 
       {/* Main Profile Form */}
-      <form onSubmit={handleSaveProfile} className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
+      <form onSubmit={handleSaveProfile} className="bg-white p-6 sm:p-8 rounded-3xl border border-indigo-100 brand-card-shadow space-y-6">
         
-        <div className="flex items-center justify-between border-b-2 border-slate-100 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div>
-            <h2 className="text-lg font-extrabold text-metricool-purple flex items-center gap-2">
-              <User className="w-5 h-5 text-metricool-blue" />
+            <h2 className="text-lg font-extrabold text-indigo-950 flex items-center gap-2">
+              <User className="w-5 h-5 text-indigo-600" />
               Informations du Compte & Préférences IA
             </h2>
             <p className="text-xs text-slate-500 font-medium mt-0.5">
@@ -178,63 +178,63 @@ export default function UserProfilePage() {
           
           <div>
             <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-metricool-purple" /> Nom & Prénom <span className="text-rose-500">*</span>
+              <User className="w-3.5 h-3.5 text-indigo-600" /> Nom & Prénom <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
             />
           </div>
 
           <div>
             <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-metricool-purple" /> Adresse E-mail (Newsletter)
+              <Mail className="w-3.5 h-3.5 text-indigo-600" /> Adresse E-mail (Newsletter)
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
             />
           </div>
 
           <div>
             <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <Linkedin className="w-3.5 h-3.5 text-metricool-blue" /> Identifiant / Pseudo LinkedIn
+              <Linkedin className="w-3.5 h-3.5 text-indigo-600" /> Identifiant / Pseudo LinkedIn
             </label>
             <input
               type="text"
               placeholder="jeandupont"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
             />
           </div>
 
           <div>
             <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <ExternalLink className="w-3.5 h-3.5 text-metricool-blue" /> URL du Profil LinkedIn
+              <ExternalLink className="w-3.5 h-3.5 text-indigo-600" /> URL du Profil LinkedIn
             </label>
             <input
               type="url"
               placeholder="https://www.linkedin.com/in/jeandupont"
               value={linkedinUrl}
               onChange={(e) => setLinkedinUrl(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
             />
           </div>
 
           <div>
             <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-metricool-pink" /> Secteur d'Activité (Auto-Détecté par IA)
+              <Sparkles className="w-3.5 h-3.5 text-violet-600" /> Secteur d'Activité (Auto-Détecté par IA)
             </label>
             <select
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white text-slate-900"
             >
               <option value="SaaS & Tech">SaaS & Tech</option>
               <option value="Marketing & Growth">Marketing & Growth</option>
@@ -249,13 +249,13 @@ export default function UserProfilePage() {
 
           <div>
             <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-metricool-purple" /> Nombre d'Abonnés LinkedIn
+              <Users className="w-3.5 h-3.5 text-indigo-600" /> Nombre d'Abonnés LinkedIn
             </label>
             <input
               type="number"
               value={followerCount}
               onChange={(e) => setFollowerCount(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
             />
           </div>
 
@@ -268,21 +268,21 @@ export default function UserProfilePage() {
               placeholder="https://votre-entreprise.com"
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
             />
           </div>
 
         </div>
 
         {saveSuccess && (
-          <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl text-xs font-bold text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div className="p-4 bg-emerald-50 border border-emerald-300 rounded-2xl text-xs font-bold text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
               <span>{saveSuccess} L'audit de votre nouveau compte a été mis à jour dans votre espace.</span>
             </div>
             <Link
               href="/mon-espace-linkedin"
-              className="px-4 py-2 bg-metricool-purple text-metricool-yellow hover:bg-black font-extrabold rounded-xl text-xs shadow-xs transition-colors text-center shrink-0 flex items-center justify-center gap-1.5"
+              className="px-4 py-2 bg-indigo-950 text-cyan-300 hover:bg-slate-900 font-extrabold rounded-xl text-xs shadow-xs transition-colors text-center shrink-0 flex items-center justify-center gap-1.5"
             >
               🚀 Voir l'Audit de Mon Compte
             </Link>
@@ -293,7 +293,7 @@ export default function UserProfilePage() {
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-3 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-2"
+            className="px-6 py-3 bg-indigo-950 hover:bg-slate-900 text-cyan-300 font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-2"
           >
             {isSaving ? (
               <>

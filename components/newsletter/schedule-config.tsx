@@ -59,13 +59,13 @@ export function ScheduleConfigManager() {
   };
 
   return (
-    <div className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-100 pb-4">
+    <div className="bg-white p-6 sm:p-8 rounded-3xl border border-indigo-100 brand-card-shadow space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-purple-100 text-purple-900 text-xs font-extrabold border border-purple-300 mb-1">
-            <Calendar className="w-3.5 h-3.5 text-purple-700" /> Programmation Automatisée
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-indigo-50 text-indigo-900 text-xs font-extrabold border border-indigo-200 mb-1">
+            <Calendar className="w-3.5 h-3.5 text-indigo-600" /> Programmation Automatisée
           </div>
-          <h3 className="text-xl font-extrabold text-metricool-purple flex items-center gap-2">
+          <h3 className="text-xl font-extrabold text-indigo-950 flex items-center gap-2">
             Planification de Parution de la Newsletter
           </h3>
           <p className="text-xs font-medium text-slate-500 mt-0.5">
@@ -86,12 +86,12 @@ export function ScheduleConfigManager() {
           {/* Day of Week */}
           <div className="space-y-1.5">
             <label className="block text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-metricool-purple" /> Jour de Parution
+              <Calendar className="w-4 h-4 text-indigo-600" /> Jour de Parution
             </label>
             <select
               value={dayOfWeek}
               onChange={(e) => setDayOfWeek(e.target.value)}
-              className="w-full px-3.5 py-3 text-xs font-extrabold border-2 border-slate-300 rounded-2xl focus:border-metricool-purple bg-white text-slate-900"
+              className="w-full px-3.5 py-3 text-xs font-extrabold border border-slate-300 rounded-2xl focus:border-indigo-600 bg-white text-slate-900"
             >
               {DAYS_OF_WEEK.map((d) => (
                 <option key={d.value} value={d.value}>
@@ -104,26 +104,26 @@ export function ScheduleConfigManager() {
           {/* Time of Day */}
           <div className="space-y-1.5">
             <label className="block text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-metricool-blue" /> Heure d'Envoi (HH:MM)
+              <Clock className="w-4 h-4 text-indigo-600" /> Heure d'Envoi (HH:MM)
             </label>
             <input
               type="time"
               required
               value={timeOfDay}
               onChange={(e) => setTimeOfDay(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-sm font-extrabold border-2 border-slate-300 rounded-2xl focus:border-metricool-purple bg-white text-slate-900"
+              className="w-full px-3.5 py-2.5 text-sm font-extrabold border border-slate-300 rounded-2xl focus:border-indigo-600 bg-white text-slate-900"
             />
           </div>
 
           {/* Frequency */}
           <div className="space-y-1.5">
             <label className="block text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-metricool-pink" /> Fréquence d'Envoi
+              <Sparkles className="w-4 h-4 text-violet-600" /> Fréquence d'Envoi
             </label>
             <select
               value={frequency}
               onChange={(e) => setFrequency(e.target.value)}
-              className="w-full px-3.5 py-3 text-xs font-extrabold border-2 border-slate-300 rounded-2xl focus:border-metricool-purple bg-white text-slate-900"
+              className="w-full px-3.5 py-3 text-xs font-extrabold border border-slate-300 rounded-2xl focus:border-indigo-600 bg-white text-slate-900"
             >
               {FREQUENCIES.map((f) => (
                 <option key={f.value} value={f.value}>
@@ -136,13 +136,13 @@ export function ScheduleConfigManager() {
         </div>
 
         {/* Current Active Program Preview */}
-        <div className="p-4 rounded-2xl bg-metricool-lightBlue/40 border-2 border-metricool-purple flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div className="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-metricool-purple text-metricool-yellow flex items-center justify-center font-extrabold shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-indigo-950 text-cyan-300 flex items-center justify-center font-extrabold shrink-0">
               🗓️
             </div>
             <div>
-              <h4 className="font-extrabold text-metricool-purple text-sm">
+              <h4 className="font-extrabold text-indigo-950 text-sm">
                 Programme Actuel : {frequency} chaque {dayOfWeek} à {timeOfDay}
               </h4>
               <p className="text-slate-600 font-medium">
@@ -154,7 +154,7 @@ export function ScheduleConfigManager() {
           <button
             type="submit"
             disabled={isSaving}
-            className="w-full sm:w-auto px-6 py-3 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all shrink-0 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-6 py-3 bg-indigo-950 hover:bg-slate-900 text-cyan-300 font-extrabold rounded-2xl text-xs shadow-md transition-all shrink-0 flex items-center justify-center gap-2"
           >
             {isSaving ? (
               <>

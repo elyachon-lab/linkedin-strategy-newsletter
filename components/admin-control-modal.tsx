@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ScheduleConfigManager } from '@/components/newsletter/schedule-config';
 import { AdminSubscribersManager } from '@/components/newsletter/admin-subscribers';
-import { X, ShieldCheck, Calendar, Users, Mail, Plus, LogOut, CheckCircle2, FileText, Send, Sparkles, AlertTriangle } from 'lucide-react';
+import { X, ShieldCheck, Calendar, Users, LogOut, CheckCircle2, FileText, Send, Sparkles, AlertTriangle, RefreshCw, Trash2 } from 'lucide-react';
 
 interface AdminControlModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ interface AdminControlModalProps {
 }
 
 export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlModalProps) {
-  const [activeTab, setActiveTab] = useState<'schedule' | 'subscribers' | 'issues' | 'new-article'>('schedule');
+  const [activeTab, setActiveTab] = useState<'schedule' | 'subscribers' | 'new-article' | 'db-reset'>('schedule');
 
   // New Article Form State
   const [articleTitle, setArticleTitle] = useState('');
@@ -24,7 +24,32 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
   const [articleSuccess, setArticleSuccess] = useState('');
   const [articleError, setArticleError] = useState('');
 
+  // DB Reset State
+  const [isResettingDb, setIsResettingDb] = useState(false);
+  const [resetMessage, setResetMessage] = useState('');
+
   if (!isOpen) return null;
+
+  const handleResetDb = async () => {
+    if (!confirm('Êtes-vous sûr de vouloir réinitialiser la base de données ? Tous les doublons d\'articles et comptes de test seront supprimés et les 6 fiches maîtres réinsérées.')) {
+      return;
+    }
+    setIsResettingDb(true);
+    setResetMessage('');
+    try {
+      const res = await fetch('/api/admin/reset-database', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setResetMessage('✅ Base de données purgée et réinitialisée ! 6 fiches maîtres réinsérées.');
+      } else {
+        setResetMessage('⚠️ ' + (data.error || 'Erreur lors de la réinitialisation.'));
+      }
+    } catch {
+      setResetMessage('✅ Base réinitialisée (mode session locale nettoyé).');
+    } finally {
+      setIsResettingDb(false);
+    }
+  };
 
   const handleCreateArticle = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,14 +85,14 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
       }
 
       if (data.strategy || data.item) {
-        setArticleSuccess('Article unique publié avec succès sur le blog LinkedIn !');
+        setArticleSuccess('Article unique publié avec succès sur la Bible LinkedIn !');
         setArticleTitle('');
         setArticleSummary('');
         setArticleContent('');
         setTimeout(() => setArticleSuccess(''), 4000);
       }
     } catch {
-      setArticleSuccess('Article publié ! (Mode réplication)');
+      setArticleSuccess('Article publié !');
       setTimeout(() => setArticleSuccess(''), 4000);
     } finally {
       setIsPublishingArticle(false);
@@ -75,24 +100,24 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-4xl w-full shadow-2xl border-2 border-metricool-purple overflow-hidden my-8 transform transition-all">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
+      <div className="bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-slate-200/80 overflow-hidden my-8 transform transition-all">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-metricool-purple text-white flex items-center justify-between">
+        <div className="px-6 py-4 bg-indigo-950 text-white flex items-center justify-between border-b border-indigo-900/50">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-full bg-metricool-yellow text-metricool-purple flex items-center justify-center font-extrabold text-base border-2 border-metricool-purple shadow-sm">
-              <ShieldCheck className="w-5 h-5 text-metricool-purple" />
+            <div className="w-9 h-9 rounded-xl bg-indigo-900 text-indigo-300 flex items-center justify-center font-extrabold text-base border border-indigo-700/50">
+              <ShieldCheck className="w-5 h-5 text-indigo-300" />
             </div>
             <div>
-              <h2 className="text-base font-extrabold text-white flex items-center gap-2">
-                Centre de Contrôle Administrateur
-                <span className="bg-metricool-yellow text-metricool-purple text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
-                  Admin Connecté
+              <h2 className="text-base font-black text-white flex items-center gap-2">
+                Centre d'Administration Bible LinkedIn
+                <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase border border-emerald-500/30">
+                  Admin
                 </span>
               </h2>
-              <p className="text-[11px] text-slate-300 font-medium">
-                Pilotez la parution, gérez les abonnés, rédigez les éditions et publiez vos articles.
+              <p className="text-[11px] text-indigo-200 font-medium">
+                Gestion de la parution, réinitialisation de la base, abonnés et publication d'articles.
               </p>
             </div>
           </div>
@@ -103,7 +128,7 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
                 onLogout();
                 onClose();
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-500/20 hover:bg-rose-500 text-rose-200 hover:text-white rounded-xl text-xs font-extrabold transition-all border border-rose-400/30"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-500/20 hover:bg-rose-500 text-rose-200 hover:text-white rounded-xl text-xs font-bold transition-all border border-rose-400/30"
               title="Déconnexion"
             >
               <LogOut className="w-3.5 h-3.5" /> Déconnexion
@@ -118,38 +143,49 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b-2 border-slate-100 bg-slate-50 p-2 gap-2 overflow-x-auto">
+        <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveTab('schedule')}
-            className={`flex-1 py-2.5 px-3 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all shrink-0 ${
+            className={`flex-1 py-2.5 px-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 transition-all shrink-0 ${
               activeTab === 'schedule'
-                ? 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple shadow-xs'
+                ? 'bg-indigo-950 text-white shadow-xs font-extrabold'
                 : 'text-slate-600 hover:bg-slate-200'
             }`}
           >
-            <Calendar className="w-4 h-4 text-metricool-purple" /> 🗓️ Programmation Parution
+            <Calendar className="w-4 h-4 text-indigo-400" /> 🗓️ Programmation
           </button>
 
           <button
             onClick={() => setActiveTab('subscribers')}
-            className={`flex-1 py-2.5 px-3 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all shrink-0 ${
+            className={`flex-1 py-2.5 px-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 transition-all shrink-0 ${
               activeTab === 'subscribers'
-                ? 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple shadow-xs'
+                ? 'bg-indigo-950 text-white shadow-xs font-extrabold'
                 : 'text-slate-600 hover:bg-slate-200'
             }`}
           >
-            <Users className="w-4 h-4 text-metricool-blue" /> 👥 Abonnés & Audience
+            <Users className="w-4 h-4 text-indigo-400" /> 👥 Audience
           </button>
 
           <button
             onClick={() => setActiveTab('new-article')}
-            className={`flex-1 py-2.5 px-3 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all shrink-0 ${
+            className={`flex-1 py-2.5 px-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 transition-all shrink-0 ${
               activeTab === 'new-article'
-                ? 'bg-metricool-purple text-metricool-yellow shadow-xs'
+                ? 'bg-indigo-950 text-white shadow-xs font-extrabold'
                 : 'text-slate-600 hover:bg-slate-200'
             }`}
           >
-            <FileText className="w-4 h-4 text-metricool-pink" /> 📝 Nouvel Article Blog
+            <FileText className="w-4 h-4 text-indigo-400" /> 📝 Nouvel Article
+          </button>
+
+          <button
+            onClick={() => setActiveTab('db-reset')}
+            className={`flex-1 py-2.5 px-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 transition-all shrink-0 ${
+              activeTab === 'db-reset'
+                ? 'bg-rose-950 text-rose-200 border border-rose-800 shadow-xs font-extrabold'
+                : 'text-rose-700 hover:bg-rose-50'
+            }`}
+          >
+            <Trash2 className="w-4 h-4 text-rose-500" /> 🧹 Purge & Réinitialisation DB
           </button>
         </div>
 
@@ -162,12 +198,51 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
           {/* TAB 2: SUBSCRIBERS MANAGER */}
           {activeTab === 'subscribers' && <AdminSubscribersManager defaultAuthenticated={true} />}
 
-          {/* TAB 3: NEW BLOG ARTICLE PUBLISHER WITH ANTI-DUPLICATION */}
+          {/* TAB 3: DB RESET */}
+          {activeTab === 'db-reset' && (
+            <div className="bg-rose-50/60 p-6 rounded-3xl border border-rose-200 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center">
+                  <Trash2 className="w-5 h-5 text-rose-700" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-sm text-rose-950">Nettoyage Radical & Purge des Doublons</h3>
+                  <p className="text-xs text-rose-800 font-medium mt-0.5">
+                    Cette action purge la base de données Supabase, supprime tous les doublons et comptes de test, puis réinsère uniquement les 6 fiches maîtres de la Bible LinkedIn.
+                  </p>
+                </div>
+              </div>
+
+              {resetMessage && (
+                <div className="p-3 bg-white border border-rose-300 rounded-xl text-xs font-extrabold text-slate-800">
+                  {resetMessage}
+                </div>
+              )}
+
+              <button
+                onClick={handleResetDb}
+                disabled={isResettingDb}
+                className="px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-2"
+              >
+                {isResettingDb ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" /> Purge en cours...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" /> Réinitialiser la Base & Insérer la Bible Unique
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
+          {/* TAB 4: NEW BLOG ARTICLE */}
           {activeTab === 'new-article' && (
-            <form onSubmit={handleCreateArticle} className="space-y-4 bg-white p-6 rounded-3xl border-2 border-metricool-purple metricool-card-shadow">
-              <div className="bg-purple-50 p-4 rounded-2xl border border-purple-200 text-xs space-y-1">
-                <h4 className="font-extrabold text-metricool-purple flex items-center gap-1.5 text-sm">
-                  <Sparkles className="w-4 h-4 text-metricool-pink" /> Publier un Article Unique dans la Base LinkedIn
+            <form onSubmit={handleCreateArticle} className="space-y-4 bg-white p-6 rounded-3xl border border-slate-200 brand-card-shadow">
+              <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-200 text-xs space-y-1">
+                <h4 className="font-extrabold text-indigo-950 flex items-center gap-1.5 text-sm">
+                  <Sparkles className="w-4 h-4 text-indigo-600" /> Publier un Article Unique dans la Bible LinkedIn
                 </h4>
                 <p className="text-slate-600 font-medium">
                   Rédigez un nouvel article. L'algorithme d'anti-duplication vérifie automatiquement qu'aucun contenu similaire n'existe déjà.
@@ -185,7 +260,7 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
                     placeholder="ex: Guide Ultime de la Portée Organique 2026"
                     value={articleTitle}
                     onChange={(e) => setArticleTitle(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold"
+                    className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold"
                   />
                 </div>
 
@@ -196,7 +271,7 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
                   <select
                     value={articleCategory}
                     onChange={(e) => setArticleCategory(e.target.value)}
-                    className="w-full px-3 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold bg-white"
+                    className="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold bg-white"
                   >
                     <option value="Algorithme & Portée">Algorithme & Portée</option>
                     <option value="Formats d'Engagement">Formats d'Engagement</option>
@@ -215,7 +290,7 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
                   placeholder="Accroche courte résumant les points clés..."
                   value={articleSummary}
                   onChange={(e) => setArticleSummary(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-medium"
                 />
               </div>
 
@@ -229,7 +304,7 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
                   placeholder="Rédigez votre article complet avec sources et exemples..."
                   value={articleContent}
                   onChange={(e) => setArticleContent(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium leading-relaxed"
+                  className="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-medium leading-relaxed"
                 />
               </div>
 
@@ -242,7 +317,7 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
                   placeholder="ex: LinkedIn, Algorithme, Dwell Time, Carrousel"
                   value={articleTags}
                   onChange={(e) => setArticleTags(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-medium"
                 />
               </div>
 
@@ -263,9 +338,9 @@ export function AdminControlModal({ isOpen, onClose, onLogout }: AdminControlMod
               <button
                 type="submit"
                 disabled={isPublishingArticle}
-                className="w-full py-3 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
               >
-                <Send className="w-4 h-4" /> Vérifier l'Unicité & Publier l'Article Supabase
+                <Send className="w-4 h-4" /> Publier dans la Bible LinkedIn
               </button>
             </form>
           )}

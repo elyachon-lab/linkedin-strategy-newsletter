@@ -111,12 +111,12 @@ export default function StrategyCenterPage() {
     <div className="space-y-8 max-w-6xl mx-auto">
       
       {/* Editorial Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-slate-200 pb-6 bg-white p-6 sm:p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6 bg-white p-6 sm:p-8 rounded-3xl border border-indigo-100 brand-card-shadow">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-metricool-pink bg-pink-100 border border-pink-300 px-3 py-1 rounded-full mb-2">
-            <Feather className="w-3.5 h-3.5 text-metricool-pink" /> Blog Strategy & Best Practices
+          <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full mb-2">
+            <Feather className="w-3.5 h-3.5 text-indigo-600" /> Blog Strategy & Best Practices
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-metricool-purple tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-indigo-950 tracking-tight">
             Fiches Stratégiques & Guide de l'Algorithme
           </h1>
           <p className="text-sm font-medium text-slate-500 mt-1">
@@ -138,9 +138,9 @@ export default function StrategyCenterPage() {
               setEditingCard(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-metricool-pink hover:bg-rose-600 text-white rounded-2xl font-extrabold text-xs shadow-md transition-all border-2 border-metricool-purple"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-950 hover:bg-slate-900 text-cyan-300 rounded-2xl font-extrabold text-xs shadow-md transition-all border border-indigo-800"
           >
-            <Plus className="w-4 h-4 text-metricool-yellow" /> Nouvel Article
+            <Plus className="w-4 h-4 text-cyan-300" /> Nouvel Article
           </button>
         </div>
       </div>
@@ -148,19 +148,19 @@ export default function StrategyCenterPage() {
       {/* Search & Category Filter */}
       <div className="space-y-4">
         <div className="relative max-w-2xl">
-          <Search className="absolute left-4 top-3.5 w-5 h-5 text-metricool-pink" />
+          <Search className="absolute left-4 top-3.5 w-5 h-5 text-indigo-600" />
           <input
             type="text"
             placeholder="Rechercher par mot-clé dans les articles (titre, tag, algorithme)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-300 rounded-2xl text-xs font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-metricool-purple transition-all shadow-2xs"
+            className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-2xl text-xs font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 transition-all shadow-2xs"
           />
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider flex items-center gap-1 shrink-0 mr-1">
-            <Filter className="w-3.5 h-3.5 text-metricool-pink" /> Catégories :
+            <Filter className="w-3.5 h-3.5 text-indigo-600" /> Catégories :
           </span>
           {categories.map((cat) => (
             <button
@@ -168,8 +168,8 @@ export default function StrategyCenterPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-colors ${
                 selectedCategory === cat
-                  ? 'bg-metricool-pink text-white shadow-xs border border-metricool-purple'
-                  : 'bg-white text-slate-700 hover:bg-pink-50 border border-slate-200'
+                  ? 'bg-indigo-950 text-cyan-300 shadow-xs border border-indigo-800'
+                  : 'bg-white text-slate-700 hover:bg-indigo-50 border border-slate-200'
               }`}
             >
               {cat}

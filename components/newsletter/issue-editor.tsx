@@ -117,10 +117,10 @@ Bonne lecture et excellente semaine !`;
     <div className="space-y-6">
       
       {/* AI Issue Generator Banner */}
-      <div className="bg-metricool-purple text-white p-5 rounded-3xl border-2 border-metricool-purple metricool-card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-slate-900 text-white p-5 rounded-3xl border border-indigo-800/50 brand-card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h4 className="text-sm font-extrabold flex items-center gap-2 text-metricool-yellow">
-            <Wand2 className="w-4 h-4 text-metricool-yellow" /> Générateur d'Édition par IA avec Sources Vérifiées
+          <h4 className="text-sm font-extrabold flex items-center gap-2 text-cyan-300">
+            <Wand2 className="w-4 h-4 text-cyan-300" /> Générateur d'Édition par IA avec Sources Vérifiées
           </h4>
           <p className="text-xs text-slate-300 font-medium">
             Générez une veille basée uniquement sur les documentations d'ingénierie et canaux d'annonces officiels.
@@ -130,9 +130,9 @@ Bonne lecture et excellente semaine !`;
         <button
           type="button"
           onClick={handleGenerateAIIssue}
-          className="px-4 py-2 bg-metricool-yellow text-metricool-purple font-extrabold rounded-2xl text-xs hover:bg-yellow-300 transition-all shrink-0 shadow-xs flex items-center justify-center gap-1.5"
+          className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold rounded-2xl text-xs transition-all shrink-0 shadow-xs flex items-center justify-center gap-1.5"
         >
-          <ShieldCheck className="w-4 h-4 text-emerald-800" /> Générer Veille Certifiée
+          <ShieldCheck className="w-4 h-4 text-emerald-400" /> Générer Veille Certifiée
         </button>
       </div>
 
@@ -140,9 +140,9 @@ Bonne lecture et excellente semaine !`;
       <VerifiedSourcesHub onImportSource={handleImportVerifiedSource} />
 
       {/* General Info */}
-      <div className="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-xs space-y-4">
-        <h3 className="text-base font-extrabold text-metricool-purple flex items-center gap-2">
-          <FileText className="w-5 h-5 text-purple-600" />
+      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+        <h3 className="text-base font-extrabold text-indigo-950 flex items-center gap-2">
+          <FileText className="w-5 h-5 text-indigo-600" />
           Informations Générales de l'Édition
         </h3>
 
@@ -155,7 +155,7 @@ Bonne lecture et excellente semaine !`;
               type="number"
               value={issue.issue_number || 1}
               onChange={(e) => handleFieldChange('issue_number', parseInt(e.target.value) || 1)}
-              className="w-full px-3 py-2 text-sm border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold"
+              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl focus:border-indigo-600 font-bold"
             />
           </div>
 
@@ -168,7 +168,7 @@ Bonne lecture et excellente semaine !`;
               placeholder="ex: Veille Tech #03 - Documentation Officielle & Google Ads B2B"
               value={issue.title || ''}
               onChange={(e) => handleFieldChange('title', e.target.value)}
-              className="w-full px-3 py-2 text-sm border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-metricool-purple"
+              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-indigo-950"
             />
           </div>
         </div>
@@ -183,7 +183,7 @@ Bonne lecture et excellente semaine !`;
               placeholder="ex: ⚡ Veille Tech #03 : Documentation LinkedIn & Google Ads"
               value={issue.subject_line || ''}
               onChange={(e) => handleFieldChange('subject_line', e.target.value)}
-              className="w-full px-3 py-2 text-sm border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
+              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl focus:border-indigo-600 font-medium"
             />
           </div>
 
@@ -196,16 +196,16 @@ Bonne lecture et excellente semaine !`;
               placeholder="Découvrez notre sélection des 3 actualités avec leurs sources officielles."
               value={issue.preview_text || ''}
               onChange={(e) => handleFieldChange('preview_text', e.target.value)}
-              className="w-full px-3 py-2 text-sm border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
+              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl focus:border-indigo-600 font-medium"
             />
           </div>
         </div>
       </div>
 
       {/* Editor Markdown Content */}
-      <div className="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-xs space-y-3">
-        <h3 className="text-base font-extrabold text-metricool-purple flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-metricool-pink" />
+      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-3">
+        <h3 className="text-base font-extrabold text-indigo-950 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-violet-600" />
           Introduction & Édito (Markdown)
         </h3>
         <textarea
@@ -213,16 +213,16 @@ Bonne lecture et excellente semaine !`;
           placeholder="Bienvenue dans cette édition ! Les informations ci-dessous sont appuyées sur les documentations officielles..."
           value={issue.content_markdown || ''}
           onChange={(e) => handleFieldChange('content_markdown', e.target.value)}
-          className="w-full px-3.5 py-2.5 text-sm font-mono border-2 border-slate-300 rounded-2xl focus:border-metricool-purple leading-relaxed"
+          className="w-full px-3.5 py-2.5 text-sm font-mono border border-slate-300 rounded-2xl focus:border-indigo-600 leading-relaxed"
         />
       </div>
 
       {/* Curated Tech News Articles */}
-      <div className="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-xs space-y-4">
+      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base font-extrabold text-metricool-purple flex items-center gap-2">
-              <Globe className="w-5 h-5 text-metricool-blue" />
+            <h3 className="text-base font-extrabold text-indigo-950 flex items-center gap-2">
+              <Globe className="w-5 h-5 text-indigo-600" />
               Articles & Ressources Sélectionnées avec URLs Source ({articles.length})
             </h3>
             <p className="text-xs text-slate-500 font-medium mt-0.5">
@@ -232,7 +232,7 @@ Bonne lecture et excellente semaine !`;
           <button
             type="button"
             onClick={handleAddArticle}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-extrabold text-metricool-purple bg-metricool-yellow border border-metricool-purple rounded-xl shadow-2xs hover:bg-yellow-300 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-extrabold text-cyan-300 bg-indigo-950 border border-indigo-800 rounded-xl shadow-2xs hover:bg-slate-900 transition-colors"
           >
             <Plus className="w-4 h-4" /> Ajouter une actualité
           </button>
@@ -243,7 +243,7 @@ Bonne lecture et excellente semaine !`;
             <p className="text-sm font-medium text-slate-500">Aucun article dans cette édition pour l'instant.</p>
             <button
               onClick={handleAddArticle}
-              className="mt-2 text-xs font-extrabold text-metricool-purple hover:underline"
+              className="mt-2 text-xs font-extrabold text-indigo-950 hover:underline"
             >
               + Cliquer pour ajouter un premier lien avec source
             </button>
@@ -253,10 +253,10 @@ Bonne lecture et excellente semaine !`;
             {articles.map((art, idx) => (
               <div
                 key={art.id || idx}
-                className="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 space-y-3 relative group"
+                className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-3 relative group"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-extrabold text-purple-900 bg-purple-100 px-2.5 py-0.5 rounded-full border border-purple-300">
+                  <span className="text-xs font-extrabold text-indigo-900 bg-indigo-100 px-2.5 py-0.5 rounded-full border border-indigo-300">
                     Article #{idx + 1}
                   </span>
                   <button
@@ -275,14 +275,14 @@ Bonne lecture et excellente semaine !`;
                       placeholder="Titre de l'article / annonce officielle"
                       value={art.title}
                       onChange={(e) => handleUpdateArticle(idx, 'title', e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-metricool-purple font-bold"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold"
                     />
                   </div>
                   <div>
                     <select
                       value={art.category}
                       onChange={(e) => handleUpdateArticle(idx, 'category', e.target.value as any)}
-                      className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-metricool-purple bg-white font-bold"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 bg-white font-bold"
                     >
                       <option value="IA & Tech">IA & Tech</option>
                       <option value="Fonctionnalité">Fonctionnalité</option>
@@ -293,14 +293,14 @@ Bonne lecture et excellente semaine !`;
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <LinkIcon className="w-3.5 h-3.5 text-metricool-blue shrink-0" />
+                  <LinkIcon className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                   <input
                     type="url"
                     required
                     placeholder="URL Source Vérifiable (ex: https://engineering.linkedin.com/blog/... ou https://support.google.com/...)"
                     value={art.url || ''}
                     onChange={(e) => handleUpdateArticle(idx, 'url', e.target.value)}
-                    className="w-full px-3 py-1 text-xs border-2 border-blue-200 rounded-xl focus:border-metricool-purple font-mono text-blue-900 bg-blue-50/50"
+                    className="w-full px-3 py-1 text-xs border border-indigo-200 rounded-xl focus:border-indigo-600 font-mono text-indigo-900 bg-indigo-50/50"
                   />
                 </div>
 
@@ -310,7 +310,7 @@ Bonne lecture et excellente semaine !`;
                     placeholder="Résumé synthétique basé sur la source..."
                     value={art.summary}
                     onChange={(e) => handleUpdateArticle(idx, 'summary', e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
+                    className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-medium"
                   />
                 </div>
 
@@ -320,7 +320,7 @@ Bonne lecture et excellente semaine !`;
                     placeholder="💡 Enseignement clé / Takeaway (ex: 'Recommandation officielle LinkedIn Engineering')"
                     value={art.takeaway}
                     onChange={(e) => handleUpdateArticle(idx, 'takeaway', e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-800 bg-white"
+                    className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-800 bg-white"
                   />
                 </div>
               </div>

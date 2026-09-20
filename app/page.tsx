@@ -61,13 +61,13 @@ export default function DashboardPage() {
   return (
     <div className="space-y-12 max-w-7xl mx-auto">
       
-      {/* Metricool Hero Banner Header */}
-      <div className="bg-white rounded-3xl p-8 sm:p-12 border-2 border-metricool-purple metricool-card-shadow text-center space-y-6">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-metricool-yellow text-metricool-purple text-xs font-extrabold border-2 border-metricool-purple uppercase tracking-wider">
-          <Sparkles className="w-4 h-4 text-metricool-purple" /> Blog & Centre de Ressources LinkedIn
+      {/* Hero Banner Header */}
+      <div className="bg-white rounded-3xl p-8 sm:p-12 border border-indigo-100 brand-card-shadow text-center space-y-6">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-extrabold border border-indigo-200 uppercase tracking-wider">
+          <Sparkles className="w-4 h-4 text-indigo-600" /> Blog & Centre de Ressources LinkedIn
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-metricool-purple tracking-tight leading-tight max-w-4xl mx-auto">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-indigo-950 tracking-tight leading-tight max-w-4xl mx-auto">
           Blog LinkedIn : Votre guide ultime pour dompter l'algorithme & captiver votre audience.
         </h1>
 
@@ -75,7 +75,7 @@ export default function DashboardPage() {
           Conseils utiles, statistiques d'audiences, structures d'accroches virales et récapitulatifs hebdomadaires de veille tech.
         </p>
 
-        {/* Metricool Big Search Bar */}
+        {/* Big Search Bar */}
         <div className="pt-2 max-w-2xl mx-auto">
           <div className="relative">
             <Search className="absolute left-5 top-4 w-6 h-6 text-slate-400" />
@@ -84,27 +84,27 @@ export default function DashboardPage() {
               placeholder="Que recherchez-vous ? ('hook', 'carrousel', 'dwell time', 'planning')..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-14 pr-32 py-4 bg-slate-50 border-2 border-metricool-purple rounded-2xl text-metricool-purple placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-metricool-blue/20 focus:bg-white text-sm font-bold shadow-xs transition-all"
+              className="w-full pl-14 pr-32 py-4 bg-slate-50 border border-slate-300 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:bg-white text-sm font-bold shadow-xs transition-all"
             />
             <button
               onClick={() => {}}
-              className="absolute right-2 top-2 bottom-2 px-5 bg-metricool-purple text-metricool-yellow font-extrabold rounded-xl text-xs hover:bg-black transition-colors"
+              className="absolute right-2 top-2 bottom-2 px-5 bg-indigo-950 text-cyan-300 font-extrabold rounded-xl text-xs hover:bg-slate-900 transition-colors"
             >
               Rechercher
             </button>
           </div>
         </div>
 
-        {/* Category Pills (Metricool Filter Buttons) */}
+        {/* Category Pills (Filter Buttons) */}
         <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all border-2 ${
+              className={`px-4 py-2 rounded-2xl text-xs font-extrabold transition-all border ${
                 selectedCategory === cat
-                  ? 'bg-metricool-purple text-metricool-yellow border-metricool-purple shadow-sm scale-105'
-                  : 'bg-slate-50 text-metricool-purple border-slate-300 hover:border-metricool-purple'
+                  ? 'bg-indigo-950 text-cyan-300 border-indigo-800 shadow-sm scale-105'
+                  : 'bg-slate-50 text-slate-700 border-slate-300 hover:border-indigo-600'
               }`}
             >
               {cat}
@@ -116,11 +116,11 @@ export default function DashboardPage() {
       {/* AI Personalized Recommendations Widget for Logged In Profile */}
       {clientProfile && <AIAuditRecommendations profile={clientProfile} />}
 
-      {/* Featured Main Article (Metricool Style Spotlight) */}
+      {/* Featured Main Article (Spotlight) */}
       {!searchQuery && selectedCategory === 'Tous' && featuredCard && (
-        <section className="bg-metricool-purple rounded-3xl p-8 sm:p-12 text-white border-2 border-metricool-purple metricool-card-shadow relative overflow-hidden">
+        <section className="bg-slate-900 rounded-3xl p-8 sm:p-12 text-white border border-indigo-800/50 brand-card-shadow relative overflow-hidden">
           <div className="max-w-3xl space-y-4 relative z-10">
-            <span className="inline-block bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple text-xs font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full">
+            <span className="inline-block bg-indigo-500/20 text-indigo-200 border border-indigo-400/30 text-xs font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full">
               À La Une • {featuredCard.category}
             </span>
             
@@ -135,7 +135,7 @@ export default function DashboardPage() {
             <div className="pt-4 flex items-center gap-4">
               <Link
                 href="/linkedin-strategy"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-metricool-yellow text-metricool-purple hover:bg-yellow-300 rounded-2xl font-extrabold text-xs shadow-md transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-2xl font-extrabold text-xs shadow-lg shadow-indigo-600/20 transition-all hover:scale-105"
               >
                 Lire l'article complet <ArrowRight className="w-4 h-4" />
               </Link>
@@ -149,23 +149,23 @@ export default function DashboardPage() {
 
       {/* Articles Feed */}
       <section className="space-y-6">
-        <div className="flex items-center justify-between border-b-2 border-slate-200 pb-4">
-          <h2 className="text-2xl font-extrabold text-metricool-purple flex items-center gap-2">
-            <BookOpen className="w-6 h-6 text-metricool-blue" />
+        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+          <h2 className="text-2xl font-extrabold text-indigo-950 flex items-center gap-2">
+            <BookOpen className="w-6 h-6 text-indigo-600" />
             {searchQuery
               ? `Résultats pour "${searchQuery}" (${filteredStrategies.length})`
               : `Articles & Guides LinkedIn (${filteredStrategies.length})`}
           </h2>
           <Link
             href="/linkedin-strategy"
-            className="text-xs font-extrabold text-metricool-blue hover:text-metricool-purple flex items-center gap-1"
+            className="text-xs font-extrabold text-indigo-600 hover:text-indigo-950 flex items-center gap-1"
           >
             Voir toutes les fiches <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         {filteredStrategies.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-3xl border-2 border-slate-200 space-y-3">
+          <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 space-y-3">
             <Sparkles className="w-10 h-10 text-slate-300 mx-auto" />
             <h3 className="text-base font-extrabold text-slate-800">Aucune fiche ne correspond à votre filtre</h3>
             <button
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                 setSearchQuery('');
                 setSelectedCategory('Tous');
               }}
-              className="text-xs font-extrabold text-metricool-purple underline"
+              className="text-xs font-extrabold text-indigo-950 underline"
             >
               Réinitialiser les filtres
             </button>
@@ -190,11 +190,11 @@ export default function DashboardPage() {
       {/* Public Newsletter Subscribe Widget */}
       <SubscribeWidget />
 
-      {/* Metricool Newsletter Section Banner */}
-      <section className="bg-gradient-to-r from-metricool-purple via-purple-950 to-metricool-purple rounded-3xl p-8 sm:p-12 text-white border-2 border-metricool-purple metricool-card-shadow space-y-8">
+      {/* Newsletter Section Banner */}
+      <section className="bg-slate-900 rounded-3xl p-8 sm:p-12 text-white border border-indigo-800/50 brand-card-shadow space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-800/80 text-metricool-yellow text-xs font-bold border border-purple-600">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-200 text-xs font-bold border border-indigo-400/30">
               <Mail className="w-3.5 h-3.5" /> Newsletter Hebdomadaire
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
@@ -207,21 +207,21 @@ export default function DashboardPage() {
 
           <Link
             href="/newsletter/create"
-            className="inline-flex items-center gap-2 px-6 py-3.5 bg-metricool-yellow text-metricool-purple hover:bg-yellow-300 font-extrabold text-xs rounded-2xl shadow-md shrink-0 transition-all hover:scale-105"
+            className="inline-flex items-center gap-2 px-6 py-3.5 bg-indigo-950 text-cyan-300 hover:bg-slate-800 font-extrabold text-xs rounded-2xl shadow-md shrink-0 transition-all hover:scale-105 border border-indigo-800"
           >
             Accéder au Studio de Rédaction <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         {/* Newsletter Issues Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-purple-800/80">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-indigo-800/50">
           {newsletters.map((issue) => (
             <div
               key={issue.id}
-              className="bg-white text-metricool-purple p-6 rounded-2xl border-2 border-metricool-purple space-y-3 shadow-xs"
+              className="bg-white text-indigo-950 p-6 rounded-2xl border border-indigo-100 space-y-3 shadow-xs"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-extrabold text-purple-900 bg-purple-100 px-3 py-0.5 rounded-full border border-purple-300">
+                <span className="text-xs font-extrabold text-indigo-900 bg-indigo-100 px-3 py-0.5 rounded-full border border-indigo-300">
                   Édition #{issue.issue_number}
                 </span>
                 <span
@@ -242,7 +242,7 @@ export default function DashboardPage() {
                 <span className="text-slate-500">
                   {issue.articles ? `${issue.articles.length} article(s) curé(s)` : ''}
                 </span>
-                <Link href="/newsletter/create" className="text-metricool-blue hover:underline">
+                <Link href="/newsletter/create" className="text-indigo-600 hover:underline">
                   Ouvrir l'édition →
                 </Link>
               </div>

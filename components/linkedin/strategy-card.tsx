@@ -15,14 +15,14 @@ interface StrategyCardProps {
 export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete }: StrategyCardProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
-  // Metricool signature category badge colors
+  // Bible LinkedIn category badge colors
   const categoryBadges: Record<string, string> = {
-    Hook: 'bg-metricool-yellow text-metricool-purple font-extrabold border-2 border-metricool-purple',
-    Algorithme: 'bg-metricool-pink text-white font-extrabold border-2 border-metricool-purple',
-    Planning: 'bg-metricool-lightBlue text-metricool-purple font-extrabold border-2 border-metricool-purple',
-    Format: 'bg-purple-200 text-purple-950 font-extrabold border-2 border-metricool-purple',
-    Engagement: 'bg-amber-200 text-amber-950 font-extrabold border-2 border-metricool-purple',
-    Copywriting: 'bg-blue-200 text-blue-950 font-extrabold border-2 border-metricool-purple',
+    Hook: 'bg-indigo-950 text-indigo-300 font-extrabold border border-indigo-800',
+    Algorithme: 'bg-indigo-600 text-white font-extrabold border border-indigo-700',
+    Planning: 'bg-cyan-950 text-cyan-300 font-extrabold border border-cyan-800',
+    Format: 'bg-purple-950 text-purple-300 font-extrabold border border-purple-800',
+    Engagement: 'bg-emerald-950 text-emerald-300 font-extrabold border border-emerald-800',
+    Copywriting: 'bg-blue-950 text-blue-300 font-extrabold border border-blue-800',
   };
 
   const copyToClipboard = (text: string, index: number) => {
@@ -41,7 +41,7 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
       <>
         {parts.map((part, i) =>
           part.toLowerCase() === searchQuery.toLowerCase() ? (
-            <mark key={i} className="bg-metricool-yellow text-metricool-purple font-bold px-1 rounded">
+            <mark key={i} className="bg-indigo-100 text-indigo-950 font-bold px-1 rounded">
               {part}
             </mark>
           ) : (
@@ -53,20 +53,20 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
   };
 
   return (
-    <article className="bg-white rounded-3xl border-2 border-metricool-purple p-6 sm:p-7 metricool-card-shadow transition-all duration-300 flex flex-col justify-between space-y-4">
+    <article className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-7 brand-card-shadow transition-all duration-300 flex flex-col justify-between space-y-4">
       
       {/* Top Meta Bar */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <span
             className={`text-xs px-3 py-1 rounded-full uppercase tracking-wider ${
-              categoryBadges[card.category] || 'bg-slate-100 text-slate-900 border-2 border-slate-900'
+              categoryBadges[card.category] || 'bg-slate-100 text-slate-900 border border-slate-200'
             }`}
           >
             {card.category}
           </span>
           {card.is_pinned && (
-            <span className="inline-flex items-center gap-1 text-xs font-bold bg-metricool-purple text-metricool-yellow px-2.5 py-0.5 rounded-full">
+            <span className="inline-flex items-center gap-1 text-xs font-bold bg-indigo-950 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-800">
               <Pin className="w-3 h-3 fill-current" /> Épinglé
             </span>
           )}
@@ -74,12 +74,12 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
 
         <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
           <span className="flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-full">
-            <Clock className="w-3.5 h-3.5 text-metricool-blue" /> {readingTimeMinutes} min de lecture
+            <Clock className="w-3.5 h-3.5 text-indigo-600" /> {readingTimeMinutes} min de lecture
           </span>
           {onEdit && (
             <button
               onClick={() => onEdit(card)}
-              className="p-1.5 text-slate-400 hover:text-metricool-purple rounded-lg hover:bg-slate-100 transition-colors"
+              className="p-1.5 text-slate-400 hover:text-indigo-950 rounded-lg hover:bg-slate-100 transition-colors"
               title="Modifier"
             >
               <Edit2 className="w-4 h-4" />
@@ -98,7 +98,7 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
       </div>
 
       {/* Article Title - Click to open Full Page */}
-      <h2 className="text-xl sm:text-2xl font-extrabold text-metricool-purple leading-snug hover:text-metricool-blue transition-colors">
+      <h2 className="text-xl sm:text-2xl font-black text-indigo-950 leading-snug hover:text-indigo-600 transition-colors">
         <Link href={`/linkedin-strategy/${card.id}`}>
           {highlightText(card.title)}
         </Link>
@@ -123,26 +123,26 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
         </div>
       )}
 
-      {/* Metricool Style Hook Copy Box */}
+      {/* Hook Copy Box */}
       {card.examples && card.examples.length > 0 && (
-        <div className="pt-3 border-t-2 border-slate-100 bg-metricool-lightBlue/30 -mx-6 -mb-6 p-6 space-y-2 rounded-b-3xl">
-          <h4 className="text-xs font-extrabold uppercase tracking-wider text-metricool-purple flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-metricool-pink" /> Modèles de Hooks prêts à copier
+        <div className="pt-3 border-t border-slate-100 bg-indigo-50/40 -mx-6 -mb-6 p-6 space-y-2 rounded-b-3xl">
+          <h4 className="text-xs font-extrabold uppercase tracking-wider text-indigo-950 flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-indigo-600" /> Modèles de Hooks prêts à copier
           </h4>
           <div className="space-y-2">
             {card.examples.map((ex, idx) => (
               <div
                 key={idx}
-                className="bg-white p-3 rounded-2xl border-2 border-metricool-purple text-xs font-bold text-metricool-purple flex items-center justify-between gap-3 shadow-xs hover:border-metricool-blue transition-colors"
+                className="bg-white p-3 rounded-2xl border border-slate-200 text-xs font-bold text-indigo-950 flex items-center justify-between gap-3 shadow-xs hover:border-indigo-300 transition-colors"
               >
                 <span className="italic font-medium">"{highlightText(ex)}"</span>
                 <button
                   onClick={() => copyToClipboard(ex, idx)}
-                  className="shrink-0 bg-metricool-yellow text-metricool-purple font-extrabold px-3 py-1.5 rounded-xl border border-metricool-purple hover:bg-yellow-300 transition-colors inline-flex items-center gap-1 shadow-2xs"
+                  className="shrink-0 bg-indigo-50 text-indigo-900 font-extrabold px-3 py-1.5 rounded-xl border border-indigo-200 hover:bg-indigo-100 transition-colors inline-flex items-center gap-1 shadow-2xs"
                 >
                   {copiedIndex === idx ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-700" /> Copié !
+                      <Check className="w-3.5 h-3.5 text-emerald-600" /> Copié !
                     </>
                   ) : (
                     <>
@@ -160,13 +160,13 @@ export function StrategyCardComponent({ card, searchQuery = '', onEdit, onDelete
       <div className="pt-3">
         <Link
           href={`/linkedin-strategy/${card.id}`}
-          className="w-full inline-flex items-center justify-between text-xs font-extrabold text-metricool-purple hover:text-metricool-blue transition-colors py-2.5 px-4 bg-slate-100 hover:bg-metricool-yellow rounded-2xl border-2 border-metricool-purple shadow-2xs"
+          className="w-full inline-flex items-center justify-between text-xs font-extrabold text-indigo-950 hover:text-white transition-colors py-2.5 px-4 bg-slate-100 hover:bg-indigo-950 rounded-2xl border border-slate-200 shadow-2xs group"
         >
           <span className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-metricool-purple" />
-            Lire l'article complet en pleine page
+            <BookOpen className="w-4 h-4 text-indigo-600 group-hover:text-indigo-300" />
+            Lire la fiche complète en pleine page
           </span>
-          <ArrowRight className="w-4 h-4 text-metricool-purple" />
+          <ArrowRight className="w-4 h-4 text-indigo-600 group-hover:text-indigo-300" />
         </Link>
       </div>
 

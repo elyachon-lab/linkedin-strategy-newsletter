@@ -9,61 +9,61 @@ export function TimingGridComponent() {
   const schedule = [
     {
       day: 'Lundi',
-      status: 'Moderate',
-      badge: 'bg-amber-100 text-amber-900 border-2 border-metricool-purple font-extrabold',
+      status: 'Modéré',
+      badge: 'bg-amber-100 text-amber-900 border border-amber-300 font-extrabold',
       bestSlots: ['08:30 - 10:00', '12:00 - 13:00'],
       advice: 'Journée de reprise et tri des e-mails. Privilégiez le milieu de matinée.',
     },
     {
       day: 'Mardi',
       status: 'Optimal 🔥',
-      badge: 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple font-extrabold',
+      badge: 'bg-indigo-100 text-indigo-950 border border-indigo-300 font-extrabold',
       bestSlots: ['07:30 - 08:45', '11:45 - 13:15', '17:30 - 18:30'],
       advice: 'Considéré comme l\'un des 2 meilleurs jours de la semaine B2B. Fort taux de réactions.',
     },
     {
       day: 'Mercredi',
       status: 'Optimal 🔥',
-      badge: 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple font-extrabold',
+      badge: 'bg-indigo-100 text-indigo-950 border border-indigo-300 font-extrabold',
       bestSlots: ['07:30 - 08:45', '12:00 - 13:00', '17:30 - 18:30'],
       advice: 'Pic d\'attention en milieu de semaine. Idéal pour les carrousels et dossiers de fond.',
     },
     {
       day: 'Jeudi',
       status: 'Optimal 🔥',
-      badge: 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple font-extrabold',
+      badge: 'bg-indigo-100 text-indigo-950 border border-indigo-300 font-extrabold',
       bestSlots: ['07:30 - 08:45', '11:45 - 13:15', '17:00 - 18:00'],
       advice: 'Excellent pour l\'engagement et la génération de leads d\'entreprise.',
     },
     {
       day: 'Vendredi',
       status: 'Modéré',
-      badge: 'bg-amber-100 text-amber-900 border-2 border-metricool-purple font-extrabold',
+      badge: 'bg-amber-100 text-amber-900 border border-amber-300 font-extrabold',
       bestSlots: ['08:00 - 10:00'],
       advice: 'Publiez tôt le matin uniquement. Évitez les sujets trop denses le vendredi après-midi.',
     },
     {
       day: 'Samedi',
       status: 'Calme',
-      badge: 'bg-slate-100 text-slate-800 border-2 border-slate-300 font-bold',
+      badge: 'bg-slate-100 text-slate-800 border border-slate-300 font-bold',
       bestSlots: ['09:00 - 11:00'],
       advice: 'Volume plus faible. Idéal pour du storytelling personnel ou du partage de culture.',
     },
     {
       day: 'Dimanche',
       status: 'Opportunité',
-      badge: 'bg-metricool-lightBlue text-metricool-purple border-2 border-metricool-purple font-extrabold',
+      badge: 'bg-cyan-100 text-cyan-950 border border-cyan-300 font-extrabold',
       bestSlots: ['18:00 - 20:30'],
       advice: 'Préparation de la semaine. Très bon taux de lecture pour des réflexions stratégiques.',
     },
   ];
 
   return (
-    <div className="bg-white rounded-3xl border-2 border-metricool-purple p-6 sm:p-8 metricool-card-shadow">
+    <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 brand-card-shadow">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h3 className="text-xl font-extrabold text-metricool-purple flex items-center gap-2">
-            <Clock className="w-6 h-6 text-metricool-pink" />
+          <h3 className="text-xl font-black text-indigo-950 flex items-center gap-2">
+            <Clock className="w-6 h-6 text-indigo-600" />
             Étude & Matrice des Heures de Publication LinkedIn (B2B)
           </h3>
           <p className="text-xs font-medium text-slate-500 mt-1">
@@ -77,14 +77,14 @@ export function TimingGridComponent() {
           <div
             key={item.day}
             onClick={() => setSelectedSlot(selectedSlot === item.day ? null : item.day)}
-            className={`p-4 rounded-2xl border-2 transition-all cursor-pointer ${
+            className={`p-4 rounded-2xl border transition-all cursor-pointer ${
               selectedSlot === item.day
-                ? 'border-metricool-purple bg-metricool-lightBlue shadow-sm'
-                : 'border-slate-200 hover:border-metricool-purple bg-slate-50 hover:bg-white'
+                ? 'border-indigo-600 bg-indigo-50/50 shadow-xs'
+                : 'border-slate-200 hover:border-indigo-300 bg-slate-50 hover:bg-white'
             }`}
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="font-extrabold text-sm text-metricool-purple">{item.day}</span>
+              <span className="font-extrabold text-sm text-indigo-950">{item.day}</span>
               <span className={`text-[10px] px-2 py-0.5 rounded-full ${item.badge}`}>
                 {item.status}
               </span>
@@ -94,7 +94,7 @@ export function TimingGridComponent() {
               {item.bestSlots.map((slot) => (
                 <div
                   key={slot}
-                  className="text-xs font-extrabold text-metricool-purple bg-white border border-metricool-purple rounded-xl px-2 py-1 text-center shadow-2xs"
+                  className="text-xs font-extrabold text-indigo-950 bg-white border border-slate-200 rounded-xl px-2 py-1 text-center shadow-2xs"
                 >
                   {slot}
                 </div>
@@ -109,10 +109,10 @@ export function TimingGridComponent() {
       </div>
 
       {selectedSlot && (
-        <div className="mt-5 p-4 bg-metricool-yellow border-2 border-metricool-purple rounded-2xl text-xs font-bold text-metricool-purple flex items-start gap-2.5 shadow-2xs">
-          <Info className="w-5 h-5 text-metricool-purple shrink-0 mt-0.5" />
+        <div className="mt-5 p-4 bg-indigo-50 border border-indigo-200 rounded-2xl text-xs font-bold text-indigo-950 flex items-start gap-2.5 shadow-2xs">
+          <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
           <div>
-            <strong>Recommandation Metricool Style pour le {selectedSlot} :</strong>{' '}
+            <strong>Recommandation Stratégique pour le {selectedSlot} :</strong>{' '}
             {schedule.find((s) => s.day === selectedSlot)?.advice}
           </div>
         </div>

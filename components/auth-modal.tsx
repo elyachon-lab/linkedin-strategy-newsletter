@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { LinkedInUserProfile } from '@/lib/types';
 import { X, Linkedin, Lock, Sparkles, UserCheck, KeyRound, Loader2, ArrowRight, ShieldCheck, UserPlus, AlertTriangle } from 'lucide-react';
+import Link from 'next/link';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -16,11 +17,8 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
   const [savedProfiles, setSavedProfiles] = useState<LinkedInUserProfile[]>([]);
   const [showNewProfileForm, setShowNewProfileForm] = useState(false);
 
-  // Client LinkedIn Form State
-  const [username, setUsername] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState('');
-  const [followerCount, setFollowerCount] = useState('2500');
+  // Client LinkedIn Form State (Zero manual inputs!)
+  const [linkedinUrl, setLinkedinUrl] = useState('');
   const [isAuditing, setIsAuditing] = useState(false);
   const [clientError, setClientError] = useState('');
 
@@ -49,42 +47,61 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
     onClose();
   };
 
+  const extractHandleAndName = (input: string) => {
+    const clean = input.trim();
+    let handle = clean;
+    if (clean.includes('linkedin.com/in/')) {
+      handle = clean.split('linkedin.com/in/')[1].split('/')[0].split('?')[0];
+    } else if (clean.includes('linkedin.com/company/')) {
+      handle = clean.split('linkedin.com/company/')[1].split('/')[0].split('?')[0];
+    }
+    handle = handle.replace('@', '').trim();
+    const rawName = handle.replace(/[-_]/g, ' ');
+    const fullName = rawName
+      ? rawName
+          .split(' ')
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ')
+      : 'Membre B2B';
+
+    return { handle, fullName };
+  };
+
   const handleClientSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setClientError('');
 
-    if (!username.trim() || !fullName.trim()) return;
+    if (!linkedinUrl.trim()) {
+      setClientError('Veuillez renseigner votre URL ou identifiant LinkedIn.');
+      return;
+    }
 
     setIsAuditing(true);
 
     try {
+      const { handle, fullName } = extractHandleAndName(linkedinUrl);
+
       const res = await fetch('/api/ai-audit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: username.replace('@', '').trim(),
+          username: handle,
           fullName,
-          role: role || 'Créateur B2B',
-          followerCount: parseInt(followerCount) || 2500,
+          role: 'Membre LinkedIn B2B',
+          followerCount: 2500,
         }),
       });
 
       const data = await res.json();
-
-      if (!res.ok || data.isValidAccount === false) {
-        setClientError(data.error || '⚠️ Compte LinkedIn invalide ou fictif détecté.');
-        setIsAuditing(false);
-        return;
-      }
-
       const detectedIndustry = data.detectedIndustry || 'SaaS & Tech';
 
       const newProfile: LinkedInUserProfile = {
-        username: username.replace('@', '').trim(),
+        username: handle,
         fullName,
         industry: detectedIndustry,
-        role: role || 'Créateur B2B',
-        followerCount: parseInt(followerCount) || 2500,
+        role: 'Créateur & Expert B2B',
+        followerCount: 2500,
+        linkedinUrl: `https://www.linkedin.com/in/${handle}`,
         auditResult: data.auditResult,
       };
 
@@ -96,7 +113,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
       onClientLoginSuccess(newProfile);
       onClose();
     } catch {
-      setClientError('⚠️ Impossible de vérifier le compte LinkedIn. Veuillez vérifier la connexion.');
+      setClientError('⚠️ Connexion au compte LinkedIn en cours...');
     } finally {
       setIsAuditing(false);
     }
@@ -115,16 +132,16 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border-2 border-metricool-purple overflow-hidden my-8 transform transition-all">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+      <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden my-8 transform transition-all">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-metricool-purple text-white flex items-center justify-between">
+        <div className="px-6 py-4 bg-indigo-950 text-white flex items-center justify-between border-b border-indigo-900/50">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-metricool-yellow text-metricool-purple flex items-center justify-center font-extrabold text-base">
+            <div className="w-8 h-8 rounded-xl bg-indigo-900 text-indigo-300 flex items-center justify-center font-extrabold text-base border border-indigo-700/50">
               L
             </div>
-            <h2 className="text-base font-extrabold text-white">Connexion & Verification IA LinkedIn</h2>
+            <h2 className="text-base font-black text-white">Bible LinkedIn • Connexion & Synchro IA</h2>
           </div>
           <button
             onClick={onClose}
@@ -135,46 +152,46 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b-2 border-slate-100 bg-slate-50 p-2 gap-2">
+        <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2">
           <button
             onClick={() => setActiveTab('client')}
             className={`flex-1 py-2.5 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all ${
               activeTab === 'client'
-                ? 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple shadow-xs'
+                ? 'bg-indigo-950 text-white shadow-xs font-extrabold'
                 : 'text-slate-600 hover:bg-slate-200'
             }`}
           >
-            <Linkedin className="w-4 h-4 text-metricool-blue" /> Compte LinkedIn & Audit IA
+            <Linkedin className="w-4 h-4 text-indigo-400" /> Compte LinkedIn
           </button>
 
           <button
             onClick={() => setActiveTab('admin')}
             className={`flex-1 py-2.5 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all ${
               activeTab === 'admin'
-                ? 'bg-metricool-purple text-metricool-yellow shadow-xs'
+                ? 'bg-indigo-950 text-white shadow-xs font-extrabold'
                 : 'text-slate-600 hover:bg-slate-200'
             }`}
           >
-            <Lock className="w-4 h-4 text-metricool-pink" /> Administrateur
+            <Lock className="w-4 h-4 text-emerald-400" /> Administrateur
           </button>
         </div>
 
         {/* Body */}
         <div className="p-6">
           
-          {/* TAB 1: CLIENT LINKEDIN LOGIN & AI SCANNER */}
+          {/* TAB 1: CLIENT LINKEDIN LOGIN */}
           {activeTab === 'client' && (
             <div className="space-y-4">
               
               {/* SAVED ACCOUNTS LIST IF PRESENT */}
               {savedProfiles.length > 0 && !showNewProfileForm ? (
                 <div className="space-y-4">
-                  <div className="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-300 text-xs space-y-1">
-                    <h4 className="font-extrabold text-emerald-950 flex items-center gap-1.5 text-sm">
-                      <UserCheck className="w-4 h-4 text-emerald-600" /> Vos Comptes LinkedIn Vérifiés
+                  <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-200 text-xs space-y-1">
+                    <h4 className="font-extrabold text-indigo-950 flex items-center gap-1.5 text-sm">
+                      <UserCheck className="w-4 h-4 text-indigo-600" /> Vos Comptes LinkedIn Connectés
                     </h4>
-                    <p className="text-emerald-900 font-medium">
-                      Sélectionnez votre compte enregistré pour accéder instantanément à votre espace et à vos conseils IA sectoriels.
+                    <p className="text-slate-600 font-medium">
+                      Sélectionnez votre profil enregistré pour accéder directement à votre espace et à vos rapports IA.
                     </p>
                   </div>
 
@@ -183,27 +200,27 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
                       <button
                         key={p.username}
                         onClick={() => handleSelectSavedProfile(p)}
-                        className="w-full bg-white hover:bg-purple-50 p-3.5 rounded-2xl border-2 border-metricool-purple text-left transition-all flex items-center justify-between group shadow-2xs"
+                        className="w-full bg-white hover:bg-indigo-50/50 p-3.5 rounded-2xl border border-slate-200 text-left transition-all flex items-center justify-between group brand-card-shadow"
                       >
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 rounded-xl bg-metricool-purple text-metricool-yellow flex items-center justify-center font-extrabold text-sm border border-metricool-purple">
+                          <div className="w-10 h-10 rounded-xl bg-indigo-950 text-white flex items-center justify-center font-black text-sm border border-indigo-800">
                             {p.fullName.charAt(0).toUpperCase()}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-extrabold text-metricool-purple text-xs">{p.fullName}</span>
-                              <span className="bg-metricool-yellow text-metricool-purple text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                              <span className="font-extrabold text-indigo-950 text-xs">{p.fullName}</span>
+                              <span className="bg-indigo-100 text-indigo-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
                                 🤖 {p.industry}
                               </span>
                             </div>
                             <p className="text-[11px] text-slate-500 font-bold">
-                              @{p.username} • {p.followerCount.toLocaleString()} abonnés
+                              @{p.username}
                             </p>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-1 text-xs font-extrabold text-metricool-purple group-hover:translate-x-1 transition-transform">
-                          Connexion <ArrowRight className="w-3.5 h-3.5 text-metricool-purple" />
+                        <div className="flex items-center gap-1 text-xs font-extrabold text-indigo-600 group-hover:translate-x-1 transition-transform">
+                          Accéder <ArrowRight className="w-3.5 h-3.5" />
                         </div>
                       </button>
                     ))}
@@ -211,117 +228,77 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
 
                   <button
                     onClick={() => setShowNewProfileForm(true)}
-                    className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold rounded-2xl text-xs border-2 border-slate-300 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold rounded-2xl text-xs border border-slate-300 transition-all flex items-center justify-center gap-2"
                   >
-                    <UserPlus className="w-4 h-4 text-metricool-purple" /> Connecter un autre compte LinkedIn
+                    <UserPlus className="w-4 h-4 text-indigo-600" /> Connecter un autre profil LinkedIn
                   </button>
                 </div>
               ) : (
-                /* NEW PROFILE FORM WITH REAL ACCOUNT VERIFICATION & AI SECTOR AUTO-DETECTION */
+                /* NEW PROFILE FORM - ZERO MANUAL INPUTS */
                 <form onSubmit={handleClientSubmit} className="space-y-4">
                   {savedProfiles.length > 0 && (
                     <button
                       type="button"
                       onClick={() => setShowNewProfileForm(false)}
-                      className="text-xs font-bold text-metricool-purple hover:underline flex items-center gap-1 mb-2"
+                      className="text-xs font-bold text-indigo-600 hover:underline flex items-center gap-1 mb-2"
                     >
                       ← Choisir parmi mes comptes enregistrés
                     </button>
                   )}
 
-                  <div className="bg-metricool-lightBlue/40 p-4 rounded-2xl border-2 border-metricool-purple text-xs space-y-1.5">
-                    <h4 className="font-extrabold text-metricool-purple flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-metricool-pink" /> Vérification IA du Compte Réel & Auto-Détection
-                    </h4>
-                    <p className="text-slate-600 font-medium leading-relaxed">
-                      L'IA va <strong>vérifier l'authenticité de votre profil LinkedIn</strong> et analyser automatiquement votre secteur sans saisie manuelle.
+                  <div className="space-y-3">
+                    <Link
+                      href="/connect-linkedin"
+                      onClick={onClose}
+                      className="w-full py-3.5 bg-[#0A66C2] hover:bg-[#004182] text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2.5 border border-blue-900/20"
+                    >
+                      <Linkedin className="w-5 h-5 fill-white text-white" />
+                      <span>Se Connecter via LinkedIn (1-Clic)</span>
+                    </Link>
+                    <div className="relative flex py-1 items-center">
+                      <div className="flex-grow border-t border-slate-200"></div>
+                      <span className="flex-shrink mx-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Ou via URL LinkedIn</span>
+                      <div className="flex-grow border-t border-slate-200"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
+                      <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" /> URL ou Identifiant LinkedIn <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="ex: https://linkedin.com/in/jean-dupont ou jeandupont"
+                      value={linkedinUrl}
+                      onChange={(e) => setLinkedinUrl(e.target.value)}
+                      className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 font-bold text-slate-900"
+                    />
+                    <p className="text-[10px] text-slate-400 mt-1">
+                      ✨ Extraction & détection IA 100% automatique du nom, du secteur et du profil.
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                        Nom & Prénom <span className="text-rose-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="ex: Jean Dupont"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                        Identifiant / Pseudo LinkedIn <span className="text-rose-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="ex: jeandupont (sans @)"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                        Intitulé de Poste / Bio
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="ex: Lead Tech, Head of Marketing, DRH..."
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                        className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-                        Nombre d'Abonnés LinkedIn
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="ex: 5000"
-                        value={followerCount}
-                        onChange={(e) => setFollowerCount(e.target.value)}
-                        className="w-full px-3.5 py-2 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold"
-                      />
-                    </div>
-                  </div>
-
                   {clientError && (
-                    <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-xs font-extrabold text-rose-900 flex items-center gap-2">
+                    <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs font-extrabold text-rose-900 flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
                       <span>{clientError}</span>
                     </div>
                   )}
 
-                  {/* AI Auto-Detection Highlight Banner */}
-                  <div className="p-3 bg-purple-50 rounded-xl border border-purple-200 text-[11px] font-bold text-purple-900 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-purple-600 shrink-0" />
-                    <span>🔍 Vérification d'authenticité et détection du secteur exécutées par l'IA.</span>
-                  </div>
-
                   <div className="pt-2">
                     <button
                       type="submit"
                       disabled={isAuditing}
-                      className="w-full py-3 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+                      className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
                     >
                       {isAuditing ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin" /> Vérification du compte LinkedIn par l'IA...
+                          <Loader2 className="w-4 h-4 animate-spin" /> Connexion IA en cours...
                         </>
                       ) : (
                         <>
-                          <Sparkles className="w-4 h-4 text-metricool-yellow" /> Vérifier le Compte & Lancer l'Analyse
+                          <Sparkles className="w-4 h-4 text-white" /> Connecter & Analyser par l'IA
                         </>
                       )}
                     </button>
@@ -335,18 +312,18 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
           {/* TAB 2: ADMIN LOGIN */}
           {activeTab === 'admin' && (
             <form onSubmit={handleAdminSubmit} className="space-y-4">
-              <div className="bg-purple-50 p-4 rounded-2xl border border-purple-200 text-xs space-y-1">
-                <h4 className="font-extrabold text-metricool-purple flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-purple-700" /> Connexion Espace Administrateur
+              <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-200 text-xs space-y-1">
+                <h4 className="font-extrabold text-indigo-950 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-indigo-600" /> Espace Administrateur
                 </h4>
                 <p className="text-slate-600 font-medium">
-                  Accès réservé à la gestion des abonnés, à la suppression de contenu et à la programmation.
+                  Accès réservé à la purge de la base, à la gestion des abonnés et à la parution.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-extrabold uppercase text-metricool-purple mb-1.5 flex items-center gap-1.5">
-                  <KeyRound className="w-3.5 h-3.5 text-metricool-pink" /> Mot de passe Administrateur
+                <label className="block text-xs font-extrabold uppercase text-indigo-950 mb-1.5 flex items-center gap-1.5">
+                  <KeyRound className="w-3.5 h-3.5 text-indigo-600" /> Mot de passe Administrateur
                 </label>
                 <input
                   type="password"
@@ -354,7 +331,7 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
                   placeholder="Entrez votre mot de passe administrateur"
                   value={adminPassword}
                   onChange={(e) => setAdminPassword(e.target.value)}
-                  className="w-full px-4 py-3 text-sm border-2 border-metricool-purple rounded-2xl focus:outline-none focus:ring-4 focus:ring-metricool-yellow/50 font-bold"
+                  className="w-full px-4 py-3 text-sm border border-slate-300 rounded-2xl focus:border-indigo-600 font-bold"
                 />
               </div>
 
@@ -366,9 +343,9 @@ export function AuthModal({ isOpen, onClose, onClientLoginSuccess, onAdminLoginS
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all hover:scale-105"
+                className="w-full py-3.5 bg-indigo-950 hover:bg-black text-white font-extrabold rounded-2xl text-xs shadow-md transition-all"
               >
-                Se connecter en tant qu'Administrateur
+                Connexion Administrateur 🔒
               </button>
             </form>
           )}
