@@ -100,12 +100,16 @@ function CollapsibleSourceAccordion({ source, darkTheme = true }: { source?: Adv
 import { LinkedInConnectModal } from '@/components/linkedin-connect-modal';
 import { Lock } from 'lucide-react';
 
+import { CSVStatsDropzone, ParsedCSVStats } from '@/components/linkedin/csv-stats-dropzone';
 import { LINKEDIN_INDUSTRIES, formatCleanLinkedInName } from '@/lib/types';
 
 export default function DedicatedClientSpacePage() {
   const [profile, setProfile] = useState<LinkedInUserProfile | null>(null);
   const [activeTab, setActiveTab] = useState<'my_audit' | 'search_audit' | 'website_scan'>('my_audit');
   
+  // Imported CSV stats state
+  const [importedCsvStats, setImportedCsvStats] = useState<ParsedCSVStats | null>(null);
+
   // Onboarding URL & Industry input state
   const [onboardingUrl, setOnboardingUrl] = useState('');
   const [onboardingIndustry, setOnboardingIndustry] = useState<string>('Communication & Marketing');
@@ -205,7 +209,7 @@ export default function DedicatedClientSpacePage() {
     runAutoAuditForRegisteredUser(newProfile);
   };
 
-  const runAutoAuditForRegisteredUser = async (userProf: LinkedInUserProfile) => {
+  const runAutoAuditForRegisteredUser = async (userProf: LinkedInUserProfile, overrideStats?: ParsedCSVStats) => {
     setIsLoadingAudit(true);
     setAuditError('');
 
@@ -216,13 +220,15 @@ export default function DedicatedClientSpacePage() {
     }
 
     try {
+      const activeCsv = overrideStats || importedCsvStats;
       const res = await fetch('/api/linkedin-audit-deep', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: targetQuery,
-          industry: userProf.industry || 'SaaS & Tech',
+          industry: userProf.industry || 'Communication & Marketing',
           userSyncData: userProf.userSyncData,
+          csvMetrics: activeCsv || undefined,
         }),
       });
 
@@ -487,6 +493,16 @@ export default function DedicatedClientSpacePage() {
       {/* TAB 1: AUTOMATIC AUDIT FOR REGISTERED USER ACCOUNT */}
       {activeTab === 'my_audit' && (
         <div className="space-y-8 animate-fadeIn">
+
+          {/* REAL LINKEDIN CSV STATS DROPZONE MODULE */}
+          <CSVStatsDropzone
+            onStatsImported={(stats) => {
+              setImportedCsvStats(stats);
+              if (profile) {
+                runAutoAuditForRegisteredUser(profile, stats);
+              }
+            }}
+          />
           
           {isLoadingAudit ? (
             <AuditDiagnosticSkeleton queryName={profile?.fullName || profile?.username} />

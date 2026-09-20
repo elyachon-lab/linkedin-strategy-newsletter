@@ -128,7 +128,7 @@ function detectIndustryFromQuery(query: string): { industry: string; confidence:
 
 export async function POST(request: Request) {
   try {
-    const { query, industry, userSyncData } = await request.json();
+    const { query, industry, userSyncData, csvMetrics } = await request.json();
 
     if (!query || query.trim().length < 2) {
       return NextResponse.json(
@@ -136,14 +136,14 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const { handle, url, accountType } = extractHandleAndUrl(query);
+    const { handle, url, accountType: autoAccountType } = extractHandleAndUrl(query);
     const { industry: autoIndustry, confidence } = detectIndustryFromQuery(query);
     const finalIndustry = industry || autoIndustry || 'Communication & Marketing';
 
     // Format clean display name with proper capitalization and spaces without dashes
     const displayName = formatCleanLinkedInName(handle);
 
-    // Compute metrics dynamically using handle string hash or REAL user sync data if available
+    // Compute metrics dynamically using handle string hash, REAL user sync data, OR imported CSV metrics
     const sync: UserSyncData | undefined = userSyncData;
 
     // Helper to generate deterministic pseudo-random number based on profile handle
@@ -158,18 +158,19 @@ export async function POST(request: Request) {
 
     const handleHash = getHandleHash(handle);
 
-    // Dynamic metrics calculation if not explicitly synced
+    // Dynamic metrics calculation if not explicitly synced or imported
     const calculatedPostFreq = Number((0.4 + ((handleHash % 32) / 10)).toFixed(1)); // 0.4 to 3.5 posts/week
     const calculatedSsi = 60 + (handleHash % 33); // 60 to 92
     const calculatedEngagement = `${(1.8 + ((handleHash % 42) / 10)).toFixed(1)}%`; // 1.8% to 5.9%
     const calculatedFollowers = 1200 + ((handleHash % 240) * 120); // 1,200 to 29,900
     const calculatedDwellTime = 50 + (handleHash % 41); // 50 to 90
 
-    const realPostFreq = sync?.weeklyPostFrequency !== undefined ? sync.weeklyPostFrequency : calculatedPostFreq;
+    const realPostFreq = csvMetrics?.weeklyPostFrequency ?? (sync?.weeklyPostFrequency !== undefined ? sync.weeklyPostFrequency : calculatedPostFreq);
     const realSsi = sync?.ssiScore ?? (sync?.isConnected ? 82 : calculatedSsi);
-    const realEngagement = sync?.engagementRate || (sync?.isConnected ? '3.8%' : calculatedEngagement);
+    const realEngagement = csvMetrics?.avgEngagementRate || sync?.engagementRate || (sync?.isConnected ? '3.8%' : calculatedEngagement);
     const realFollowers = sync?.followerCount || calculatedFollowers;
     const realLastPost = sync?.lastPostDate || (realPostFreq <= 0.4 ? 'Il y a 3 semaines' : realPostFreq <= 1.0 ? 'Il y a 5 jours' : 'Hier à 14h30');
+    const finalAccountType = csvMetrics?.accountType || autoAccountType;
 
     // Format human-readable frequency dynamically
     let frequencyDisplay = '';
@@ -254,9 +255,9 @@ export async function POST(request: Request) {
       username: handle,
       industry: finalIndustry,
       industryConfidence: confidence,
-      accountType,
+      accountType: finalAccountType,
       verificationScore: 98,
-      isConnected: !!sync?.isConnected,
+      isConnected: !!sync?.isConnected || !!csvMetrics,
 
       // PHASE 1: ÉTAT DES LIEUX & DIAGNOSTIC DE LA COMMUNICATION ACTUELLE
       currentDiagnostic: {
@@ -265,7 +266,7 @@ export async function POST(request: Request) {
         dwellTimeScore,
         currentPublishingFrequency: frequencyDisplay,
         lastObservedPost: realLastPost,
-        observedFormatDistribution: sync?.primaryFormat
+        observedFormatDistribution: csvMetrics?.observedFormatDistribution || (sync?.primaryFormat
           ? [
               { format: sync.primaryFormat, percentage: fmt1Pct },
               { format: 'Posts Texte Storytelling', percentage: fmt2Pct },
@@ -275,7 +276,7 @@ export async function POST(request: Request) {
               { format: 'Carrousels PDF Verticaux (4:5)', percentage: fmt1Pct },
               { format: 'Posts Texte Storytelling', percentage: fmt2Pct },
               { format: 'Images & Liens Externes', percentage: fmt3Pct },
-            ],
+            ]),
         profileHeadlineStatus: sync?.isConnected
           ? '🟢 Titre de profil aligné avec votre cible et votre secteur d\'activité.'
           : realSsi >= 75
