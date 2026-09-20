@@ -3,91 +3,37 @@ import { StrategyCard, NewsletterIssue } from '../types';
 export const INITIAL_STRATEGIES: StrategyCard[] = [
   {
     id: 'strat-1',
-    title: 'Règle des 3 secondes & Structure du Hook',
-    category: 'Hook',
-    tags: ['accroche', 'conversion', 'lisibilité', 'scroll-stopper'],
-    summary: 'Le hook est la phrase la plus critique de votre publication. Il détermine si l\'utilisateur va cliquer sur "...voir plus" ou continuer de scroller.',
-    content: `### Pourquoi le Hook est la clé de voûte de votre portée ?
-Sur LinkedIn, le bouton **"...voir plus"** s'intercale après les 140 à 210 premiers caractères (selon l'écran). Si votre phrase d'ouverture n'éveille pas une émotion immédiate (curiosité, rupture de croyance, gain concret), 80% des utilisateurs passeront leur chemin sans lire votre contenu.
+    title: 'Guide Master : L\'Algorithme LinkedIn 2026 & le Score SSI',
+    category: 'Algorithme',
+    tags: ['algorithme', 'reach', 'ssi', 'dwell time', 'golden hour'],
+    summary: 'Comprendre précisément comment l\'algorithme classe vos posts : Dwell Time, règles d\'interaction dans la Golden Hour et calcul de l\'index SSI.',
+    content: `### Les 4 Piliers Fondamentaux de l'Algorithme LinkedIn 2026 :
 
-### 5 Formules de Hooks Infaillibles :
-1. **La Contre-intuition** : *"J'ai arrêté de poster 5 fois par semaine sur LinkedIn. Voici ce qui s'est passé (+42% d'impressions)."*
-2. **Le Résultat Chiffré** : *"En 90 jours, nous avons généré 120k€ avec 0€ de budget pub. Le guide étape par étape :"*
-3. **Le Statu Quo Cassé** : *"Tout le monde vous dit de créer du contenu quotidien. C'est la pire erreur B2B. Voici pourquoi."*
-4. **La Curation d'Outils** : *"9 outils IA que les top 1% des créateurs utilisent en secret (et qui vous font gagner 10h/semaine)."*
-5. **Le Storytelling de Crise** : *"Il y a 6 mois, mon entreprise a failli fermer. Voici la leçon à 50 000€ qui a tout changé."*
+1. **Le Dwell Time (Temps de rétention)** :
+   LinkedIn valorise avant tout le temps passé par un utilisateur sur votre post. Les carrousels PDF cliquables et les textes aérés avec des pépites à forte valeur augmentent mécaniquement cette métrique.
 
-### 💡 Les Règles d'Or du Formatage :
-- Ne mettez JAMAIS de politesse ("Bonjour à tous", "Ravi de vous retrouver") en première ligne.
-- Laissez une ligne vide entre votre hook et votre première phrase explicative.
-- Limitez la première ligne à 8-12 mots maximum pour être lisible sur mobile.`,
+2. **La Règle d'Or de la Golden Hour (La 1ère Heure)** :
+   Les signaux d'engagement reçus dans les **60 premières minutes** (commentaires qualifiés de plus de 5 mots, partages avec texte, enregistrements) déclenchent la diffusion du post auprès du 2ème et 3ème cercle.
+
+3. **La Pénalisation des Liens Externes dans le Corps de Post** :
+   Insérer un lien externe dans le corps du texte réduit le reach de 35% à 50%. La stratégie validée consiste à placer les liens exclusivement dans le **1er commentaire** ou commentaire épinglé.
+
+4. **Le Social Selling Index (SSI)** :
+   Votre score SSI (sur 100) détermine votre coefficient de distribution de départ. Plus votre SSI est élevé, plus le premier palier d'affichage de votre post est large.`,
     examples: [
-      "J'ai analysé 1 000 posts LinkedIn viraux. Voici les 5 règles d'or qui reviennent systématiquement :",
-      "Ne lancez PAS votre newsletter avant d'avoir lu ceci (3 erreurs qui coûtent très cher).",
-      "Comment j'ai gagné 15 000 abonnés qualifiés en 6 mois sans jamais démarcher en MP."
+      "💡 Astuce : Répondre à un commentaire par une question relance la conversation et prolonge la distribution sur 48h.",
+      "⚠️ Attention : Évitez d'éditer votre post dans les 10 minutes suivant sa publication (réinitialisation de l'évaluation)."
     ],
     is_pinned: true,
     created_at: new Date().toISOString(),
   },
   {
     id: 'strat-2',
-    title: 'Algorithme LinkedIn 2.0 : Les Nouveaux Facteurs de Reach',
-    category: 'Algorithme',
-    tags: ['algorithme', 'reach', 'dwell time', 'commentaires', 'golden hour'],
-    summary: 'Comprendre précisément comment l\'algorithme classe vos posts : Dwell Time, règles strictes sur les liens externes, et l\'importance absolue de la 1ère heure.',
-    content: `### Les 4 Piliers Fondamentaux de l'Algorithme :
-
-1. **Le Dwell Time (Temps de rétention sur la publication)** :
-   LinkedIn valorise avant tout le temps passé par un utilisateur sur votre post. Les carrousels PDF cliquables et les textes aérés avec des pépites à forte valeur augmentent mécaniquement cette métrique.
-
-2. **La Règle d'Or de la Golden Hour (La 1ère Heure)** :
-   Les signaux d'engagement reçus dans les **60 premières minutes** (commentaires de plus de 5 mots, partages avec texte, enregistrements) déclenchent la diffusion du post auprès du 2ème et 3ème cercle de votre réseau.
-
-3. **La Pénalisation des Liens Externes** :
-   LinkedIn souhaite conserver ses utilisateurs sur sa plateforme. Placer un lien vers un site externe dans le corps du post réduit la portée initiale de 30% à 50%.
-   **Solution** : Placez votre lien en **1er commentaire** et épinglez-le.
-
-4. **L'Interaction de l'Auteur** :
-   Répondre à TOUS les commentaires dans les 2 heures suivant la publication prolonge la courbe de distribution du post de 24 à 48 heures.`,
-    examples: [
-      "💡 Astuce : Répondre à un commentaire par une question relance la conversation et double le nombre total de commentaires.",
-      "⚠️ Attention : Évitez d'éditer votre post dans les 10 minutes suivant sa publication (cela réinitialise le score d'évaluation algorithmique)."
-    ],
-    is_pinned: true,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'strat-3',
-    title: 'Plages Horaires & Jours Optimaux de Publication B2B',
-    category: 'Planning',
-    tags: ['timing', 'horaires', 'planning', 'audience', 'engagement'],
-    summary: 'Analyse des fenêtres de tir stratégiques pour publier au moment où vos prospects B2B sont actifs sur leur fil d\'actualité.',
-    content: `### Le Calendrier Stratégique de Publication :
-
-- **Mardi, Mercredi & Jeudi (Les Jours Champions B2B)** :
-  - **07:30 - 08:45** : Avant les réunions, pendant les transports. Taux d'ouverture maximal.
-  - **11:45 - 13:15** : Pause déjeuner. Moment privilégié pour les carrousels et articles synthétiques.
-  - **17:30 - 18:30** : Fin de journée de bureau.
-
-- **Lundi & Vendredi (Jours Intermédiaires)** :
-  - Lundi matin : privilégier entre 08:30 et 10:00 (après le dépouillement des e-mails).
-  - Vendredi : privilégier la matinée (08:00 - 11:00). Éviter l'après-midi.
-
-- **Samedi & Dimanche (La Fenêtre Personnelle & Reflexion)** :
-  - Dimanche soir (18:00 - 20:30) : Excellent créneau pour le storytelling d'entrepreneur, les bilans de semaine et les réflexions stratégiques.`,
-    examples: [
-      "📅 Fréquence recommandée : 3 à 4 publications de haute valeur par semaine valent mieux que 7 posts médiocres."
-    ],
-    is_pinned: false,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'strat-4',
-    title: 'Format Carrousel PDF : Secrets de Conception & Dwell Time',
+    title: 'Le Format Carrousel PDF (4:5) & Optimisation du Dwell Time',
     category: 'Format',
-    tags: ['carrousel', 'pdf', 'canva', 'design', 'conversion'],
+    tags: ['carrousel', 'pdf', 'dwell time', 'design', 'conversion'],
     summary: 'Le carrousel PDF génère jusqu\'à 3x plus d\'impressions et 5x plus d\'enregistrements qu\'un simple post texte.',
-    content: `### Architecture d'un Carrousel Virant (8 à 12 slides) :
+    content: `### Architecture d'un Carrousel PDF Virant (8 à 12 slides) :
 
 1. **Slide 1 (La Couverture)** : Titre provocateur ou ultra-spécifique, typographie XXL, contrastes forts.
 2. **Slide 2 (Le Problème / Constat)** : Expliciter la douleur ou la fausse croyance de votre cible.
@@ -98,98 +44,105 @@ Sur LinkedIn, le bouton **"...voir plus"** s'intercale après les 140 à 210 pre
 ### Spécifications Techniques Optimales :
 - **Dimensions** : 1080 x 1350 px (format vertical 4:5) pour occuper plus d'espace sur l'écran smartphone.
 - **Poids** : Moins de 10 Mo en format PDF.
-- **Canva Tip** : Ajoutez une petite flèche visuelle qui pointe vers la droite au bas de chaque slide pour inciter au balayage.`,
+- **Indicateur de balayage** : Ajoutez une flèche visuelle au bas de chaque slide pour inciter au swipe.`,
     examples: [
       "📌 Pensez à ajouter un rappel 'Enregistrez ce carrousel pour le consulter plus tard' sur la dernière slide."
+    ],
+    is_pinned: true,
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: 'strat-3',
+    title: 'Les 10 Formules d\'Accroches (Hooks) B2B Infaillibles',
+    category: 'Hook',
+    tags: ['accroche', 'hook', 'conversion', 'lisibilité', 'scroll-stopper'],
+    summary: 'Le hook détermine si l\'utilisateur va cliquer sur "...voir plus" ou continuer de scroller. 80% du succès d\'un post dépend des 3 premières lignes.',
+    content: `### Pourquoi le Hook est la clé de voûte de votre portée ?
+Sur LinkedIn, le bouton **"...voir plus"** s'intercale après les 140 à 210 premiers caractères. Si votre phrase d'ouverture n'éveille pas une émotion immédiate, 80% des utilisateurs passeront leur chemin.
+
+### 5 Formules de Hooks à Fort Taux d'Ouverture :
+1. **La Contre-intuition** : *"J'ai arrêté de poster 5 fois par semaine sur LinkedIn. Voici ce qui s'est passé (+42% d'impressions)."*
+2. **Le Résultat Chiffré** : *"En 90 jours, nous avons généré 120k€ avec 0€ de budget pub. Le guide étape par étape :"*
+3. **Le Statu Quo Cassé** : *"Tout le monde vous dit de créer du contenu quotidien. C'est la pire erreur B2B. Voici pourquoi."*
+4. **La Curation d'Outils** : *"9 outils IA que les top 1% des créateurs utilisent en secret (et qui vous font gagner 10h/semaine)."*
+5. **Le Storytelling de Crise** : *"Il y a 6 mois, mon entreprise a failli fermer. Voici la leçon à 50 000€ qui a tout changé."*
+
+### 💡 Règles de Formatage :
+- Pas de formules de politesse ("Bonjour à tous") en première ligne.
+- Saut de ligne obligatoire après la phrase choc.
+- 8 à 12 mots maximum sur la première ligne pour être parfaitement lisible sur mobile.`,
+    examples: [
+      "J'ai analysé 1 000 posts LinkedIn viraux. Voici les 5 règles d'or qui reviennent systématiquement :",
+      "Ne lancez PAS votre newsletter avant d'avoir lu ceci (3 erreurs qui coûtent très cher)."
+    ],
+    is_pinned: false,
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: 'strat-4',
+    title: 'Matrice Éditoriale & Horaires Stratégiques B2B',
+    category: 'Planning',
+    tags: ['timing', 'horaires', 'planning', 'audience', 'engagement'],
+    summary: 'Analyse des fenêtres de tir stratégiques et de la cadence de publication optimale pour maximiser la visibilité auprès des décideurs B2B.',
+    content: `### Le Calendrier Stratégique de Publication B2B :
+
+- **Mardi, Mercredi & Jeudi (Les Jours Champions B2B)** :
+  - **07:30 - 08:45** : Avant les réunions, pendant les transports. Taux d'ouverture maximal.
+  - **11:45 - 13:15** : Pause déjeuner. Moment privilégié pour les carrousels et articles synthétiques.
+  - **17:30 - 18:30** : Fin de journée de bureau.
+
+- **Lundi & Vendredi (Jours Intermédiaires)** :
+  - Lundi matin : privilégier entre 08:30 et 10:00 (après le dépouillement des e-mails).
+  - Vendredi : privilégier la matinée (08:00 - 11:00). Éviter l'après-midi.
+
+- **Dimanche soir (Fenêtre Reflexion & Storytelling)** :
+  - Dimanche (18:00 - 20:30) : Excellent créneau pour le storytelling d'entrepreneur, les bilans de semaine et réflexions.`,
+    examples: [
+      "📅 Fréquence recommandée : 2 à 3 publications de haute valeur par semaine valent mieux que 7 posts sans saveur."
     ],
     is_pinned: false,
     created_at: new Date().toISOString(),
   },
   {
     id: 'strat-5',
-    title: 'Stratégie de Commentaires & La Méthode des 3C',
-    category: 'Engagement',
-    tags: ['commentaires', 'networking', 'outreach', 'visibilité'],
-    summary: '80% de votre visibilité sur LinkedIn provient des commentaires pertinents que vous laissez chez les autres.',
-    content: `### La Règle des 80/20 du Réseau :
-La croissance de votre compte ne dépend pas uniquement de vos propres publications, mais de votre présence sous les posts des leaders d'opinion de votre marché.
+    title: 'Optimisation de Profil Client-Centric & Conversion 1er Commentaire',
+    category: 'Copywriting',
+    tags: ['profil', 'bio', 'titre', 'liens', 'conversion'],
+    summary: 'Transformer votre profil LinkedIn d\'un simple CV en une page de vente haute conversion centrée sur le bénéfice client.',
+    content: `### La Formule du Titre de Profil HAUTE CONVERSION :
+Évitez les intitulés génériques ("Manager chez Company"). Utilisez la structure :
+**"J'aide [Cible] à [Résultat désiré] grâce à [Méthode / Solution]"**.
 
-### La Structure des 3C pour vos Commentaires :
-1. **Complimenter** : Saluer l'originalité ou la pertinence du point soulevé.
-2. **Compléter** : Apporter une donnée chiffrée, une anecdote concrète ou un contre-exemple constructif.
-3. **Questionner** : Poser une question ouverte qui invite l'auteur et la communauté à réagir.
-
-### Routine Quotidienne recommandée (15 min/jour) :
-- Commentez 5 posts cibles avant de publier votre propre contenu.
-- Les commentaires apportant une réelle valeur d'expert captent naturellement des dizaines de visites sur votre profil.`,
+### La Stratégie du 1er Commentaire :
+Pour contourner la pénalisation des liens externes :
+1. Rédigez votre post de manière 100% native (texte + carrousel).
+2. Ajoutez à la fin du post : *"🔗 Lien d'accès complet disponible dans le 1er commentaire !"*.
+3. Publiez le post, puis commentez immédiatement avec le lien et la description.
+4. Épinglez le commentaire.`,
     examples: [
-      "Exemple de mauvais commentaire : 'Super post, merci !' (Portée nulle)",
-      "Exemple de bon commentaire : 'Point très juste sur le Dwell Time. De notre côté, nous avons remarqué que coupler le carrousel à un sondage augmentait l'engagement de +24%. As-tu observé le même phénomène @Auteur ?'"
+      "Titre recommandé : 'J'aide les fondateurs SaaS B2B à passer de 10k€ à 100k€ MRR grâce au Social Selling LinkedIn.'"
     ],
     is_pinned: false,
     created_at: new Date().toISOString(),
   },
   {
     id: 'strat-6',
-    title: 'Le Social Selling B2B : La Méthode Inbound pour Générer des Leads',
+    title: 'Méthode Inbound Social Selling & Prospection Douce',
     category: 'Engagement',
-    tags: ['social selling', 'leads', 'b2b', 'prospection', 'ssi'],
-    summary: 'Comment attirer des prospects qualifiés sur votre profil LinkedIn sans envoyer de messages de prospection à froid.',
-    content: `### Qu'est-ce que le Social Selling B2B ?
-Le Social Selling consiste à utiliser LinkedIn pour écouter, interagir et apporter de la valeur à vos prospects cibles avant même de tenter une vente. L'objectif est d'être la première personne à laquelle votre prospect pense lorsqu'il ressent un besoin.
+    tags: ['social selling', 'inbound', 'prospection', 'commentaires', 'networking'],
+    summary: 'Comment attirer des prospects qualifiés sur votre profil sans envoyer de messages de prospection à froid intempestifs.',
+    content: `### La Méthode des 3C pour vos Commentaires :
+80% de votre visibilité découle des commentaires laissés sous les posts d'acteurs de votre marché.
+1. **Complimenter** : Saluer la pertinence de l'analyse.
+2. **Compléter** : Apporter une donnée chiffrée ou un contre-exemple constructif.
+3. **Questionner** : Poser une question ouverte incitant l'auteur et la communauté à répondre.
 
-### Les 4 Piliers du Social Selling Index (SSI) :
-1. **Créer une marque professionnelle forte** (profil optimisé client-centric).
-2. **Trouver les bonnes personnes** (recherche ciblée de décideurs).
-3. **Échanger des informations** (partager du contenu à forte valeur ajoutée).
-4. **Construire des relations de confiance** (commenter et échanger en message privé avec empathie).
-
-### La Méthode des Triggers (Déclencheurs d'Achat) :
-- Surveillez les mouvements dans les entreprises cibles (levées de fonds, recrutements, nominations).
-- Réagissez aux publications de vos prospects dans les 30 minutes avec un commentaire d'expert.
-- Envoyez un message privé contextualisé uniquement APRÈS avoir interagi avec leur contenu.`,
+### La Prospection Douce en 3 Étapes :
+1. Identifiez vos prospects cibles.
+2. Laissez 2 ou 3 commentaires qualifiés sur leurs publications pendant 2 semaines.
+3. Envoyez un message privé contextualisé uniquement APRÈS ces interactions.`,
     examples: [
-      "Exemple de premier message privé : 'Bonjour [Prénom], j'ai adoré votre réflexion sur [Sujet]. De notre côté, nous avons remarqué que [Donnée]. Au plaisir d'échanger !'"
-    ],
-    is_pinned: false,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'strat-7',
-    title: 'Comment Rédiger des Posts Storytelling Captivants (La Structure en 5 Actes)',
-    category: 'Copywriting',
-    tags: ['storytelling', 'émotion', 'rédaction', 'histoire', 'conversion'],
-    summary: 'Le storytelling est l\'outil le plus puissant pour humaniser votre marque et susciter l\'empathie de vos lecteurs.',
-    content: `### La Structure en 5 Actes d'un Storytelling LinkedIn Virant :
-
-1. **L'Élément Déclencheur (Slide / Ligne 1)** : Présenter la situation initiale et la rupture ("En 2022, j'ai pris la pire décision de ma carrière d'entrepreneur").
-2. **L'Épreuve / Le Creux de la Vague** : Montrer la vulnérabilité et les obstacles rencontrés ("0 client pendant 4 mois, un solde bancaire au plus bas").
-3. **La Prise de Conscience / Le Délicat Pivot** : L'élément clé qui a tout débloqué ("Puis j'ai compris la règle fondamentale du positionnement B2B").
-4. **Les Résultats Concrets** : Chiffres et preuves à l'appui (+150k€ de CA générés).
-5. **La Leçon pour le Lecteur & CTA** : Ce que votre réseau doit retenir pour éviter la même erreur.`,
-    examples: [
-      "💡 Règle de vulnérabilité : Soyez authentique mais ne vous victimisez pas. Montrez toujours comment vous avez surmonté l'obstacle."
-    ],
-    is_pinned: false,
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'strat-8',
-    title: 'La Stratégie de Repurposing : 1 Seul Contenu Décliné en 7 Formats',
-    category: 'Format',
-    tags: ['repurposing', 'productivité', 'recyclage', 'content-engine'],
-    summary: 'Ne réinventez pas la roue à chaque post. Maximisez le rendement de chaque idée forte.',
-    content: `### Comment Décliner un Seul Article ou Podcast en 7 Contenus :
-
-- **Jour 1** : 1 Carrousel PDF synthèse des 5 points clés.
-- **Jour 2** : 1 Post Texte axé sur la contre-intuition (Le Hook choc).
-- **Jour 3** : 1 Vidéo courte / Short (60 secondes résumant l'idée 1).
-- **Jour 4** : 1 Post Storytelling sur les coulisses de cette découverte.
-- **Jour 5** : 1 Sondage interactif pour faire réagir votre communauté.
-- **Jour 6** : 1 Édition de Newsletter récapitulative.
-- **Jour 7** : 1 Citation visuelle forte sous forme d'image.`,
-    examples: [
-      "💡 Gain de temps : 2 heures de création de contenu le lundi suffisent pour alimenter toute votre semaine."
+      "Exemple de message privé doux : 'Bonjour [Prénom], j'ai adoré votre réflexion sur [Sujet]. De notre côté, nous observons [Donnée]. Au plaisir d'échanger !'"
     ],
     is_pinned: false,
     created_at: new Date().toISOString(),

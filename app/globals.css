@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,30 +6,32 @@
 
 @layer base {
   body {
-    background-color: #F9FAFC;
-    color: #2D1A29;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #F8FAFC;
+    color: #0F172A;
+    font-family: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 }
 
-/* Metricool Pink & Yellow Dominant Gradient Line */
-.metricool-gradient-bar {
-  background: linear-gradient(90deg, #EE5B91 0%, #FACC15 50%, #EE5B91 100%);
+/* Bible LinkedIn Accent Gradient Bar */
+.metricool-gradient-bar, .brand-gradient-bar {
+  background: linear-gradient(90deg, #1E1B4B 0%, #6366F1 50%, #06B6D4 100%);
 }
 
-.metricool-gradient-text {
-  background: linear-gradient(90deg, #EE5B91 0%, #FACC15 50%, #EE5B91 100%);
+.metricool-gradient-text, .brand-gradient-text {
+  background: linear-gradient(90deg, #1E1B4B 0%, #6366F1 50%, #06B6D4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Metricool Offset Card Shadow */
-.metricool-card-shadow {
-  box-shadow: 0 8px 0 0 #2D1A29;
+/* Sleek Floating Card Shadow (Modern Bible LinkedIn Style) */
+.metricool-card-shadow, .brand-card-shadow {
+  box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.06), 0 8px 10px -6px rgba(99, 102, 241, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: all 0.2s ease-in-out;
 }
 
-.metricool-card-shadow:hover {
-  box-shadow: 0 12px 0 0 #2D1A29;
+.metricool-card-shadow:hover, .brand-card-shadow:hover {
+  box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.12), 0 10px 15px -5px rgba(6, 182, 212, 0.08);
   transform: translateY(-2px);
 }
 
@@ -50,8 +52,8 @@
 
 /* Highlight animation for search matches */
 mark {
-  background-color: #E7FF56;
-  color: #2D1A29;
+  background-color: #E0F2FE;
+  color: #0369A1;
   padding: 0.1rem 0.3rem;
   border-radius: 0.25rem;
   font-weight: 700;

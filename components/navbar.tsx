@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { LinkedInUserProfile } from '@/lib/types';
 import { AuthModal } from '@/components/auth-modal';
 import { AdminControlModal } from '@/components/admin-control-modal';
-import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound, LayoutDashboard, Search, User, LogIn } from 'lucide-react';
+import { UserCheck, Linkedin, ShieldCheck, Sparkles, LogOut, KeyRound, LayoutDashboard, Search, User, LogIn, BookOpen } from 'lucide-react';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -56,101 +56,101 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
       
-      {/* Metricool Top Gradient Announcement Bar */}
-      <div className="metricool-gradient-bar py-1.5 px-4 text-center text-white text-xs font-semibold flex items-center justify-center gap-2">
-        <span>⚡ Guide & Veille Tech LinkedIn • Moteur d'accroches & meilleures pratiques 2026</span>
-        <span className="hidden sm:inline bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase font-bold">Pro</span>
+      {/* Bible LinkedIn Top Gradient Bar */}
+      <div className="brand-gradient-bar py-1.5 px-4 text-center text-white text-xs font-semibold flex items-center justify-center gap-2">
+        <span>📘 Bible LinkedIn 2026 • Le Guide Ultime de la Croissance Organic B2B</span>
+        <span className="hidden sm:inline bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase font-bold">Officiel</span>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Brand Logo - Metricool Pink & Yellow Style */}
+          {/* Brand Logo - Bible LinkedIn Style */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-2xl bg-metricool-pink text-metricool-yellow flex items-center justify-center font-bold text-xl shadow-md group-hover:scale-105 transition-transform border-2 border-metricool-purple">
-              M
+            <div className="w-10 h-10 rounded-2xl bg-indigo-950 text-indigo-400 flex items-center justify-center font-black text-xl shadow-md group-hover:scale-105 transition-transform border border-indigo-800/50">
+              <BookOpen className="w-5 h-5 text-indigo-400" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-xl text-metricool-purple tracking-tight leading-none flex items-center gap-1">
-                LinkedIn Strategy <span className="w-2.5 h-2.5 rounded-full bg-metricool-yellow inline-block animate-pulse border border-metricool-purple" />
+              <span className="font-extrabold text-xl text-indigo-950 tracking-tight leading-none flex items-center gap-1.5">
+                Bible LinkedIn <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block animate-pulse" />
               </span>
-              <span className="text-xs text-slate-500 font-medium mt-1">
-                Guide Metricool • Audit IA & Veille
+              <span className="text-[11px] text-slate-500 font-medium mt-1">
+                La référence absolue du Growth B2B
               </span>
             </div>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-2">
+          <nav className="hidden md:flex items-center space-x-1.5">
             <Link
               href="/"
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/'
-                  ? 'bg-metricool-lightPink text-metricool-pink border border-metricool-pink/30 font-extrabold'
-                  : 'text-slate-700 hover:text-metricool-pink hover:bg-pink-50'
+                  ? 'bg-indigo-50 text-indigo-900 border border-indigo-200 font-extrabold'
+                  : 'text-slate-700 hover:text-indigo-900 hover:bg-slate-100'
               }`}
             >
-              Accueil Blog
+              Accueil & Guides
             </Link>
 
             <Link
               href="/linkedin-strategy"
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname.startsWith('/linkedin-strategy')
-                  ? 'bg-metricool-lightPink text-metricool-pink border border-metricool-pink/30 font-extrabold'
-                  : 'text-slate-700 hover:text-metricool-pink hover:bg-pink-50'
+                  ? 'bg-indigo-50 text-indigo-900 border border-indigo-200 font-extrabold'
+                  : 'text-slate-700 hover:text-indigo-900 hover:bg-slate-100'
               }`}
             >
-              Fiches & Stratégie
+              Fiches Référence
             </Link>
 
             <Link
               href="/audit-linkedin"
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/audit-linkedin'
-                  ? 'bg-pink-100 text-metricool-pink border border-pink-300 font-extrabold'
-                  : 'text-slate-700 hover:text-metricool-pink hover:bg-pink-50'
+                  ? 'bg-indigo-50 text-indigo-900 border border-indigo-200 font-extrabold'
+                  : 'text-slate-700 hover:text-indigo-900 hover:bg-slate-100'
               }`}
             >
-              <Search className="w-3.5 h-3.5 inline mr-1 text-metricool-pink" />
+              <Search className="w-3.5 h-3.5 inline mr-1 text-indigo-600" />
               Audit LinkedIn
             </Link>
 
             <Link
               href="/connect-linkedin"
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/connect-linkedin'
-                  ? 'bg-blue-100 text-blue-900 border border-blue-300 font-extrabold'
-                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+                  ? 'bg-blue-50 text-blue-900 border border-blue-200 font-extrabold'
+                  : 'text-slate-700 hover:text-indigo-900 hover:bg-slate-100'
               }`}
             >
-              <Linkedin className="w-3.5 h-3.5 inline mr-1 text-[#0077B5]" />
+              <Linkedin className="w-3.5 h-3.5 inline mr-1 text-[#0A66C2]" />
               Lier LinkedIn
             </Link>
 
             <Link
               href="/mon-espace-linkedin"
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname === '/mon-espace-linkedin'
-                  ? 'bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple shadow-2xs font-extrabold'
-                  : 'text-slate-700 hover:text-metricool-purple hover:bg-slate-100'
+                  ? 'bg-indigo-950 text-white shadow-xs font-extrabold'
+                  : 'text-slate-700 hover:text-indigo-900 hover:bg-slate-100'
               }`}
             >
-              <LayoutDashboard className="w-3.5 h-3.5 inline mr-1 text-metricool-purple" />
+              <LayoutDashboard className="w-3.5 h-3.5 inline mr-1 text-indigo-400" />
               Mon Espace IA
             </Link>
 
             <Link
               href="/newsletter"
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
                 pathname.startsWith('/newsletter')
-                  ? 'bg-pink-50 text-metricool-pink border border-pink-200 font-extrabold'
-                  : 'text-slate-700 hover:text-metricool-pink hover:bg-pink-50'
+                  ? 'bg-indigo-50 text-indigo-900 border border-indigo-200 font-extrabold'
+                  : 'text-slate-700 hover:text-indigo-900 hover:bg-slate-100'
               }`}
             >
-              Newsletter de Veille
+              Newsletter Veille
             </Link>
           </nav>
 
@@ -159,11 +159,11 @@ export function Navbar() {
             {isAdminLoggedIn && (
               <button
                 onClick={() => setIsAdminControlOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-metricool-pink hover:bg-rose-600 text-white border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-sm transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-950 hover:bg-black text-white rounded-2xl text-xs font-extrabold shadow-xs transition-all border border-indigo-800/50"
                 title="Espace Administrateur"
               >
-                <ShieldCheck className="w-4 h-4 text-metricool-yellow" />
-                <span>Espace Admin 🔒</span>
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Admin 🔒</span>
               </button>
             )}
 
@@ -171,9 +171,9 @@ export function Navbar() {
               <div className="flex items-center space-x-2">
                 <Link
                   href="/profil"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 bg-metricool-yellow text-metricool-purple border-2 border-metricool-purple rounded-2xl text-xs font-extrabold shadow-2xs hover:bg-yellow-300 transition-colors"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-indigo-950 rounded-2xl text-xs font-extrabold transition-colors border border-slate-200"
                 >
-                  <User className="w-4 h-4 text-metricool-purple" />
+                  <User className="w-4 h-4 text-indigo-600" />
                   @{clientProfile.username}
                 </Link>
                 <button
@@ -190,13 +190,13 @@ export function Navbar() {
                   href="/login"
                   className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl text-xs font-extrabold transition-all"
                 >
-                  <LogIn className="w-3.5 h-3.5 text-metricool-purple" /> Connexion
+                  <LogIn className="w-3.5 h-3.5 text-indigo-600" /> Connexion
                 </Link>
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-metricool-pink hover:bg-rose-600 text-white rounded-2xl text-xs font-extrabold transition-all shadow-md border-2 border-metricool-purple"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-extrabold transition-all shadow-md"
                 >
-                  <UserCheck className="w-3.5 h-3.5 text-metricool-yellow" /> S'inscrire
+                  <UserCheck className="w-3.5 h-3.5 text-white" /> S'inscrire
                 </Link>
               </div>
             ) : (

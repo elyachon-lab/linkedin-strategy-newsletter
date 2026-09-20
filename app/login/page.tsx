@@ -81,33 +81,33 @@ function LoginContent() {
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 bg-white p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
+    <div className="max-w-md mx-auto my-12 bg-white p-8 rounded-3xl border border-slate-200/80 brand-card-shadow space-y-6">
       
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 bg-metricool-purple text-metricool-yellow rounded-2xl flex items-center justify-center mx-auto shadow-md">
-          <Linkedin className="w-6 h-6 text-metricool-yellow" />
+        <div className="w-12 h-12 bg-indigo-950 text-indigo-400 rounded-2xl flex items-center justify-center mx-auto shadow-sm border border-indigo-800/50">
+          <Linkedin className="w-6 h-6 text-indigo-400" />
         </div>
-        <h1 className="text-2xl font-extrabold text-metricool-purple">Connexion à votre Compte</h1>
+        <h1 className="text-2xl font-black text-indigo-950">Connexion à votre Compte</h1>
         <p className="text-xs font-medium text-slate-500">
-          Connectez-vous pour accéder au Centre de Stratégie, à vos audits IA et à votre espace personnalisé.
+          Connectez-vous pour accéder à la Bible LinkedIn, vos audits IA et vos fiches stratégiques.
         </p>
       </div>
 
       {redirectTo !== '/mon-espace-linkedin' && (
-        <div className="p-3 rounded-xl bg-purple-50 border border-purple-200 text-xs font-bold text-purple-900 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-purple-600 shrink-0" />
+        <div className="p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-xs font-bold text-indigo-900 flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" />
           <span>Connectez-vous pour accéder à la page réservée : {redirectTo}</span>
         </div>
       )}
 
-      {/* Metricool-style OAuth LinkedIn Quick Button */}
+      {/* 1-Click LinkedIn OAuth Connection */}
       <div className="space-y-3">
         <Link
           href="/connect-linkedin"
-          className="w-full py-3.5 bg-[#0077B5] hover:bg-[#005E93] text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2.5 border-2 border-blue-900/10"
+          className="w-full py-3.5 bg-[#0A66C2] hover:bg-[#004182] text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2.5 border border-blue-900/20"
         >
           <Linkedin className="w-5 h-5 fill-white text-white" />
-          <span>Se Connecter via LinkedIn (Metricool Style)</span>
+          <span>Se Connecter via LinkedIn (1-Clic)</span>
         </Link>
         <div className="relative flex py-1 items-center">
           <div className="flex-grow border-t border-slate-200"></div>
@@ -119,7 +119,7 @@ function LoginContent() {
       <form onSubmit={handleLogin} className="space-y-4">
         <div>
           <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-            <Mail className="w-3.5 h-3.5 text-metricool-purple" /> Adresse E-mail <span className="text-rose-500">*</span>
+            <Mail className="w-3.5 h-3.5 text-indigo-600" /> Adresse E-mail <span className="text-rose-500">*</span>
           </label>
           <input
             type="email"
@@ -127,13 +127,13 @@ function LoginContent() {
             placeholder="votre.email@exemple.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+            className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 font-bold text-slate-900 transition-all"
           />
         </div>
 
         <div>
           <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-            <KeyRound className="w-3.5 h-3.5 text-metricool-pink" /> Mot de Passe <span className="text-rose-500">*</span>
+            <KeyRound className="w-3.5 h-3.5 text-indigo-600" /> Mot de Passe <span className="text-rose-500">*</span>
           </label>
           <input
             type="password"
@@ -141,12 +141,12 @@ function LoginContent() {
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+            className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 font-bold text-slate-900 transition-all"
           />
         </div>
 
         {errorMessage && (
-          <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-xs font-extrabold text-rose-900 text-center">
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs font-extrabold text-rose-900 text-center">
             {errorMessage}
           </div>
         )}
@@ -154,7 +154,7 @@ function LoginContent() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3.5 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+          className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <>
@@ -162,7 +162,7 @@ function LoginContent() {
             </>
           ) : (
             <>
-              Se Connecter <ArrowRight className="w-4 h-4 text-metricool-yellow" />
+              Se Connecter <ArrowRight className="w-4 h-4" />
             </>
           )}
         </button>
@@ -171,7 +171,7 @@ function LoginContent() {
       <div className="border-t border-slate-100 pt-4 text-center">
         <p className="text-xs text-slate-500 font-medium">
           Vous n'avez pas encore de compte ?{' '}
-          <Link href="/signup" className="font-extrabold text-metricool-purple hover:underline">
+          <Link href="/signup" className="font-extrabold text-indigo-600 hover:underline">
             S'inscrire gratuitement
           </Link>
         </p>

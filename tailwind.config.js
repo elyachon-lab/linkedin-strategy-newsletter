@@ -8,18 +8,26 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          indigo: '#1E1B4B',
+          violet: '#6366F1',
+          cyan: '#06B6D4',
+          emerald: '#10B981',
+          dark: '#0F172A',
+          slate: '#F8FAFC',
+        },
         metricool: {
-          pink: '#EE5B91',
-          rose: '#F43F5E',
-          yellow: '#E7FF56',
-          brightYellow: '#FACC15',
-          purple: '#2D1A29',
-          blue: '#589CBC',
-          amber: '#F5CA32',
-          lightPink: '#FFF0F5',
-          lightYellow: '#FEFCE8',
-          lightBlue: '#D5F0FE',
-          bg: '#FAF9FB',
+          pink: '#6366F1',
+          rose: '#6366F1',
+          yellow: '#06B6D4',
+          brightYellow: '#06B6D4',
+          purple: '#1E1B4B',
+          blue: '#6366F1',
+          amber: '#F59E0B',
+          lightPink: '#EEF2FF',
+          lightYellow: '#ECFEFF',
+          lightBlue: '#E0F2FE',
+          bg: '#F8FAFC',
         },
         linkedin: {
           blue: '#0A66C2',
@@ -29,7 +37,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        sans: ['Outfit', 'Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
     },
   },

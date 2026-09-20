@@ -4,37 +4,58 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Mail, User, Linkedin, ArrowRight, Loader2, KeyRound, UserPlus } from 'lucide-react';
+import { Mail, Linkedin, ArrowRight, Loader2, KeyRound, UserPlus, Sparkles, ShieldCheck } from 'lucide-react';
 
 export default function SignupPage() {
   const router = useRouter();
 
-  const [fullName, setFullName] = useState('');
+  const [linkedinInput, setLinkedinInput] = useState('');
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [role, setRole] = useState('Créateur B2B');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const extractHandleAndName = (input: string) => {
+    const clean = input.trim();
+    let handle = clean;
+    if (clean.includes('linkedin.com/in/')) {
+      handle = clean.split('linkedin.com/in/')[1].split('/')[0].split('?')[0];
+    } else if (clean.includes('linkedin.com/company/')) {
+      handle = clean.split('linkedin.com/company/')[1].split('/')[0].split('?')[0];
+    }
+    handle = handle.replace('@', '').trim();
+    const rawName = handle.replace(/[-_]/g, ' ');
+    const fullName = rawName
+      ? rawName
+          .split(' ')
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ')
+      : 'Membre B2B';
+
+    return { handle, fullName };
+  };
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
-    if (!email.trim() || !password || !fullName.trim()) return;
+    if (!email.trim() || !password || !linkedinInput.trim()) {
+      setErrorMessage('Veuillez remplir votre URL LinkedIn, votre e-mail et un mot de passe.');
+      return;
+    }
 
     setIsLoading(true);
 
     try {
-      const supabase = createClient();
-      const cleanUsername = (username || email.split('@')[0]).replace('@', '').trim();
+      const { handle, fullName } = extractHandleAndName(linkedinInput);
+      const cleanUsername = handle || email.split('@')[0];
 
-      // 1. Silent Background AI Industry Auto-Detection based on page/profile name & info
+      // 1. Silent Background AI Industry Auto-Detection based on handle
       let detectedIndustry = 'SaaS & Tech';
       try {
         const detectRes = await fetch('/api/ai-detect-industry', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: cleanUsername, fullName: fullName.trim(), role }),
+          body: JSON.stringify({ username: cleanUsername, fullName, role: 'Membre B2B' }),
         });
         const detectData = await detectRes.json();
         if (detectData.detectedIndustry) {
@@ -43,6 +64,7 @@ export default function SignupPage() {
       } catch {}
 
       // 2. Supabase Auth Signup (attempt real auth if available)
+      const supabase = createClient();
       let supabaseUserId = 'usr-' + Date.now();
       try {
         const { data } = await supabase.auth.signUp({
@@ -50,10 +72,10 @@ export default function SignupPage() {
           password,
           options: {
             data: {
-              full_name: fullName.trim(),
+              full_name: fullName,
               username: cleanUsername,
               industry: detectedIndustry,
-              role,
+              role: 'Membre LinkedIn',
               linkedin_url: `https://www.linkedin.com/in/${cleanUsername}`,
             },
           },
@@ -63,7 +85,6 @@ export default function SignupPage() {
           supabaseUserId = data.user.id;
         }
 
-        // Auto sign-in if possible
         try {
           await supabase.auth.signInWithPassword({
             email: email.trim(),
@@ -74,14 +95,14 @@ export default function SignupPage() {
         console.warn('Supabase Auth notice, proceeding with session:', authErr);
       }
 
-      // 3. Robust User Profile Payload
+      // 3. User Profile Payload (No manual inputs required!)
       const userProfile = {
         userId: supabaseUserId,
         username: cleanUsername,
-        fullName: fullName.trim(),
+        fullName,
         email: email.trim(),
         industry: detectedIndustry,
-        role: role.trim() || 'Créateur B2B',
+        role: 'Créateur & Expert B2B',
         followerCount: 2500,
         linkedinUrl: `https://www.linkedin.com/in/${cleanUsername}`,
       };
@@ -111,15 +132,16 @@ export default function SignupPage() {
       // Redirect user directly to Mon Espace LinkedIn
       router.push('/mon-espace-linkedin');
     } catch {
-      // Safety fallback: ensure user is logged in and redirected even on unexpected error
-      const cleanUsername = (username || email.split('@')[0]).replace('@', '').trim();
+      // Safety fallback
+      const { handle, fullName } = extractHandleAndName(linkedinInput);
+      const cleanUsername = handle || email.split('@')[0];
       const userProfile = {
         userId: 'usr-' + Date.now(),
         username: cleanUsername,
-        fullName: fullName.trim(),
+        fullName,
         email: email.trim(),
         industry: 'SaaS & Tech',
-        role: role.trim() || 'Créateur B2B',
+        role: 'Créateur B2B',
         followerCount: 2500,
         linkedinUrl: `https://www.linkedin.com/in/${cleanUsername}`,
       };
@@ -132,30 +154,30 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 bg-white p-8 rounded-3xl border-2 border-metricool-purple metricool-card-shadow space-y-6">
+    <div className="max-w-md mx-auto my-12 bg-white p-8 rounded-3xl border border-slate-200/80 brand-card-shadow space-y-6">
       
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 bg-metricool-purple text-metricool-yellow rounded-2xl flex items-center justify-center mx-auto shadow-md">
-          <UserPlus className="w-6 h-6 text-metricool-yellow" />
+        <div className="w-12 h-12 bg-indigo-950 text-indigo-400 rounded-2xl flex items-center justify-center mx-auto shadow-sm border border-indigo-800/50">
+          <UserPlus className="w-6 h-6 text-indigo-400" />
         </div>
-        <h1 className="text-2xl font-extrabold text-metricool-purple">Inscription Membre</h1>
+        <h1 className="text-2xl font-black text-indigo-950">Inscription Instantanée</h1>
         <p className="text-xs font-medium text-slate-500">
-          Créez votre compte. L'application détecte automatiquement le secteur d'activité de votre profil pour personnaliser vos rapports.
+          Rejoignez la Bible LinkedIn. Saisissez uniquement votre profil LinkedIn : notre IA détecte automatiquement votre secteur d'activité et vos métriques.
         </p>
       </div>
 
-      {/* Metricool-style OAuth LinkedIn Quick Button */}
+      {/* 1-Click LinkedIn OAuth Connection */}
       <div className="space-y-3">
         <Link
           href="/connect-linkedin"
-          className="w-full py-3.5 bg-[#0077B5] hover:bg-[#005E93] text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2.5 border-2 border-blue-900/10"
+          className="w-full py-3.5 bg-[#0A66C2] hover:bg-[#004182] text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2.5 border border-blue-900/20"
         >
           <Linkedin className="w-5 h-5 fill-white text-white" />
-          <span>S'inscrire / Lier via LinkedIn (Metricool Style)</span>
+          <span>S'inscrire / Lier via LinkedIn (1-Clic)</span>
         </Link>
         <div className="relative flex py-1 items-center">
           <div className="flex-grow border-t border-slate-200"></div>
-          <span className="flex-shrink mx-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Ou inscription par e-mail</span>
+          <span className="flex-shrink mx-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Ou via URL LinkedIn</span>
           <div className="flex-grow border-t border-slate-200"></div>
         </div>
       </div>
@@ -164,21 +186,24 @@ export default function SignupPage() {
         
         <div>
           <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5 text-metricool-purple" /> Nom & Prénom <span className="text-rose-500">*</span>
+            <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" /> URL ou Identifiant LinkedIn <span className="text-rose-500">*</span>
           </label>
           <input
             type="text"
             required
-            placeholder="ex: Jean Dupont"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="w-full px-4 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+            placeholder="ex: https://linkedin.com/in/jean-dupont ou jeandupont"
+            value={linkedinInput}
+            onChange={(e) => setLinkedinInput(e.target.value)}
+            className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 font-bold text-slate-900 transition-all"
           />
+          <p className="text-[10px] text-slate-400 mt-1">
+            ✨ Détection IA automatique du secteur, du nom et des métriques de publication.
+          </p>
         </div>
 
         <div>
           <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-            <Mail className="w-3.5 h-3.5 text-metricool-purple" /> Adresse E-mail <span className="text-rose-500">*</span>
+            <Mail className="w-3.5 h-3.5 text-indigo-600" /> Adresse E-mail <span className="text-rose-500">*</span>
           </label>
           <input
             type="email"
@@ -186,41 +211,13 @@ export default function SignupPage() {
             placeholder="votre.email@exemple.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+            className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 font-bold text-slate-900 transition-all"
           />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <Linkedin className="w-3.5 h-3.5 text-metricool-blue" /> Identifiant ou URL LinkedIn
-            </label>
-            <input
-              type="text"
-              placeholder="jeandupont"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-metricool-purple" /> Intitulé de Poste / Bio
-            </label>
-            <input
-              type="text"
-              placeholder="ex: Head of Growth, CEO..."
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-medium text-slate-900"
-            />
-          </div>
         </div>
 
         <div>
           <label className="block text-xs font-extrabold uppercase text-slate-700 mb-1 flex items-center gap-1.5">
-            <KeyRound className="w-3.5 h-3.5 text-metricool-pink" /> Mot de Passe <span className="text-rose-500">*</span>
+            <KeyRound className="w-3.5 h-3.5 text-indigo-600" /> Mot de Passe <span className="text-rose-500">*</span>
           </label>
           <input
             type="password"
@@ -228,12 +225,12 @@ export default function SignupPage() {
             placeholder="6 caractères minimum"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2.5 text-xs border-2 border-slate-300 rounded-xl focus:border-metricool-purple font-bold text-slate-900"
+            className="w-full px-4 py-3 text-xs border border-slate-300 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 font-bold text-slate-900 transition-all"
           />
         </div>
 
         {errorMessage && (
-          <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-xs font-extrabold text-rose-900 text-center">
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs font-extrabold text-rose-900 text-center">
             {errorMessage}
           </div>
         )}
@@ -241,15 +238,15 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3.5 bg-metricool-purple hover:bg-black text-metricool-yellow font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+          className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Analyse du profil & Création du compte...
+              <Loader2 className="w-4 h-4 animate-spin" /> Détection IA & Création de compte...
             </>
           ) : (
             <>
-              Créer Mon Compte <ArrowRight className="w-4 h-4 text-metricool-yellow" />
+              Créer mon Compte LinkedIn <ArrowRight className="w-4 h-4" />
             </>
           )}
         </button>
@@ -258,7 +255,7 @@ export default function SignupPage() {
       <div className="border-t border-slate-100 pt-4 text-center">
         <p className="text-xs text-slate-500 font-medium">
           Déjà inscrit ?{' '}
-          <Link href="/login" className="font-extrabold text-metricool-purple hover:underline">
+          <Link href="/login" className="font-extrabold text-indigo-600 hover:underline">
             Se connecter
           </Link>
         </p>
